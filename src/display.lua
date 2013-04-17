@@ -1,0 +1,252 @@
+Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
+local class=require (Display_Path .. 'vendor/30log')
+
+Display = class {
+	color=require (Display_Path .. 'color'),
+	widthInChars,
+	heightInChars,
+	charWidth=9,
+	charHeight=16,
+	defaultBackgroundColor,
+	defaultForegroundColor,
+	full,
+	vsync,
+	fsaa,
+	cursorX,
+	cursorY,
+	glyphSprite,
+	glyphs={},
+	chars={{}},
+	backgroundColors={{}},
+	foregroundColors={{}},
+	oldChars={{}},
+	oldBackgroundColors={{}},
+	oldForegroundColors={{}},
+	canvas
+}
+
+--[[ Init/Constructor
+	   Create a new 'terminal' with:
+	      rlLove  ='Path/to/RLLove_Folder/rlLove'
+	      terminal=RLLove(w, h, dfg, dbg, full, vsync, fsaa)
+	    where
+	    w    = width of terminal in number of characters (dictates what populates love.graphics.setMode)
+	    h    = height of terminal in number of characters (dictates what populates love.graphics.setMode)
+	    dfg  = default foreground color of type [red, green, blue, alpha]
+	    dbg  = default background color of type [red, green, blue, alpha]
+	    full = boolean for use full screen (populates love.graphics.setMode)
+	    vsync= boolean for use vsync (populates love.graphics.setMode)
+	    fsaa = number of fsaa samples (populates love.graphics.setMode)
+  ]]
+function Display:__init(w, h, dfg, dbg, full, vsync, fsaa)
+	self.widthInChars = w and w or 80
+	self.heightInChars= h and h or 24
+	self.full         = full and full or false
+	self.vsync        = vsync and vsync or false
+	self.fsaa         = fsaa and fsaa or 0
+
+	love.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, self.full, self.vsync, self.fsaa)
+
+	self.defaultForegroundColor=dfg and dfg or self.color.white
+	self.defaultBackgroundColor=dbg and dgb or self.color.black
+
+	love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+									 self.defaultBackgroundColor.g,
+									 self.defaultBackgroundColor.b,
+									 self.defaultBackgroundColor.a)
+
+	self.canvas=love.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+
+	self:loadGlyphs()
+	self:initTables()
+end
+
+function Display:draw()
+	love.graphics.setCanvas(self.canvas)
+	for x=1,self.widthInChars do
+		for y=1,self.heightInChars do
+	   		local c =self.chars[x][y]
+	   		local bg=self.backgroundColors[x][y]
+			local fg=self.foregroundColors[x][y]
+	   		local px=(x-1)*self.charWidth
+	   		local py=(y-1)*self.charHeight
+	   		if self.oldChars[x][y]            ~= c  or
+			   self.oldBackgroundColors[x][y] ~= bg or
+			   self.oldForegroundColors[x][y] ~= fg then
+
+		   		self:setColor(bg)
+		   		love.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
+
+		   		local qd=self.glyphs[self.chars[x][y]]
+		   		self:setColor(fg)
+		   		love.graphics.drawq(self.glyphSprite, qd, px, py)
+
+				self.oldChars[x][y]            = c
+				self.oldBackgroundColors[x][y] = bg
+				self.oldForegroundColors[x][y] = fg
+			end
+		end
+	end
+	love.graphics.setCanvas()
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.draw(self.canvas)
+end
+
+-- Gets
+function Display:getCharHeight()
+	return self.charHeight
+end
+function Display:getCharWidth()
+	return self.charWidth
+end
+function Display:getHeightInChars()
+	return self.heightInChars
+end
+function Display:getWidthInChars()
+	return self.widthInChars
+end
+function Display:getDefaultBackgroundColor()
+	return self.defaultBackgroundColor
+end
+function Display:getDefaultForegroundColor()
+	return self.defaultForegroundColor
+end
+-- Sets
+function Display:setDefaultBackgroundColor(c)
+	self.defaultBackgroundColor=c and c or self.color.black
+end
+function Display:setDefaultForegroundColor(c)
+	self.defaultForegroundColor=c and c or self.color.white
+end
+
+
+-- other
+-- Populate the glyph image table
+function Display:loadGlyphs()
+	self.glyphSprite=love.graphics.newImage(Display_Path .. 'img/cp437.png')
+	for i=0,255 do
+		sx=(i%32)*self.charWidth
+		sy=math.floor(i/32)*self.charHeight
+		self.glyphs[i]=love.graphics.newQuad(sx, sy, self.charWidth, self.charHeight, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+	end
+end
+
+--[[ Clear a designated rectangle of space with specified char and colors
+	 c  = Character to use in wipe (nil defaults to space)
+	 x  = x-coord of top-left of clearing box (defaults to 1)
+	 y  = y-coord of top-left of clearing box (defaults to 1)
+	 w  = distance x of clearing box (defaults to widthInChars)
+	 h  = distance y of clearing box (defaults to heightInChars)
+	 fg = foreground color to use (defaults to defaultForegroundColor)
+	 bg = background color to use (defaults to defaultBackgroundColor)
+]]
+function Display:clear(c, x, y, w, h, fg, bg)
+	c =c and c or ' '
+	w =w and w or self.widthInChars
+	local s=''
+	for i=1,w do
+		s=s..c
+	end
+	x =self:validateX(x, s)
+	y =self:validateY(y)
+	h =self:validateHeight(y, h)
+	fg=self:validateForegroundColor(fg)
+	bg=self:validateBackgroundColor(bg)
+	for i=0,h do
+		self:writeValidatedString(s, x, y+i, fg, bg)
+	end
+end
+
+function Display:clearCanvas()
+	self.canvas:clear()
+end
+
+--[[ Write character or string to the display
+     s  = String/Char to write            (required)
+     x  = x Position in display           (optional)
+     y  = y Position in display           (optional)
+     fg = foreground color of char/string (optional)
+     bg = background color of char/string (optional)
+]]
+function Display:write(s, x, y, fg, bg)
+	assert(s, "Display:write() must have string as param")
+	x = self:validateX(x, s)
+	y = self:validateY(y, s)
+	fg= self:validateForegroundColor(fg)
+	bg= self:validateBackgroundColor(bg)
+
+	self:writeValidatedString(s, x, y, fg, bg)
+end
+
+function Display:writeCenter(s, y, fg, bg)
+	assert(s, "Display:writeCenter() must have string as param")
+	assert(#s<self.widthInChars, "Length of "..s.." is greater than screen width")
+	y = y and y or math.floor((self:getHeightInChars() - 1) / 2)
+	y = self:validateY(y, s)
+	fg= self:validateForegroundColor(fg)
+	bg= self:validateBackgroundColor(bg)
+
+	local x=math.floor((self.widthInChars-#s)/2)
+	self:writeValidatedString(s, x, y, fg, bg)
+end
+
+function Display:writeValidatedString(s, x, y, fg, bg)
+	for i=1,#s do
+		self.backgroundColors[x+i-1][y] = bg
+		self.foregroundColors[x+i-1][y] = fg
+		self.chars[x+i-1][y]            = s:byte(i)
+	end
+end
+-- Helpers
+function Display:initTables()
+	for i=1,self.widthInChars do
+		self.chars[i]               = {}
+		self.backgroundColors[i]    = {}
+		self.foregroundColors[i]    = {}
+		self.oldChars[i]            = {}
+		self.oldBackgroundColors[i] = {}
+		self.oldForegroundColors[i] = {}
+		for j=1,self.heightInChars do
+			self.chars[i][j]               = 32
+			self.backgroundColors[i][j]    = self.defaultBackgroundColor
+			self.foregroundColors[i][j]    = self.defaultForegroundColor
+			self.oldChars[i][j]            = nil
+			self.oldBackgroundColors[i][j] = nil
+			self.oldForegroundColors[i][j] = nil
+		end
+	end
+end
+
+function Display:validateX(x, s)
+	x = x and x or 1
+	assert(x>0 and x<=self.widthInChars, "X value must be between 0 and "..self.widthInChars)
+	assert((x+#s)-1<=self.widthInChars, "X value plus length of String must be between 0 and "..self.widthInChars)
+	return x
+end
+function Display:validateY(y)
+	y = y and y or 1
+	assert(y>0 and y<=self.heightInChars, "Y value must be between 0 and "..self.heightInChars)
+	return y
+end
+function Display:validateForegroundColor(c)
+	c = c and c or self.defaultForegroundColor
+	assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
+	return c
+end
+function Display:validateBackgroundColor(c)
+	c = c and c or self.defaultBackgroundColor
+	assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
+	return c
+end
+function Display:validateHeight(y, h)
+	h=h and h or self.heightInChars-y
+	assert(h>0, "Height must be greater than 0. Height provided: "..h)
+	assert(y+h<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
+	return h
+end
+function Display:setColor(c)
+	c = c and c or self.defaultForegroundColor
+	love.graphics.setColor(c.r, c.g, c.b, c.a)
+end
+
+return Display
