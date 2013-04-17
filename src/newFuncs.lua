@@ -42,6 +42,15 @@ function table.slice (values,i1,i2)
 	end
 	return res
 end
+-- add js indexOf function
+function table.indexOf(values,value)
+	if values then
+		for i=1,#values do
+			if values[i] == value then return i end
+		end
+	end
+	return 0
+end
 -- asserts the type of 'theTable' is table
 function isATable(theTable)
 	assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type..")")

@@ -2,6 +2,7 @@ Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
 local class=require (Display_Path .. 'vendor/30log')
 
 Display = class {
+	__name='Display',
 	color=require (Display_Path .. 'color'),
 	widthInChars,
 	heightInChars,
@@ -12,8 +13,6 @@ Display = class {
 	full,
 	vsync,
 	fsaa,
-	cursorX,
-	cursorY,
 	glyphSprite,
 	glyphs={},
 	chars={{}},

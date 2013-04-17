@@ -43,4 +43,8 @@ ROT.RNG.twister:randomseed(os.time())
 
 ROT.StringGenerator = require (ROTLOVE_PATH .. 'stringGenerator')
 
+ROT.EventQueue = require (ROTLOVE_PATH .. 'eventQueue')
+
+ROT.Scheduler = require (ROTLOVE_PATH .. 'scheduler')
+ROT.Scheduler.Simple = require (ROTLOVE_PATH .. 'simpleScheduler')
 return ROT

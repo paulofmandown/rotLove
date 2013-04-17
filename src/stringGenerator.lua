@@ -2,6 +2,7 @@ StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
 local class  =require (StringGen_Path .. 'vendor/30log')
 
 StringGenerator = class {
+	__name   ='StringGenerator',
 	_options = {words=false,
 				order=3,
 				prior=0.001
@@ -99,9 +100,7 @@ function StringGenerator:_observeEvent(context, event)
 	end
 	self._data[key][event]=self._data[key][event]+1
 end
-local sCount=1
 function StringGenerator:_sample(context)
-	sCount=sCount+1
 	context   =self:_backoff(context)
 	local key =self:_join(context)
 	local data=self._data[key]
