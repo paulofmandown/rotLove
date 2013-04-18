@@ -47,6 +47,7 @@ ROT.Engine           = require (ROTLOVE_PATH .. 'engine')
 ROT.Map              = require (ROTLOVE_PATH .. 'map')
 ROT.Map.Arena        = require (ROTLOVE_PATH .. 'arena')
 ROT.Map.DividedMaze  = require (ROTLOVE_PATH .. 'dividedMaze')
+ROT.Map.IceyMaze     = require (ROTLOVE_PATH .. 'iceyMaze')
 
 ROT.RNG.mwc:randomseed(os.time())
 ROT.RNG.lcg:randomseed(os.time())

@@ -8,3 +8,4 @@
 			--require 'display'
 			--require 'arena'
 			--require 'dividedMaze'
+			require 'iceyMaze'

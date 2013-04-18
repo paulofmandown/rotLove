@@ -12,9 +12,9 @@ end
 function Map:create(callback) end
 
 function Map:_fillMap(value)
-	map={}
+	local map={}
 	for  i=1,self._width do
-		table.insert({})
+		table.insert(map, {})
 		for j=1,self._height do table.insert(map[i], value) end
 	end
 	return map
