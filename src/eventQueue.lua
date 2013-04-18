@@ -19,15 +19,14 @@ function EventQueue:clear()
 end
 
 function EventQueue:add(event, time)
-	local index=1
+	local index= 1
 	if self._eventTimes then
 		for i=1,#self._eventTimes do
 			if self._eventTimes[i]>time then
 				index=i
 				break
-			elseif self._eventTimes[i]==time then
-				index=i+1
 			end
+			index=i+1
 		end
 	end
 	table.insert(self._events, index, event)
@@ -35,7 +34,7 @@ function EventQueue:add(event, time)
 end
 
 function EventQueue:get()
-	if not #self._events then return nil end
+	if #self._events<1 then return nil end
 	local time = table.remove(self._eventTimes, 1)
 	if time>0 then
 		self._time=self._time+time

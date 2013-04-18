@@ -1,7 +1,7 @@
 SimpleScheduler_Path =({...})[1]:gsub("[%.\\/]simpleScheduler$", "") .. '/'
 local class  =require (SimpleScheduler_Path .. 'vendor/30log')
 
-SimpleScheduler= Scheduler:extends { }
+SimpleScheduler= Scheduler:extends { __name='SimpleScheduler' }
 
 function SimpleScheduler:add(item, repeating)
 	self._queue:add(item, 0)
@@ -9,7 +9,6 @@ function SimpleScheduler:add(item, repeating)
 end
 
 function SimpleScheduler:next()
-	write(table.indexOf(self._repeat, self._current))
 	if self._current and table.indexOf(self._repeat, self._current)~=0 then
 		self._queue:add(self._current, 0)
 	end
