@@ -5,4 +5,6 @@
 			--require 'simple'
 			--require 'event'
 			--require 'stringGen'
-			require 'display'
+			--require 'display'
+			--require 'arena'
+			--require 'dividedMaze'

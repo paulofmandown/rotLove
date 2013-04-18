@@ -3,7 +3,7 @@ local class  =require (ROTLOVE_PATH .. 'vendor/30log')
 
 ROT=class {
 	DEFAULT_WIDTH =80,
-	DEFAULT_HEIGHT=25,
+	DEFAULT_HEIGHT=24,
 
 	DIRS= {FOUR={
 				{ 0,-1},
@@ -44,6 +44,9 @@ ROT.Scheduler.Simple = require (ROTLOVE_PATH .. 'simpleScheduler')
 ROT.Scheduler.Speed  = require (ROTLOVE_PATH .. 'speedScheduler')
 ROT.Scheduler.Action = require (ROTLOVE_PATH .. 'actionScheduler')
 ROT.Engine           = require (ROTLOVE_PATH .. 'engine')
+ROT.Map              = require (ROTLOVE_PATH .. 'map')
+ROT.Map.Arena        = require (ROTLOVE_PATH .. 'arena')
+ROT.Map.DividedMaze  = require (ROTLOVE_PATH .. 'dividedMaze')
 
 ROT.RNG.mwc:randomseed(os.time())
 ROT.RNG.lcg:randomseed(os.time())

@@ -53,7 +53,7 @@ function table.indexOf(values,value)
 end
 -- asserts the type of 'theTable' is table
 function isATable(theTable)
-	assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type..")")
+	assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")
 end
 
 -- New String functions
