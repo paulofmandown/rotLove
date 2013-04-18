@@ -13,4 +13,7 @@ String Generator - Direct Port from rot.js
 Demos Folder
 ==========
 Added new demos folder.
-Move
+
+In Demos/main.lua, uncomment the line for the demo you'd like to see.
+
+Then, from the Demos directory in the shell, run `love .`
