@@ -1,7 +1,8 @@
 --[[ Divided Maze ]]
 ROT=require 'vendor/rotLove/rot'
 function love.load()
-	f =Display(80,24)
+	-- Icey works better with odd width/height
+	f =Display:new(81,25)
 	im=IceyMaze:new(f:getWidth(), f:getHeight(), 0)
 	im:create(calbak)
 end

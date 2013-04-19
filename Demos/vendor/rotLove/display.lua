@@ -130,8 +130,8 @@ end
 function Display:getCharWidth()
 	return self.charWidth
 end
-function Display:getWidth() self:getWidthInChars() end
-function Display:getHeight() self:getHeightInChars() end
+function Display:getWidth() return self:getWidthInChars() end
+function Display:getHeight() return self:getHeightInChars() end
 function Display:getHeightInChars()
 	return self.heightInChars
 end

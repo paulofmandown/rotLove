@@ -15,7 +15,6 @@ function IceyMaze:create(callback)
 	local w=self._width
 	local h=self._height
 	local map=self:_fillMap(1)
-
 	w= w%2==1 and w-1 or w-2
 	h= h%2==1 and h-1 or h-2
 
@@ -29,34 +28,31 @@ function IceyMaze:create(callback)
 				{0,0}
 			   }
 	repeat
-		cw=1+2*math.floor(self._rng:random()*w/2)
-		cw=1+2*math.floor(self._rng:random()*h/2)
-
+		cx=2+2*math.floor(self._rng:random()*(w-1)/2)
+		cy=2+2*math.floor(self._rng:random()*(h-1)/2)
 		if done==0 then map[cx][cy]=0 end
-
 		if map[cx][cy]==0 then
 			self:_randomize(dirs)
 			repeat
-				if math.floor(self._rng:random()*self._regularity+1)==0 then
-					blocked=true
-					for i=1,4 do
-						nx=cx+dirs[i][1]*2
-						ny=cy+dirs[i][2]*2
-						if self._isFree(map, nx, ny, w, h) then
-							map[nx][ny]=0
-							map[cx+dirs[i][1]][cy+dirs[i][2]]=0
+				if math.floor(self._rng:random()*(self._regularity+1))==0 then self:_randomize(dirs) end
+				blocked=true
+				for i=1,4 do
+					nx=cx+dirs[i][1]*2
+					ny=cy+dirs[i][2]*2
+					if self:_isFree(map, nx, ny, w, h) then
+						map[nx][ny]=0
+						map[cx+dirs[i][1]][cy+dirs[i][2]]=0
 
-							cx=nx
-							cy=ny
-							blocked=false
-							done=done+1
-							break
-						end
+						cx=nx
+						cy=ny
+						blocked=false
+						done=done+1
+						break
 					end
 				end
-			until not blocked
+			until blocked
 		end
-	until done+1<w*h/4
+	until done+1>=w*h/4
 
 	for i=1,self._width do
 		for j=1,self._height do
@@ -97,8 +93,8 @@ function IceyMaze:_randomize(dirs)
 end
 
 function IceyMaze:_isFree(map, x, y, w, h)
-	if x<=1 or y<=1 or x>=width or x>=height then return false end
-	return map[x][y]==1
+	if x<2 or y<2 or x>w or y>h then return false end
+	return map[x][y]~=0
 end
 
 return IceyMaze
