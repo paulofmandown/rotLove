@@ -1,12 +1,15 @@
 --[[ Uncomment the Demo you'd like to run! ]]--
-			-- Schedulers
-			--require 'speed'
-			--require 'engine'
-			--require 'action'
-			--require 'simple'
 
 			-- Event Queue
 			--require 'event'
+
+			-- Schedulers
+			--require 'simple'
+			--require 'speed'
+			--require 'action'
+
+			-- Engine
+			--require 'engine'
 
 			-- String Generator
 			--require 'stringGen'
@@ -18,3 +21,4 @@
 			--require 'arena'
 			--require 'dividedMaze'
 			--require 'iceyMaze'
+			require 'ellerMaze'
