@@ -23,4 +23,5 @@
 			--require 'iceyMaze'
 			--require 'ellerMaze'
 			--require 'cellular'
-			require 'digger'
+			--require 'digger'
+

@@ -47,6 +47,7 @@ ROT.Map.Feature      = require (ROTLOVE_PATH .. 'feature')
 ROT.Map.Room         = require (ROTLOVE_PATH .. 'room')
 ROT.Map.Corridor     = require (ROTLOVE_PATH .. 'corridor')
 ROT.Map.Digger       = require (ROTLOVE_PATH .. 'digger')
+ROT.Map.Uniform      = require (ROTLOVE_PATH .. 'uniform')
 
 ROT.RNG.mwc:randomseed(os.time())
 ROT.RNG.lcg:randomseed(os.time())
