@@ -112,6 +112,10 @@ function string:split(delim, maxNb)
     return result
 end
 
+function math.round()
+	mult = mult or 1
+    return math.floor((n + mult/2)/mult) * mult
+end
 
 -- io.write(arg..'\n')
 function write(str)

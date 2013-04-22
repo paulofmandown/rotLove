@@ -21,4 +21,6 @@
 			--require 'arena'
 			--require 'dividedMaze'
 			--require 'iceyMaze'
-			require 'ellerMaze'
+			--require 'ellerMaze'
+			--require 'cellular'
+			require 'digger'

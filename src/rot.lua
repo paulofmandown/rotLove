@@ -20,15 +20,7 @@ ROT=class {
 				{-1, 1},
 				{-1, 0},
 				{-1,-1}
-		       },
-		   SIX={
-		   	    {-1,-1},
-		   	    { 1,-1},
-		   	    { 2, 0},
-		   	    { 1, 1},
-		   	    {-1, 1},
-		   	    {-2, 0}
-			   }
+		       }
 		  }
 }
 
@@ -49,6 +41,12 @@ ROT.Map.Arena        = require (ROTLOVE_PATH .. 'arena')
 ROT.Map.DividedMaze  = require (ROTLOVE_PATH .. 'dividedMaze')
 ROT.Map.IceyMaze     = require (ROTLOVE_PATH .. 'iceyMaze')
 ROT.Map.EllerMaze    = require (ROTLOVE_PATH .. 'ellerMaze')
+ROT.Map.Cellular     = require (ROTLOVE_PATH .. 'cellular')
+ROT.Map.Dungeon      = require (ROTLOVE_PATH .. 'dungeon')
+ROT.Map.Feature      = require (ROTLOVE_PATH .. 'feature')
+ROT.Map.Room         = require (ROTLOVE_PATH .. 'room')
+ROT.Map.Corridor     = require (ROTLOVE_PATH .. 'corridor')
+ROT.Map.Digger       = require (ROTLOVE_PATH .. 'digger')
 
 ROT.RNG.mwc:randomseed(os.time())
 ROT.RNG.lcg:randomseed(os.time())
