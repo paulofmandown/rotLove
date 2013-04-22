@@ -101,7 +101,13 @@ end
 
 function Room:debug()
 	local command    = write and write or io.write
-	local debugString= 'room    : '..self._x1..','..self._y1..','..self._x2..','..self._y2
+	local door='doors'
+	for k,_ in pairs(self._doors) do door=door..'; '..k end
+	local debugString= 'room    : '..(self._x1 and self._x1 or 'not available')
+							  ..','..(self._y1 and self._y1 or 'not available')
+							  ..','..(self._x2 and self._x2 or 'not available')
+							  ..','..(self._y2 and self._y2 or 'not available')
+							  ..','..door
 	command(debugString)
 end
 
@@ -137,6 +143,7 @@ function Room:create(gen, digCallback)
 			else
 				value=0
 			end
+			if value==2 then write('door') end
 			digCallback(gen, x, y, value)
 		end
 	end

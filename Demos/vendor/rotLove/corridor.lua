@@ -17,7 +17,7 @@ function Corridor:createRandomAt(x, y, dx, dy, options)
 	local rng=ROT.RNG.twister and ROT.RNG.twister or twister and twister
 	local min   =options.corridorLength[1]
 	local max   =options.corridorLength[2]
-	local length=min+math.floor(rng:random()*(max-min+1))
+	local length=math.floor(rng:random(min, max))
 	return self:new(x, y, x+dx*length, y+dy*length)
 end
 
@@ -41,7 +41,7 @@ function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 
 	local ok=true
 
-	for i=0,length do
+	for i=0,length-1 do
 		local x=sx+i*dx
 		local y=sy+i*dy
 
@@ -78,7 +78,7 @@ function Corridor:create(gen, digCallback)
 	if dx~=0 then dx=dx/math.abs(dx) end
 	if dy~=0 then dy=dy/math.abs(dy) end
 
-	for i=0,length do
+	for i=0,length-1 do
 		local x=sx+i*dx
 		local y=sy+i*dy
 		digCallback(gen, x, y, 0)

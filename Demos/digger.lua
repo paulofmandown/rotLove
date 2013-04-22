@@ -8,3 +8,7 @@ function love.load()
 end
 function love.draw() f:draw() end
 function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
+function love.update()
+	love.timer.sleep(1)
+	dgr:create(calbak)
+end
