@@ -112,7 +112,7 @@ function string:split(delim, maxNb)
     return result
 end
 
-function math.round()
+function math.round(n, mult)
 	mult = mult or 1
     return math.floor((n + mult/2)/mult) * mult
 end

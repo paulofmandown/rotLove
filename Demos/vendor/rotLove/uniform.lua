@@ -30,12 +30,12 @@ function Uniform:create(callback)
     while true do
         local t2=os.clock()*1000
         if t2-t1>self._options.timeLimit then return nil end
-        self._map=self._fillMap(1)
+        self._map=self:_fillMap(1)
         self._dug=0
         self._rooms={}
         self._unconnected={}
-        self._generateRooms()
-        if self._generateCorridors() then break end
+        self:_generateRooms()
+        if self:_generateCorridors() then break end
     end
 
     if callback then
@@ -54,7 +54,7 @@ function Uniform:_generateRooms()
     local h=self._height-2
     local room=nil
     repeat
-        room=self._generateRoom()
+        room=self:_generateRoom()
         if self._dug/(w*h)>self._options.roomDugPercentage then break end
     until not room
 end
@@ -64,8 +64,8 @@ function Uniform:_generateRoom()
     while count<self._roomAttempts do
         count=count+1
         local room=Room:createRandom(self._width, self._height, self._options)
-        if room:isValid(self._isWallCallback, self._canBeDugCallback) then
-            room:create(self._digCallback)
+        if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+            room:create(self, self._digCallback)
             table.insert(self._rooms, room)
             return room
         end
@@ -78,22 +78,29 @@ function Uniform:_generateCorridors()
     while cnt<self._corridorAttempts do
         cnt=cnt+1
         self._corridors={}
-
-        self._map=self._fillMap(1)
-        for k,_ in pairs(self._rooms) do
-            local room=self._rooms[k]
-            room:clearDoors()
-            room:create(self._digCallback)
-            table.insert(self._unconnected, room)
+        mapStr='\n'
+        for j=1,self._height do
+            for i=1,self._width do
+                mapStr=mapStr..(self._map[i][j]==1 and '#' or '.')
+            end
+            mapStr=mapStr..'\n'
         end
-        self._unconnected=table.randomize(self._unconnected)
-        self._connected  ={}
+        write(mapStr)
+        self._map=self:_fillMap(1)
+        for i=1,#self._rooms do
+            local room=self._rooms[i]
+            room:clearDoors()
+            room:create(self, self._digCallback)
+        end
 
+        self._unconnected=table.randomize(table.slice(self._rooms))
+        self._connected  ={}
+        table.insert(self._connected, table.remove(self._unconnected))
         while true do
             local connected=table.random(self._connected)
-            local room1    =self._closestRoom(self._unconnected, connected)
-            local room2    =self._closestRoom(self._unconnected, room1)
-            if not self._connectRooms(room1, room2 then break end
+            local room1    =self:_closestRoom(self._unconnected, connected)
+            local room2    =self:_closestRoom(self._connected, room1)
+            if not self:_connectRooms(room1, room2) then break end
             if #self._unconnected<1 then return true end
         end
     end
@@ -116,7 +123,6 @@ function Uniform:_closestRoom(rooms, room)
             result=r
         end
     end
-
     return result
 end
 
@@ -134,21 +140,159 @@ function Uniform:_connectRooms(room1, room2)
     local index    =0
 
     if math.abs(diffX)<math.abs(diffY) then
-        dirIndex1=diffY>0 and 2 or 0
-        dirIndex2=(dirIndex1+2)%4
+        dirIndex1=diffY>0 and 3 or 1
+        dirIndex2=(dirIndex1+2)%4+1
         min      =room2:getLeft()
         max      =room2:getRight()
-        index    =0
+        index    =1
     else
-        dirIndex1=diffX>0 and 1 or 3
-        dirIndex2=(dirIndex1+2)%4
+        dirIndex1=diffX>0 and 2 or 4
+        dirIndex2=(dirIndex1+2)%4+1
         min      =room2:getTop()
         max      =room2:getBottom()
-        index    =1
+        index    =2
     end
 
-    local start=self._placeInWall(room1, dirIndex1)
-    --...To Be Continued...
+    local index2=((index+1)%2)+1
+
+    local start=self:_placeInWall(room1, dirIndex1)
+    if #start<1 then return false end
+    local endTable={}
+
+    room1:debug()
+    room2:debug()
+    if start[index] >= min and start[index] <= max then
+        write('1')
+        endTbl=table.slice(start)
+        local value =nil
+        if dirIndex2==1 then value=room2:getTop()-1
+        elseif dirIndex2==2 then value=room2:getRight()+1
+        elseif dirIndex2==3 then value=room2:getBottom()+1
+        elseif dirIndex2==4 then value=room2:getLeft()-1 end
+        endTbl[index2]=value
+        self:_digLine({start, endTbl})
+    elseif start[index] < min-1 or start[index] > max+1 then
+        write('2')
+        local diff=start[index]-center2[index]
+        local rotation=0
+        if dirIndex2==1 or dirIndex2==2 then rotation=diff<0 and 3 or 1
+        elseif dirIndex2==3 or dirIndex2==4 then rotation=diff<0 and 1 or 3 end
+        if rotation==0 then assert(false, 'failed to rotate') end
+        dirIndex2=(dirIndex2+rotation)%4+1
+
+        endTbl=self:_placeInWall(room2, dirIndex2)
+        if #endTbl<1 then return false end
+
+        local mid={0,0}
+        mid[index]=start[index]
+        mid[index2]=endTbl[index2]
+        self:_digLine({start, mid, endTbl})
+    else
+        write('3')
+        endTbl=self:_placeInWall(room2, dirIndex2)
+        if #endTbl<1 then return false end
+        local mid   =math.round((endTbl[index2]+start[index2])/2)
+
+        local mid1={0,0}
+        local mid2={0,0}
+        mid1[index] = start[index];
+        mid1[index2] = mid;
+        mid2[index] = endTbl[index];
+        mid2[index2] = mid;
+        self:_digLine({start, mid1, mid2, endTbl});
+    end
+
+    room1:addDoor(start[1],start[2])
+    room2:addDoor(endTbl[1], endTbl[2])
+
+    local index=table.indexOf(self._unconnected, room1)
+    if index~=0 then
+        table.remove(self._unconnected, index)
+        table.insert(self._connected, room1)
+    end
+    local index=table.indexOf(self._unconnected, room2)
+    if index~=0 then
+        table.remove(self._unconnected, index)
+        table.insert(self._connected, room2)
+    end
+
+    return true
+end
+
+function Uniform:_placeInWall(room, dirIndex)
+    local start ={0,0}
+    local dir   ={0,0}
+    local length=0
+write('DirIndex '..dirIndex)
+    if dirIndex==1 then
+        dir   ={1,0}
+        start ={room:getLeft()-1, room:getTop()-1}
+        length= room:getRight()-room:getLeft()
+    elseif dirIndex==2 then
+        dir   ={0,1}
+        start ={room:getRight()+1, room:getTop()}
+        length=room:getBottom()-room:getTop()
+    elseif dirIndex==3 then
+        dir   ={1,0}
+        start ={room:getLeft()-1, room:getBottom()+1}
+        length=room:getRight()-room:getLeft()
+    elseif dirIndex==4 then
+        dir   ={0,1}
+        start ={room:getLeft()-1, room:getTop()-1}
+        length=room:getBottom()-room:getTop()
+    end
+    local avail={}
+    local lastBadIndex=-1
+    local null=string.char(0)
+    for i=1,length do
+        local x=start[1]+i*dir[1]
+        local y=start[2]+i*dir[2]
+        table.insert(avail, null)
+        write('Map '..x..','..y..' is '..self._map[x][y])
+        if self._map[x][y]==1 then --is a wall
+            if lastBadIndex ~=i-1 then
+                avail[i]={x, y}
+                write('avail['..i..'] is: '..x..','..y)
+            end
+        else
+            lastBadIndex=i
+            if i>1 then avail[i-1]=null end
+        end
+    end
+    for i=1,#avail do
+        if avail[i]==string.char(0) then
+            write('removing')
+            table.remove(avail, i)
+            i=i-1
+        end
+    end
+    return #avail>0 and table.random(avail) or nil
+end
+
+function Uniform:_digLine(points)
+    for i=2,#points do
+        local start=points[i-1]
+        local endPt=points[i]
+        local corridor=Corridor:new(start[1], endPt[1], start[2], endPt[2])
+        corridor:create(self, self._digCallback)
+        table.insert(self._corridors, corridor)
+    end
+end
+
+function Uniform:_digCallback(x, y, value)
+    write('digging: '..x..','..y)
+    self._map[x][y]=value
+    if value==0 then self._dug=self._dug+1 end
+end
+
+function Uniform:_isWallCallback(x, y)
+    if x<1 or y<1 or x>self._width or y>self._height then return false end
+    return self._map[x][y]==1
+end
+
+function Uniform:_canBeDugCallback(x, y)
+    if x<2 or y<2 or x>=self._width or y>=self._height then return false end
+    return self._map[x][y]==1
 end
 
 return Uniform

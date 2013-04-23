@@ -24,4 +24,4 @@
 			--require 'ellerMaze'
 			--require 'cellular'
 			--require 'digger'
-
+			require 'uniform'

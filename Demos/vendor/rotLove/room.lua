@@ -64,23 +64,24 @@ function Room:createRandomCenter(cx, cy, options)
 end
 
 function Room:createRandom(availWidth, availHeight, options)
+    local rng=ROT.RNG.twister
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
-	local width=min+math.floor(self._rng:random()*(max-min+1))
+	local width=math.floor(rng:random(min, max))
 
 	local min   =options.roomHeight[1]
 	local max   =options.roomHeight[2]
-	local height=min+math.floor(self._rng:random()*(max-min+1))
+	local height=math.floor(rng:random(min, max))
 
-	local left=availWidth-width-1
-	local top =availHeight-height-1
+	local left=availWidth-width
+	local top =availHeight-height
 
-	local x1=math.floor(self._rng:random()*left)
-	local y1=math.floor(self._rng:random()*top)
-	local x2=x1+width-1
-	local y2=y1+height-1
+	local x1=math.floor(rng:random()*left)
+	local y1=math.floor(rng:random()*top)
+	local x2=x1+width
+	local y2=y1+height
 
-	return Room:new(x1, x2, y1, y2)
+	return Room:new(x1, y1, x2, y2)
 end
 
 function Room:addDoor(x, y)
