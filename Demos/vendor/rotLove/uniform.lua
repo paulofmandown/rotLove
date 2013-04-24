@@ -11,7 +11,7 @@ function Uniform:__init(width, height, options)
                     roomWidth={4,9},
                     roomHeight={4,6},
                     corridorLength={3,7},
-                    roomDugPercentage=0.17,
+                    roomDugPercentage=0.1,
                     timeLimit=1000
                   }
     if options then
@@ -45,13 +45,20 @@ function Uniform:create(callback)
             end
         end
     end
-
+    mapStr='\n'
+    for j=1,self._height do
+        for i=1,self._width do
+            mapStr=mapStr..(self._map[i][j]==1 and '#' or '.')
+        end
+        mapStr=mapStr..'\n'
+    end
+    write(mapStr)
     return self
 end
 
 function Uniform:_generateRooms()
-    local w=self._width-2
-    local h=self._height-2
+    local w=self._width-4
+    local h=self._height-4
     local room=nil
     repeat
         room=self:_generateRoom()
@@ -78,14 +85,6 @@ function Uniform:_generateCorridors()
     while cnt<self._corridorAttempts do
         cnt=cnt+1
         self._corridors={}
-        mapStr='\n'
-        for j=1,self._height do
-            for i=1,self._width do
-                mapStr=mapStr..(self._map[i][j]==1 and '#' or '.')
-            end
-            mapStr=mapStr..'\n'
-        end
-        write(mapStr)
         self._map=self:_fillMap(1)
         for i=1,#self._rooms do
             local room=self._rooms[i]
@@ -141,26 +140,35 @@ function Uniform:_connectRooms(room1, room2)
 
     if math.abs(diffX)<math.abs(diffY) then
         dirIndex1=diffY>0 and 3 or 1
-        dirIndex2=(dirIndex1+2)%4+1
+        dirIndex2=(dirIndex1+1)%4+1
         min      =room2:getLeft()
         max      =room2:getRight()
         index    =1
     else
         dirIndex1=diffX>0 and 2 or 4
-        dirIndex2=(dirIndex1+2)%4+1
+        dirIndex2=(dirIndex1+1)%4+1
         min      =room2:getTop()
         max      =room2:getBottom()
         index    =2
     end
 
-    local index2=((index+1)%2)+1
+    local index2=3-index
 
     local start=self:_placeInWall(room1, dirIndex1)
     if #start<1 then return false end
-    local endTable={}
-
+    local endTbl={}
+    write('\n\n')
     room1:debug()
     room2:debug()
+
+    write('start['..index..']: '..start[index])
+    write('min     : '..min)
+    write('max     : '..max)
+    write('diffX   : '..diffX)
+    write('diffY   : '..diffY)
+    write('dirIndx1: '..dirIndex1)
+    write('dirIndx2: '..dirIndex2)
+
     if start[index] >= min and start[index] <= max then
         write('1')
         endTbl=table.slice(start)
@@ -174,6 +182,7 @@ function Uniform:_connectRooms(room1, room2)
     elseif start[index] < min-1 or start[index] > max+1 then
         write('2')
         local diff=start[index]-center2[index]
+        write('diff    : '..diff)
         local rotation=0
         if dirIndex2==1 or dirIndex2==2 then rotation=diff<0 and 3 or 1
         elseif dirIndex2==3 or dirIndex2==4 then rotation=diff<0 and 1 or 3 end
@@ -181,7 +190,7 @@ function Uniform:_connectRooms(room1, room2)
         dirIndex2=(dirIndex2+rotation)%4+1
 
         endTbl=self:_placeInWall(room2, dirIndex2)
-        if #endTbl<1 then return false end
+        if not endTbl then return false end
 
         local mid={0,0}
         mid[index]=start[index]
@@ -223,7 +232,8 @@ function Uniform:_placeInWall(room, dirIndex)
     local start ={0,0}
     local dir   ={0,0}
     local length=0
-write('DirIndex '..dirIndex)
+    local retTable={}
+
     if dirIndex==1 then
         dir   ={1,0}
         start ={room:getLeft()-1, room:getTop()-1}
@@ -248,39 +258,38 @@ write('DirIndex '..dirIndex)
         local x=start[1]+i*dir[1]
         local y=start[2]+i*dir[2]
         table.insert(avail, null)
-        write('Map '..x..','..y..' is '..self._map[x][y])
         if self._map[x][y]==1 then --is a wall
             if lastBadIndex ~=i-1 then
                 avail[i]={x, y}
-                write('avail['..i..'] is: '..x..','..y)
             end
         else
             lastBadIndex=i
             if i>1 then avail[i-1]=null end
         end
     end
+
     for i=1,#avail do
-        if avail[i]==string.char(0) then
-            write('removing')
-            table.remove(avail, i)
+        if avail[i]~=string.char(0) then
+            table.insert(retTable, avail[i])
             i=i-1
         end
     end
-    return #avail>0 and table.random(avail) or nil
+    return #retTable>0 and table.random(retTable) or nil
 end
 
 function Uniform:_digLine(points)
     for i=2,#points do
         local start=points[i-1]
         local endPt=points[i]
-        local corridor=Corridor:new(start[1], endPt[1], start[2], endPt[2])
+        write('start: '..start[1]..','..start[2])
+        write('end  : '..endPt[1]..','..endPt[2])
+        local corridor=Corridor:new(start[1], start[2], endPt[1], endPt[2])
         corridor:create(self, self._digCallback)
         table.insert(self._corridors, corridor)
     end
 end
 
 function Uniform:_digCallback(x, y, value)
-    write('digging: '..x..','..y)
     self._map[x][y]=value
     if value==0 then self._dug=self._dug+1 end
 end

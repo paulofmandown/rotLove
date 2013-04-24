@@ -8,7 +8,11 @@ function love.load()
 end
 function love.draw() f:draw() end
 function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
+update=false
 function love.update()
---	love.timer.sleep(1)
---	uni:create(calbak)
+    if update then
+        uni:create(calbak)
+        update=false
+    end
 end
+function love.keypressed(key) update=true end
