@@ -3,7 +3,7 @@ local class  =require (Room_PATH .. 'vendor/30log')
 
 Room = Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
 function Room:__init(x1, y1, x2, y2, doorX, doorY)
-	assert(ROT or twister, 'require rot or RandomLua')
+	assert(ROT, 'require rot or RandomLua')
 	self._x1   =x1
 	self._x2   =x2
 	self._y1   =y1
@@ -13,12 +13,12 @@ function Room:__init(x1, y1, x2, y2, doorX, doorY)
 		self._doors[doorX..','..doorY] = 1
 	end
 	self.__name='Room'
-	self._rng  =ROT.RNG.twister and ROT.RNG.twister or twister and twister
+	self._rng  =ROT.RNG.Twister:new()
+    self._rng:randomseed()
 
 end
 
-function Room:createRandomAt(x, y, dx, dy, options)
-	local rng =ROT.RNG.twister and ROT.RNG.twister or twister and twister
+function Room:createRandomAt(x, y, dx, dy, options, rng)
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
 	local width=min+math.floor(rng:random(min, max))
@@ -45,8 +45,7 @@ function Room:createRandomAt(x, y, dx, dy, options)
 	end
 end
 
-function Room:createRandomCenter(cx, cy, options)
-	local rng=ROT.RNG.twister
+function Room:createRandomCenter(cx, cy, options, rng)
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
 	local width=min+math.floor(rng:random()*(max-min+1))
@@ -63,8 +62,7 @@ function Room:createRandomCenter(cx, cy, options)
 	return Room:new(x1, y1, x2, y2)
 end
 
-function Room:createRandom(availWidth, availHeight, options)
-    local rng=ROT.RNG.twister
+function Room:createRandom(availWidth, availHeight, options, rng)
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
 	local width=math.floor(rng:random(min, max))
@@ -80,7 +78,7 @@ function Room:createRandom(availWidth, availHeight, options)
 	local y1=math.floor(rng:random()*top)
 	local x2=x1+width
 	local y2=y1+height
-
+write(x1..','..y1..','..x2..','..y2)
 	return Room:new(x1, y1, x2, y2)
 end
 

@@ -9,7 +9,8 @@ function Rogue:__init(width, height, options)
     self.__name='Rogue'
     self._options={cellWidth=3, cellHeight=3}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
-    self._rng=ROT.RNG.twister
+    self._rng=ROT.RNG.Twister:new()
+    self._rng:randomseed()
     function calculateRoomSize(size, cell)
         local max=math.floor((size/cell)*0.8)
         local min=math.floor((size/cell)*0.25)

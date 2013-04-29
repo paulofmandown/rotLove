@@ -6,6 +6,11 @@
         --         useFullScreen, useVSync, numberOfFsaaSamples)
         -- Defaults shown here
 		frame=Display(80, 24, 1, {r=192,g=192,b=192,a=255}, {r=0,g=0,b=0,a=255}, false, false, 3)
+        rand = math.random(1,3)
+        rng = rand == 1 and ROT.RNG.Twister:new() or
+              rand == 2 and ROT.RNG.LCG:new() or
+              ROT.RNG.MWC:new()
+        rng:randomseed()
 	end
 	function love.draw()
 		frame:draw()
@@ -22,10 +27,6 @@
 	end
 
 	function getRandomColor()
-		rand = math.random(1,3)
-		local rng = rand == 1 and ROT.RNG.twister or
-					rand == 2 and ROT.RNG.lcg or
-					ROT.RNG.mwc
 		return { r=math.floor(rng:random(0,255)),
 				 g=math.floor(rng:random(0,255)),
 				 b=math.floor(rng:random(0,255)),

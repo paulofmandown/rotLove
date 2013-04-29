@@ -8,7 +8,8 @@ function IceyMaze:__init(width, height, regularity)
 	IceyMaze.super.__init(self, width, height)
 	self.__name     ='IceyMaze'
 	self._regularity= regularity and regularity or 0
-	self._rng       =ROT.RNG.twister
+	self._rng       =ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
 function IceyMaze:create(callback)

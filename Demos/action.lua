@@ -5,7 +5,8 @@ class= require 'vendor/rotLove/vendor/30log'
 function love.load()
 	s  =ActionScheduler:new()
 	f  =Display(80,24)
-	rng=ROT.RNG.twister
+	rng=ROT.RNG.Twister:new()
+    rng:randomseed()
 	for i=1,4 do s:add(i,true,i-1) end
 end
 y=1

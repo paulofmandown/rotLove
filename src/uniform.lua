@@ -5,7 +5,7 @@ Uniform=Dungeon:extends { _options, _rng }
 
 function Uniform:__init(width, height, options)
     Uniform.super.__init(self, width, height)
-    assert(ROT or twister, 'require rot or RandomLua')
+    assert(ROT, 'require rot')
     self.__name='Uniform'
     self._options={
                     roomWidth={4,9},
@@ -23,6 +23,8 @@ function Uniform:__init(width, height, options)
     self._corridorAttempts=20
     self._connected={}
     self._unconnected={}
+    self._rng=ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
 function Uniform:create(callback)
@@ -62,7 +64,7 @@ function Uniform:_generateRoom()
     local count=0
     while count<self._roomAttempts do
         count=count+1
-        local room=Room:createRandom(self._width, self._height, self._options)
+        local room=Room:createRandom(self._width, self._height, self._options, self._rng)
         if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
             room:create(self, self._digCallback)
             table.insert(self._rooms, room)

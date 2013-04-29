@@ -21,7 +21,8 @@ function Cellular:__init(width, height, options)
 	assert(t==8 or t==4, 'topology must be 8 or 4')
 	self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
 
-	self._rng = ROT.RNG.twister
+	self._rng = ROT.RNG.Twister:new()
+    self._rng:randomseed()
 
 end
 

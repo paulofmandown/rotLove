@@ -14,7 +14,6 @@ function Bresenham:compute(cx, cy, r, callback)
     local visited={}
     callback(cx,cy,r)
     visited[Point(cx, cy):hashCode()]=0
-    local start=os.clock()
     --[[]]
     local thePoints=self:_getCircle(cx, cy, r)
     for _,p in pairs(thePoints) do
@@ -32,7 +31,6 @@ function Bresenham:compute(cx, cy, r, callback)
             end
         end
     end
-    write(os.clock()-start)
 end
 
 function Bresenham:_oob(x, y, r)

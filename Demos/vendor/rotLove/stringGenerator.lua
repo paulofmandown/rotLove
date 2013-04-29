@@ -8,7 +8,8 @@ StringGenerator = class {
 	_suffix,
 	_prefix,
 	_priorValues,
-	_data
+	_data,
+    _rng
 }
 function StringGenerator:__init(options)
 	self.__name   ='StringGenerator'
@@ -30,6 +31,9 @@ function StringGenerator:__init(options)
 		table.insert(self._prefix, self._boundary)
 	end
 	self._priorValues[self._boundary]=self._options.prior
+
+    self._rng=ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
 function StringGenerator:clear()
@@ -145,7 +149,7 @@ function StringGenerator:_pickRandom(data)
 	for k,_ in pairs(data) do
 		total=total+data[k]
 	end
-	rand=ROT.RNG.twister:random()*total
+	rand=self._rng:random()*total
 	i=0
 	for k,_ in pairs(data) do
 		i=i+data[k]

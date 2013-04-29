@@ -35,6 +35,6 @@
 			--require 'precise'
 
 			--[[ Ray Casting ]]--
-			require 'bresenham'
+			--require 'bresenham'
 
 

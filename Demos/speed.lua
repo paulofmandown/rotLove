@@ -11,7 +11,8 @@ function actor:getSpeed() return self.speed end
 
 function love.load()
 	f=Display(80, 24)
-	rng=ROT.RNG.twister
+	rng=ROT.RNG.Twister:new()
+    rng:randomseed()
 	s=SpeedScheduler:new()
 	for i=1,4 do
 		a=actor:new(rng:random(1,100), i)

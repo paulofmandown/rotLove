@@ -5,7 +5,7 @@ Digger=Dungeon:extends { _options, _rng }
 
 function Digger:__init(width, height, options)
 	Digger.super.__init(self, width, height)
-	assert(ROT or twister, 'require rot or RandomLua')
+	assert(ROT, 'require rot')
 
 	self._options={
 					roomWidth={3,8},
@@ -28,7 +28,8 @@ function Digger:__init(width, height, options)
 	self._featureAttempts=20
 	self._walls={}
 
-	self._rng  =ROT.RNG.twister and ROT.RNG.twister or twister and twister
+	self._rng  =ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
 function Digger:create(callback)
@@ -114,7 +115,7 @@ end
 function Digger:_firstRoom()
 	local cx  =math.floor(self._width/2)
 	local cy  =math.floor(self._height/2)
-	local room=Room:new():createRandomCenter(cx, cy, self._options)
+	local room=Room:new():createRandomCenter(cx, cy, self._options, self._rng)
 	table.insert(self._rooms, room)
 	room:create(self, self._digCallback)
 end
@@ -149,7 +150,7 @@ function Digger:_tryFeature(x, y, dx, dy)
 		end
 	end
 
-	feature=feature:createRandomAt(x, y, dx, dy, self._options)
+	feature=feature:createRandomAt(x, y, dx, dy, self._options, self._rng)
 	if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
 		return false
 	end

@@ -25,9 +25,21 @@ ROT=class {
 }
 
 require (ROTLOVE_PATH .. 'newFuncs')
-require (ROTLOVE_PATH .. 'vendor/RandomLua')
 
-ROT.RNG              = { mwc=mwc(), lcg=lcg(), twister=twister()}
+--[[--------------------------------]]--
+-- All RNG 'classes' and functions derived from RandomLua
+--[[------------------------------------
+RandomLua v0.3.1
+Pure Lua Pseudo-Random Numbers Generator
+Under the MIT license.
+copyright(c) 2011 linux-man
+--]]------------------------------------
+ROT.RNG              = require (ROTLOVE_PATH .. 'rng')
+ROT.RNG.Twister      = require (ROTLOVE_PATH .. 'twister')
+ROT.RNG.LCG          = require (ROTLOVE_PATH .. 'lcg')
+ROT.RNG.MWC          = require (ROTLOVE_PATH .. 'mwc')
+--[[--------------------------------]]--
+
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
 ROT.StringGenerator  = require (ROTLOVE_PATH .. 'stringGenerator')
 ROT.EventQueue       = require (ROTLOVE_PATH .. 'eventQueue')
@@ -55,11 +67,6 @@ ROT.FOV              = require (ROTLOVE_PATH .. 'fov')
 ROT.FOV.Precise      = require (ROTLOVE_PATH .. 'precise')
 ROT.Line             = require (ROTLOVE_PATH .. 'line')
 ROT.FOV.Bresenham    = require (ROTLOVE_PATH .. 'bresenham')
-
-
-ROT.RNG.mwc:randomseed(os.time())
-ROT.RNG.lcg:randomseed(os.time())
-ROT.RNG.twister:randomseed(os.time())
 
 return ROT
 

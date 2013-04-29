@@ -6,7 +6,8 @@ EllerMaze = Map:extends { _rng }
 function EllerMaze:__init(width, height)
 	EllerMaze.super.__init(self, width, height)
 	self.__name='EllerMaze'
-	self._rng  =ROT.RNG.twister
+	self._rng  =ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
 function EllerMaze:create(callback)

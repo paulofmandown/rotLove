@@ -3,18 +3,18 @@ local class  =require (Corridor_PATH .. 'vendor/30log')
 
 Corridor = Feature:extends { _startX, _startY, _endX, _endY, _rng }
 function Corridor:__init(startX, startY, endX, endY)
-	assert(ROT or twister, 'require rot or RandomLua')
+	assert(ROT, 'require rot')
 	self._startX       =startX
 	self._startY       =startY
 	self._endX         =endX
 	self._endY         =endY
 	self._endsWithAWall=true
 	self.__name        ='Corridor'
-	self._rng  =ROT.RNG.twister and ROT.RNG.twister or twister and twister
+	self._rng  =ROT.RNG.Twister:new()
+    self._rng:randomseed()
 end
 
-function Corridor:createRandomAt(x, y, dx, dy, options)
-	local rng=ROT.RNG.twister and ROT.RNG.twister or twister and twister
+function Corridor:createRandomAt(x, y, dx, dy, options, rng)
 	local min   =options.corridorLength[1]
 	local max   =options.corridorLength[2]
 	local length=math.floor(rng:random(min, max))
