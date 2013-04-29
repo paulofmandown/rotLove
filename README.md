@@ -10,7 +10,12 @@ rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3
 
 String Generator - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
 
-Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform(WIP) Dungeons. Ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeons. Ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+
+Noise Generator  - Simplex Noise
+
+FOV              - Bresenham Line based Ray Casting
+
 
 Demos Folder
 ==========
@@ -21,11 +26,9 @@ Then, from the Demos directory in the shell, run `love .`
 
 To-Do
 ==========
-Maps     - Uniform(WIP), Rogue
+Maps     - Rogue (*still has a fail-state, need to pin down)
 
-Noise
-
-FOV      - DiscreteShadow, PreciseShadow
+FOV      - Precise Shadow Casting
 
 Color    - Currently only supplies values defined by [Ascii Panel](https://github.com/trystan/AsciiPanel). Need to add functions defined with [rot.js](http://ondras.github.io/rot.js/hp/).
 

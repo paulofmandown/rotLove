@@ -31,13 +31,14 @@ Display = class {
 	    where
 	    w    = width of terminal in number of characters (dictates what populates love.graphics.setMode)
 	    h    = height of terminal in number of characters (dictates what populates love.graphics.setMode)
+        scale= glyphSize (1: charWidth=9, charHeight=16)
 	    dfg  = default foreground color of type [red, green, blue, alpha]
 	    dbg  = default background color of type [red, green, blue, alpha]
 	    full = boolean for use full screen (populates love.graphics.setMode)
 	    vsync= boolean for use vsync (populates love.graphics.setMode)
 	    fsaa = number of fsaa samples (populates love.graphics.setMode)
   ]]
-function Display:__init(w, h, dfg, dbg, full, vsync, fsaa)
+function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	self.__name='Display'
 	self.widthInChars = w and w or 80
 	self.heightInChars= h and h or 24
@@ -45,8 +46,9 @@ function Display:__init(w, h, dfg, dbg, full, vsync, fsaa)
 	self.vsync        = vsync and vsync or false
 	self.fsaa         = fsaa and fsaa or 0
 	self.color=require (Display_Path .. 'color')
-	self.charWidth=9
-	self.charHeight=16
+    self.scale=scale and scale or 1
+	self.charWidth=self.scale*9
+	self.charHeight=self.scale*16
 	self.glyphs={}
 	self.chars={{}}
 	self.backgroundColors={{}}
@@ -69,9 +71,9 @@ function Display:__init(w, h, dfg, dbg, full, vsync, fsaa)
 	-- Populate the glyph image table
 	self.glyphSprite=love.graphics.newImage(Display_Path .. 'img/cp437.png')
 	for i=0,255 do
-		sx=(i%32)*self.charWidth
-		sy=math.floor(i/32)*self.charHeight
-		self.glyphs[i]=love.graphics.newQuad(sx, sy, self.charWidth, self.charHeight, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+		sx=(i%32)*9
+		sy=math.floor(i/32)*16
+		self.glyphs[i]=love.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
 	end
 
 	for i=1,self.widthInChars do
@@ -107,10 +109,11 @@ function Display:draw()
 
 		   		self:setColor(bg)
 		   		love.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
-
-		   		local qd=self.glyphs[self.chars[x][y]]
-		   		self:setColor(fg)
-		   		love.graphics.drawq(self.glyphSprite, qd, px, py)
+                if c~=32 and c~=255 then
+    		   		local qd=self.glyphs[c]
+	       	   		self:setColor(fg)
+		      		love.graphics.drawq(self.glyphSprite, qd, px, py, nil, self.scale)
+                end
 
 				self.oldChars[x][y]            = c
 				self.oldBackgroundColors[x][y] = bg
@@ -124,26 +127,17 @@ function Display:draw()
 end
 
 -- Gets
-function Display:getCharHeight()
-	return self.charHeight
-end
-function Display:getCharWidth()
-	return self.charWidth
-end
+function Display:getCharHeight() return self.charHeight end
+function Display:getCharWidth() return self.charWidth end
 function Display:getWidth() return self:getWidthInChars() end
 function Display:getHeight() return self:getHeightInChars() end
-function Display:getHeightInChars()
-	return self.heightInChars
-end
-function Display:getWidthInChars()
-	return self.widthInChars
-end
-function Display:getDefaultBackgroundColor()
-	return self.defaultBackgroundColor
-end
-function Display:getDefaultForegroundColor()
-	return self.defaultForegroundColor
-end
+function Display:getHeightInChars() return self.heightInChars end
+function Display:getWidthInChars() return self.widthInChars end
+function Display:getDefaultBackgroundColor() return self.defaultBackgroundColor end
+function Display:getDefaultForegroundColor() return self.defaultForegroundColor end
+function Display:getCharacter(x, y) return string.char(self.chars[x][y]) end
+function Display:getBackgroundColor(x, y) return self.backgroundColors[x][y] end
+function Display:getForegroundColor(x, y) return self.foregroundColors[x][y] end
 -- Sets
 function Display:setDefaultBackgroundColor(c)
 	self.defaultBackgroundColor=c and c or self.color.black

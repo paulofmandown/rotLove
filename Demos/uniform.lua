@@ -11,8 +11,8 @@ function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
 update=false
 function love.update()
     if update then
-        uni:create(calbak)
         update=false
+        uni:create(calbak)
     end
 end
 function love.keypressed(key) update=true end

@@ -144,7 +144,6 @@ function Room:create(gen, digCallback)
 			else
 				value=0
 			end
-			if value==2 then write('door') end
 			digCallback(gen, x, y, value)
 		end
 	end

@@ -1,0 +1,34 @@
+Line_PATH =({...})[1]:gsub("[%.\\/]line$", "") .. '/'
+local class  =require (Line_PATH .. 'vendor/30log')
+
+Line=class{ x1, y1, x2, y2, points }
+function Line:__init(x1, y1, x2, y2)
+    self.x1=x1
+    self.y1=y1
+    self.x2=x2
+    self.y2=y2
+    self.points={}
+    if not Point then require (Line_PATH .. 'point') end
+end
+function Line:getPoints()
+    local dx =math.abs(self.x2-self.x1)
+    local dy =math.abs(self.y2-self.y1)
+    local sx =self.x1<self.x2 and 1 or -1
+    local sy =self.y1<self.y2 and 1 or -1
+    local err=dx-dy
+
+    while true do
+        table.insert(self.points, Point:new(self.x1, self.y1))
+        if self.x1==self.x2 and self.y1==self.y2 then break end
+        local e2=err*2
+        if e2>-dx then
+            err=err-dy
+            self.x1 =self.x1+sx
+        end
+        if e2<dx then
+            err=err+dx
+            self.y1 =self.y1+sy
+        end
+    end
+    return self
+end

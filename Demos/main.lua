@@ -1,27 +1,40 @@
 --[[ Uncomment the Demo you'd like to run! ]]--
 
-			-- Event Queue
+			-- [[ Event Queue ]]--
 			--require 'event'
 
-			-- Schedulers
+			-- [[ Schedulers ]]--
 			--require 'simple'
 			--require 'speed'
 			--require 'action'
 
-			-- Engine
+			-- [[ Engine ]]--
 			--require 'engine'
 
-			-- String Generator
+			-- [[ String Generator ]]--
 			--require 'stringGen'
 
-			-- Disply
+			-- [[ Disply ]]--
 			--require 'display'
 
-			-- Map Generators
+			-- [[ Map Generators ]]--
 			--require 'arena'
 			--require 'dividedMaze'
 			--require 'iceyMaze'
 			--require 'ellerMaze'
 			--require 'cellular'
 			--require 'digger'
-			require 'uniform'
+			--require 'uniform'
+			--require 'rogue'
+
+			-- [[ Noise Generator ]]--
+			--require 'simplex'
+
+			-- [[ FOV ]]--
+			-- [[ Shadow Casting ]]-- (WIP)
+			--require 'precise'
+
+			--[[ Ray Casting ]]--
+			require 'bresenham'
+
+

@@ -6,11 +6,14 @@ function love.load()
 	dm:create(calbak)
 end
 function love.draw() f:draw() end
+local update=false
 function love.update()
-	love.timer.sleep(1)
-	dm:create(calbak)
+	if update then
+        update=false
+    	dm:create(calbak)
+    end
 end
 function calbak(x,y,val)
 	f:write(val==1 and '#' or '.', x, y)
 end
---]]
+function love.keypressed(key) update=true end

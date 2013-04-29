@@ -48,9 +48,18 @@ ROT.Map.Room         = require (ROTLOVE_PATH .. 'room')
 ROT.Map.Corridor     = require (ROTLOVE_PATH .. 'corridor')
 ROT.Map.Digger       = require (ROTLOVE_PATH .. 'digger')
 ROT.Map.Uniform      = require (ROTLOVE_PATH .. 'uniform')
+ROT.Map.Rogue        = require (ROTLOVE_PATH .. 'rogue')
+ROT.Noise            = require (ROTLOVE_PATH .. 'noise')
+ROT.Noise.Simplex    = require (ROTLOVE_PATH .. 'simplex')
+ROT.FOV              = require (ROTLOVE_PATH .. 'fov')
+ROT.FOV.Precise      = require (ROTLOVE_PATH .. 'precise')
+ROT.Line             = require (ROTLOVE_PATH .. 'line')
+ROT.FOV.Bresenham    = require (ROTLOVE_PATH .. 'bresenham')
+
 
 ROT.RNG.mwc:randomseed(os.time())
 ROT.RNG.lcg:randomseed(os.time())
 ROT.RNG.twister:randomseed(os.time())
 
 return ROT
+

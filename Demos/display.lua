@@ -1,7 +1,11 @@
 --[[ Display, RNG ]]--
 	ROT = require 'vendor/rotLove/rot'
 	function love.load()
-		frame=Display(80, 24)
+        -- Display(widthInCharacters, heightInCharacters, characterScale
+        --         defaultForegroundColor, defaultBackgroundColor,
+        --         useFullScreen, useVSync, numberOfFsaaSamples)
+        -- Defaults shown here
+		frame=Display(80, 24, 1, {r=192,g=192,b=192,a=255}, {r=0,g=0,b=0,a=255}, false, false, 3)
 	end
 	function love.draw()
 		frame:draw()

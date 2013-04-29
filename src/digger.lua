@@ -8,11 +8,12 @@ function Digger:__init(width, height, options)
 	assert(ROT or twister, 'require rot or RandomLua')
 
 	self._options={
-					roomWidth={4,9},
-					roomHeight={4,6},
-					corridorLength={3,10},
+					roomWidth={3,8},
+					roomHeight={3,5},
+					corridorLength={3,7},
 					dugPercentage=0.2,
-					timeLimit=1000
+					timeLimit=1000,
+                    nocorridorsmode=false
 				  }
 	if options then
 		for k,_ in pairs(options) do
@@ -21,6 +22,9 @@ function Digger:__init(width, height, options)
 	end
 
 	self._features={rooms=4, corridors=4}
+    if self._options.nocorridorsmode then
+        self._features.corridors=nil
+    end
 	self._featureAttempts=20
 	self._walls={}
 
@@ -104,7 +108,6 @@ function Digger:_canBeDugCallback(x, y)
 end
 
 function Digger:_priorityWallCallback(x, y)
-	write(x..','..y)
 	self._walls[x..','..y]=2
 end
 
@@ -131,19 +134,32 @@ function Digger:_findWall()
 end
 
 function Digger:_tryFeature(x, y, dx, dy)
-	local rand = self._rng:random()
-	local feature=rand>0.5 and Room or Corridor
+	local feature=nil
+	local total  =0
+	for k,_ in pairs(self._features) do total=total+self._features[k] end
+	local rand=math.floor(self._rng:random()*total)
+	local sub=0
+	local ftype=''
+	for k,_ in pairs(self._features) do
+		sub=sub+self._features[k]
+		if rand<sub then
+			ftype=k
+			feature=k=='rooms' and Room or Corridor
+			break
+		end
+	end
 
 	feature=feature:createRandomAt(x, y, dx, dy, self._options)
-	--feature:debug()
 	if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
 		return false
 	end
 	feature:create(self, self._digCallback)
-	if rand>0.5 then table.insert(self._rooms, feature)
-	else
+	if ftype=='rooms' then
+		table.insert(self._rooms, feature)
+	elseif ftype=='corridors' then
 		feature:createPriorityWalls(self, self._priorityWallCallback)
 		table.insert(self._corridors, feature)
+		else assert(false, 'couldn\'t get ftype')
 	end
 	return true
 end

@@ -1,19 +1,18 @@
+--[[ Rogue ]]
 ROT=require 'vendor/rotLove/rot'
+
 function love.load()
-	f =Display(81,25)
-	em=EllerMaze:new(f:getWidth(), f:getHeight())
-	em:create(calbak)
+    f  =Display(80, 24)
+    rog=Rogue(f:getWidth(), f:getHeight())
+    rog:create(calbak)
 end
 function love.draw() f:draw() end
-ellerStr=''
-function calbak(x,y,val)
-	f:write(val==1 and '#' or '.', x, y)
-end
-local update=false
+function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
+update=false
 function love.update()
     if update then
         update=false
-        em:create(calbak)
+        rog:create(calbak)
     end
 end
 function love.keypressed(key) update=true end
