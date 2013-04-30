@@ -1,7 +1,7 @@
-RNG_PATH =({...})[1]:gsub("[%.\\/]rng$", "") .. '/'
+local RNG_PATH =({...})[1]:gsub("[%.\\/]rng$", "") .. '/'
 local class  =require (RNG_PATH .. 'vendor/30log')
 
-RNG=class {  }
+local RNG=class {  }
 function RNG:__init()
     self.__name='RNG'
 end

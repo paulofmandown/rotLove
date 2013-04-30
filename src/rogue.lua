@@ -1,7 +1,7 @@
-Rogue_PATH =({...})[1]:gsub("[%.\\/]rogue$", "") .. '/'
+local Rogue_PATH =({...})[1]:gsub("[%.\\/]rogue$", "") .. '/'
 local class  =require (Rogue_PATH .. 'vendor/30log')
 
-Rogue=Map:extends { _options, _rng }
+local Rogue=ROT.Map:extends { _options, _rng }
 
 function Rogue:__init(width, height, options)
     assert(ROT, 'require rot, please, sir')

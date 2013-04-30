@@ -1,7 +1,7 @@
-Simplex_PATH =({...})[1]:gsub("[%.\\/]simplex$", "") .. '/'
+local Simplex_PATH =({...})[1]:gsub("[%.\\/]simplex$", "") .. '/'
 local class  =require (Simplex_PATH .. 'vendor/30log')
 
-Simplex=Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
+local Simplex=ROT.Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
 
 function Simplex:__init(gradients)
     self.__name='Simplex'

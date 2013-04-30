@@ -1,7 +1,7 @@
-Dungeon_PATH =({...})[1]:gsub("[%.\\/]dungeon$", "") .. '/'
+local Dungeon_PATH =({...})[1]:gsub("[%.\\/]dungeon$", "") .. '/'
 local class  =require (Dungeon_PATH .. 'vendor/30log')
 
-Dungeon = Map:extends { _rooms, _corridors }
+local Dungeon = ROT.Map:extends { _rooms, _corridors }
 
 function Dungeon:__init(width, height)
 	Dungeon.super.__init(self, width, height)

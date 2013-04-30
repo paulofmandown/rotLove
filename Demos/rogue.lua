@@ -2,8 +2,8 @@
 ROT=require 'vendor/rotLove/rot'
 
 function love.load()
-    f  =Display(80, 24)
-    rog=Rogue(f:getWidth(), f:getHeight())
+    f  =ROT.Display(80, 24)
+    rog=ROT.Map.Rogue(f:getWidth(), f:getHeight())
     rog:create(calbak)
 end
 function love.draw() f:draw() end

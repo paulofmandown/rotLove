@@ -1,8 +1,8 @@
 --[[ Cellular ]]--
 ROT=require 'vendor/rotLove/rot'
 function love.load()
-	f =Display(80,24)
-	cl=Cellular:new(f:getWidth(), f:getHeight())
+	f =ROT.Display(80,24)
+	cl=ROT.Map.Cellular:new(f:getWidth(), f:getHeight())
 	cl:randomize(.5)
 	cl:create(calbak)
 end

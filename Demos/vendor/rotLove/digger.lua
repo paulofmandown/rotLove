@@ -1,7 +1,7 @@
-Digger_PATH =({...})[1]:gsub("[%.\\/]digger$", "") .. '/'
+local Digger_PATH =({...})[1]:gsub("[%.\\/]digger$", "") .. '/'
 local class  =require (Digger_PATH .. 'vendor/30log')
 
-Digger=Dungeon:extends { _options, _rng }
+local Digger=ROT.Map.Dungeon:extends { _options, _rng }
 
 function Digger:__init(width, height, options)
 	Digger.super.__init(self, width, height)
@@ -115,7 +115,7 @@ end
 function Digger:_firstRoom()
 	local cx  =math.floor(self._width/2)
 	local cy  =math.floor(self._height/2)
-	local room=Room:new():createRandomCenter(cx, cy, self._options, self._rng)
+	local room=ROT.Map.Room:new():createRandomCenter(cx, cy, self._options, self._rng)
 	table.insert(self._rooms, room)
 	room:create(self, self._digCallback)
 end
@@ -145,7 +145,7 @@ function Digger:_tryFeature(x, y, dx, dy)
 		sub=sub+self._features[k]
 		if rand<sub then
 			ftype=k
-			feature=k=='rooms' and Room or Corridor
+			feature=k=='rooms' and ROT.Map.Room or ROT.Map.Corridor
 			break
 		end
 	end

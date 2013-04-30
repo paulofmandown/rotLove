@@ -1,7 +1,7 @@
-StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
+local StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
 local class  =require (StringGen_Path .. 'vendor/30log')
 
-StringGenerator = class {
+local StringGenerator = class {
 	__name,
 	_options,
 	_boundary,

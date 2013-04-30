@@ -1,7 +1,7 @@
-FOV_PATH =({...})[1]:gsub("[%.\\/]fov$", "") .. '/'
+local FOV_PATH =({...})[1]:gsub("[%.\\/]fov$", "") .. '/'
 local class  =require (FOV_PATH .. 'vendor/30log')
 
-FOV=class{ __name, _lightPasses, _options }
+local FOV=class{ __name, _lightPasses, _options }
 
 function FOV:__init(lightPassesCallback, options)
     self.__name='FOV'

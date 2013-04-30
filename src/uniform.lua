@@ -1,7 +1,7 @@
-Uniform_PATH =({...})[1]:gsub("[%.\\/]uniform$", "") .. '/'
+local Uniform_PATH =({...})[1]:gsub("[%.\\/]uniform$", "") .. '/'
 local class  =require (Uniform_PATH .. 'vendor/30log')
 
-Uniform=Dungeon:extends { _options, _rng }
+local Uniform=ROT.Map.Dungeon:extends { _options, _rng }
 
 function Uniform:__init(width, height, options)
     Uniform.super.__init(self, width, height)
@@ -64,7 +64,7 @@ function Uniform:_generateRoom()
     local count=0
     while count<self._roomAttempts do
         count=count+1
-        local room=Room:createRandom(self._width, self._height, self._options, self._rng)
+        local room=ROT.Map.Room:createRandom(self._width, self._height, self._options, self._rng)
         if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
             room:create(self, self._digCallback)
             table.insert(self._rooms, room)
@@ -260,7 +260,7 @@ function Uniform:_digLine(points)
     for i=2,#points do
         local start=points[i-1]
         local endPt=points[i]
-        local corridor=Corridor:new(start[1], start[2], endPt[1], endPt[2])
+        local corridor=ROT.Map.Corridor:new(start[1], start[2], endPt[1], endPt[2])
         corridor:create(self, self._digCallback)
         table.insert(self._corridors, corridor)
     end

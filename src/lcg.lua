@@ -1,9 +1,10 @@
-LCG_PATH =({...})[1]:gsub("[%.\\/]lcg$", "") .. '/'
+local LCG_PATH =({...})[1]:gsub("[%.\\/]lcg$", "") .. '/'
 local class  =require (LCG_PATH .. 'vendor/30log')
 
-LCG=RNG:extends { mt, index, a, c, m, x, _seed }
+local LCG=ROT.RNG:extends { __name, mt, index, a, c, m, x, _seed }
 
 function LCG:__init(r)
+	self.__name='LCG'
     self.a= 1103515245
     self.c= 12345
     self.m= 0x10000

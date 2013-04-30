@@ -14,6 +14,9 @@
 			-- [[ String Generator ]]--
 			--require 'stringGen'
 
+			--[[ Random Number Generator ]]--
+			--require 'rng'   --state get/set
+
 			-- [[ Disply ]]--
 			--require 'display'
 

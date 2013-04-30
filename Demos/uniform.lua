@@ -2,8 +2,8 @@
 ROT=require 'vendor/rotLove/rot'
 
 function love.load()
-	f  =Display(80, 24)
-	uni=Uniform(f:getWidth(), f:getHeight())
+	f  =ROT.Display(80, 24)
+	uni=ROT.Map.Uniform(f:getWidth(), f:getHeight())
 	uni:create(calbak)
 end
 function love.draw() f:draw() end

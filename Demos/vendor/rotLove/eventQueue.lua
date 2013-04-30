@@ -1,7 +1,7 @@
-EventQueue_Path =({...})[1]:gsub("[%.\\/]eventQueue$", "") .. '/'
+local EventQueue_Path =({...})[1]:gsub("[%.\\/]eventQueue$", "") .. '/'
 local class  =require (EventQueue_Path .. 'vendor/30log')
 
-EventQueue = class {
+local EventQueue = class {
 	__name     ='EventQueue',
 	_time      =0,
 	_events    ={},

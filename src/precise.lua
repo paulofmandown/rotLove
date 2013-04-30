@@ -1,7 +1,7 @@
-Precise_PATH =({...})[1]:gsub("[%.\\/]precise$", "") .. '/'
+local Precise_PATH =({...})[1]:gsub("[%.\\/]precise$", "") .. '/'
 local class  =require (Precise_PATH .. 'vendor/30log')
 
-Precise=FOV:extends{ __name, _lightPasses, _options }
+local Precise=ROT.FOV:extends{ __name, _lightPasses, _options }
 
 function Precise:__init(lightPassesCallback, options)
     Precise.super.__init(self, lightPassesCallback, options)

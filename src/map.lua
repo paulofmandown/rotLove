@@ -1,7 +1,7 @@
-Map_PATH =({...})[1]:gsub("[%.\\/]map$", "") .. '/'
+local Map_PATH =({...})[1]:gsub("[%.\\/]map$", "") .. '/'
 local class  =require (Map_PATH .. 'vendor/30log')
 
-Map=class { __name, _width, _height}
+local Map=class { __name, _width, _height}
 function Map:__init(width, height)
 	self.__name= 'Map'
 	assert(ROT or (width and height), 'require rot or provide width and height with Map:new(width, height)')

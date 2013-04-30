@@ -1,9 +1,11 @@
-MWC_PATH =({...})[1]:gsub("[%.\\/]mwc$", "") .. '/'
+local MWC_PATH =({...})[1]:gsub("[%.\\/]mwc$", "") .. '/'
 local class  =require (MWC_PATH .. 'vendor/30log')
 
-MWC=RNG:extends { mt, index, a, c, ic, m, x, _seed }
+local MWC=ROT.RNG:extends { __name, mt, index, a, c, ic, m, x, _seed }
 
 function MWC:__init(r)
+	self.__name='MWC'
+
     self.a= 1103515245
     self.c= 12345
     self.ic=self.c
@@ -36,7 +38,7 @@ function MWC:randomseed(s)
 end
 
 function MWC:getState()
-    return { a=self.a, c=self.c, m=self.m, x=self.x, _seed=self._seed}
+    return { a=self.a, c=self.c, ic=self.ic, m=self.m, x=self.x, _seed=self._seed}
 end
 
 function MWC:setState(stateTable)

@@ -1,8 +1,8 @@
 --[[ Divided Maze ]]
 ROT=require 'vendor/rotLove/rot'
 function love.load()
-	f =Display(80,24)
-	dm=DividedMaze:new(f:getWidth(), f:getHeight())
+	f =ROT.Display(80,24)
+	dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
 	dm:create(calbak)
 end
 function love.draw() f:draw() end

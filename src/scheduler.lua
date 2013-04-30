@@ -1,7 +1,7 @@
-Scheduler_Path =({...})[1]:gsub("[%.\\/]scheduler$", "") .. '/'
+local Scheduler_Path =({...})[1]:gsub("[%.\\/]scheduler$", "") .. '/'
 local class  =require (Scheduler_Path .. 'vendor/30log')
 
-Scheduler = class {
+local Scheduler = class {
 	__name,
 	_queue,
 	_repeat,
@@ -9,7 +9,7 @@ Scheduler = class {
 }
 function Scheduler:__init()
 	self.__name  ='Scheduler'
-	self._queue=EventQueue:new()
+	self._queue=ROT.EventQueue:new()
 	self._repeat ={}
 	self._current=nil
 end

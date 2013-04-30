@@ -1,7 +1,7 @@
-IceyMaze_PATH =({...})[1]:gsub("[%.\\/]iceyMaze$", "") .. '/'
+local IceyMaze_PATH =({...})[1]:gsub("[%.\\/]iceyMaze$", "") .. '/'
 local class  =require (IceyMaze_PATH .. 'vendor/30log')
 
-IceyMaze = Map:extends { _regularity, _rng }
+local IceyMaze = ROT.Map:extends { _regularity, _rng }
 
 function IceyMaze:__init(width, height, regularity)
 	assert(ROT or twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')

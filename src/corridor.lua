@@ -1,7 +1,7 @@
-Corridor_PATH =({...})[1]:gsub("[%.\\/]corridor$", "") .. '/'
+local Corridor_PATH =({...})[1]:gsub("[%.\\/]corridor$", "") .. '/'
 local class  =require (Corridor_PATH .. 'vendor/30log')
 
-Corridor = Feature:extends { _startX, _startY, _endX, _endY, _rng }
+local Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng }
 function Corridor:__init(startX, startY, endX, endY)
 	assert(ROT, 'require rot')
 	self._startX       =startX

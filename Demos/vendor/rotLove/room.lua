@@ -1,7 +1,7 @@
-Room_PATH =({...})[1]:gsub("[%.\\/]room$", "") .. '/'
+local Room_PATH =({...})[1]:gsub("[%.\\/]room$", "") .. '/'
 local class  =require (Room_PATH .. 'vendor/30log')
 
-Room = Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
+local Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
 function Room:__init(x1, y1, x2, y2, doorX, doorY)
 	assert(ROT, 'require rot or RandomLua')
 	self._x1   =x1

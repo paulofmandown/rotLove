@@ -1,7 +1,7 @@
-Cellular_PATH =({...})[1]:gsub("[%.\\/]cellular$", "") .. '/'
+local Cellular_PATH =({...})[1]:gsub("[%.\\/]cellular$", "") .. '/'
 local class  =require (Cellular_PATH .. 'vendor/30log')
 
-Cellular = Map:extends { _rng, _options, _map }
+local Cellular = ROT.Map:extends { _rng, _options, _map }
 
 function Cellular:__init(width, height, options)
 	assert(ROT, 'must require rot')

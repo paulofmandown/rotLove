@@ -1,7 +1,7 @@
-Engine_PATH =({...})[1]:gsub("[%.\\/]engine$", "") .. '/'
+local Engine_PATH =({...})[1]:gsub("[%.\\/]engine$", "") .. '/'
 local class  =require (Engine_PATH .. 'vendor/30log')
 
-Engine = class { _scheduler, _lock }
+local Engine = class { _scheduler, _lock }
 function Engine:__init(scheduler)
 	self.__name='Engine'
 	self._scheduler=scheduler

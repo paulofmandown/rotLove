@@ -1,7 +1,7 @@
-Point_PATH =({...})[1]:gsub("[%.\\/]point$", "") .. '/'
+local Point_PATH =({...})[1]:gsub("[%.\\/]point$", "") .. '/'
 local class  =require (Point_PATH .. 'vendor/30log')
 
-Point=class { x, y }
+local Point=class { x, y }
 function Point:__init(x, y)
     self.x=x
     self.y=y
@@ -33,3 +33,5 @@ function Point:adjacentPoints()
     end end
     return points
 end
+
+return Point

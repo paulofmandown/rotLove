@@ -5,7 +5,7 @@
         --         defaultForegroundColor, defaultBackgroundColor,
         --         useFullScreen, useVSync, numberOfFsaaSamples)
         -- Defaults shown here
-		frame=Display(80, 24, 1, {r=192,g=192,b=192,a=255}, {r=0,g=0,b=0,a=255}, false, false, 3)
+		frame=ROT.Display(80, 24, 1, {r=192,g=192,b=192,a=255}, {r=0,g=0,b=0,a=255}, false, false, 3)
         rand = math.random(1,3)
         rng = rand == 1 and ROT.RNG.Twister:new() or
               rand == 2 and ROT.RNG.LCG:new() or

@@ -1,24 +1,22 @@
-Bresenham_PATH =({...})[1]:gsub("[%.\\/]bresenham$", "") .. '/'
+local Bresenham_PATH =({...})[1]:gsub("[%.\\/]bresenham$", "") .. '/'
 local class  =require (Bresenham_PATH .. 'vendor/30log')
 
-Bresenham=FOV:extends { __name, _lightPasses, _options }
+local Bresenham=ROT.FOV:extends { __name, _lightPasses, _options }
 
 function Bresenham:__init(lightPassesCallback, options)
     Bresenham.super.__init(self, lightPassesCallback, options)
     self.__name='Bresenham'
-    if not Line then require (Bresenham_PATH .. 'line') end
-    if not Point then require (Bresenham_PATH .. 'point') end
 end
 
 function Bresenham:compute(cx, cy, r, callback)
     local visited={}
     callback(cx,cy,r)
-    visited[Point(cx, cy):hashCode()]=0
+    visited[ROT.Point(cx, cy):hashCode()]=0
     --[[]]
     local thePoints=self:_getCircle(cx, cy, r)
     for _,p in pairs(thePoints) do
         local x,y=p[1],p[2]
-        local line=Line(cx,cy,x, y):getPoints()
+        local line=ROT.Line(cx,cy,x, y):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end

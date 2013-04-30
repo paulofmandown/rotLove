@@ -1,9 +1,10 @@
-Twister_PATH =({...})[1]:gsub("[%.\\/]twister$", "") .. '/'
+local Twister_PATH =({...})[1]:gsub("[%.\\/]twister$", "") .. '/'
 local class  =require (Twister_PATH .. 'vendor/30log')
 
-Twister=RNG:extends { mt, index, _seed }
+local Twister=ROT.RNG:extends { __name, mt, index, _seed }
 
 function Twister:__init()
+	self.__name='Twister'
     self.mt={}
     self.index=0
 end
@@ -44,7 +45,11 @@ function Twister:random(a, b)
 end
 
 function Twister:getState()
-    return { mt=self.mt, index=self.index, _seed=self._seed}
+	local newmt={}
+	for i=0,623 do
+		newmt[i]=self.mt[i]
+	end
+    return { mt=newmt, index=self.index, _seed=self._seed}
 end
 
 function Twister:setState(stateTable)

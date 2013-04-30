@@ -27,9 +27,9 @@ function unlock()
 end
 
 function love.load()
-	f=Display(80,24)
-	s=SimpleScheduler:new()
-	e=Engine:new(s)
+	f=ROT.Display(80,24)
+	s=ROT.Scheduler.Simple:new()
+	e=ROT.Engine:new(s)
 	s:add(a1, true)
 	e:start()
 end

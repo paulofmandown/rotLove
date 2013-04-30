@@ -1,8 +1,8 @@
 --[[ Event Queue ]]--
 ROT= require 'vendor/rotLove/rot'
 function love.load()
-	f=Display(80,24)
-	q=EventQueue()
+	f=ROT.Display(80,24)
+	q=ROT.EventQueue()
 	q:add('e1', 100)
 	q:add('e2', 50)
 	q:add('e3', 10)

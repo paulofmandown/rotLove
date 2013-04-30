@@ -38,15 +38,14 @@ function placePlayer()
 end
 
 function love.load()
-    f  =Display(80, 24)
-    prc=Precise()
+    f  =ROT.Display(80, 24)
     map={}
     doTheThing()
 end
 function doTheThing()
-    uni=Uniform:new(f:getWidth(), f:getHeight())
+    uni=ROT.Map.Uniform:new(f:getWidth(), f:getHeight())
     uni:create(calbak)
-    fov=Precise:new(lightCalbak)
+    fov=ROT.FOV.Precise:new(lightCalbak)
     placePlayer()
     fov:compute(player.x, player.y, 2, computeCalbak)
 end

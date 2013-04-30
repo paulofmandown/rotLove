@@ -1,7 +1,7 @@
-DividedMaze_PATH =({...})[1]:gsub("[%.\\/]dividedMaze$", "") .. '/'
+local DividedMaze_PATH =({...})[1]:gsub("[%.\\/]dividedMaze$", "") .. '/'
 local class  =require (DividedMaze_PATH .. 'vendor/30log')
 
-DividedMaze = Map:extends { }
+local DividedMaze = ROT.Map:extends { }
 
 function DividedMaze:__init(width, height)
 	DividedMaze.super.__init(self, width, height)

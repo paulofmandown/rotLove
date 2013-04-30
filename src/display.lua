@@ -1,7 +1,7 @@
-Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
+local Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
 local class=require (Display_Path .. 'vendor/30log')
 
-Display = class {
+local Display = class {
 	__name,
 	color,
 	widthInChars,

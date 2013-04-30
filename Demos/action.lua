@@ -3,8 +3,8 @@ ROT= require 'vendor/rotLove/rot'
 class= require 'vendor/rotLove/vendor/30log'
 
 function love.load()
-	s  =ActionScheduler:new()
-	f  =Display(80,24)
+	s  =ROT.Scheduler.Action:new()
+	f  =ROT.Display(80,24)
 	rng=ROT.RNG.Twister:new()
     rng:randomseed()
 	for i=1,4 do s:add(i,true,i-1) end

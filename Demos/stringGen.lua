@@ -1,8 +1,8 @@
 --[[ String Gen ]]--
 ROT = require 'vendor/rotLove/rot'
 function love.load()
-	frame=Display(80, 24)
-	sg = StringGenerator()
+	frame=ROT.Display(80, 24)
+	sg = ROT.StringGenerator()
 	-- where names.txt is a plain-text list of mixed-case names (one per line)
 	-- Provided is a list of Dunmer Names from UESP
 	for name in io.lines('names.txt') do

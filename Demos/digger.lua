@@ -2,8 +2,8 @@
 ROT=require 'vendor/rotLove/rot'
 
 function love.load()
-	f  =Display(80, 24)
-	dgr=Digger(f:getWidth(), f:getHeight())
+	f  =ROT.Display(80, 24)
+	dgr=ROT.Map.Digger(f:getWidth(), f:getHeight())
 	dgr:create(calbak)
 end
 function love.draw() f:draw() end

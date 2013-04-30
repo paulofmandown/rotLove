@@ -1,7 +1,7 @@
-Arena_PATH =({...})[1]:gsub("[%.\\/]arena$", "") .. '/'
+local Arena_PATH =({...})[1]:gsub("[%.\\/]arena$", "") .. '/'
 local class  =require (Arena_PATH .. 'vendor/30log')
 
-Arena = Map:extends { }
+local Arena = ROT.Map:extends { }
 
 function Arena:__init(width, height)
 	Arena.super.__init(self, width, height)
