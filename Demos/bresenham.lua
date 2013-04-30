@@ -45,7 +45,7 @@ end
 function doTheThing()
     mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
     mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=true})
+    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=false})
     placePlayer()
     fov:compute(player.x, player.y, 10, computeCalbak)
 end
