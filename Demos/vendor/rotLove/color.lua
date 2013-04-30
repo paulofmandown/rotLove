@@ -1,12 +1,11 @@
 local Color_PATH=({...})[1]:gsub("[%.\\/]color$", "") .. '/'
 local class  =require (Color_PATH .. 'vendor/30log')
 
-local Color=class { _cache }
+local Color=class { _cache, _rng }
 
 function Color:__init()
-
-
-	self._cache={
+    self._rng = ROT.RNG.Twister:new()
+    self._cached={
 			black= {r=0,g=0,b=0,a=255},
 			navy= {r=0,g=0,b=128,a=255},
 			darkblue= {r=0,g=0,b=139,a=255},
@@ -154,6 +153,240 @@ function Color:__init()
 			ivory= {r=255,g=255,b=240,a=255},
 			white= {r=255,g=255,b=255,a=255}
 	}
+end
+
+function Color:fromString(str)
+    local cached={r=0,g=0,b=0,a=255}
+    local r
+    if self._cached[str] then cached = self._cached[str]
+    else
+        local values={}
+        if str:sub(1,1) == '#' then
+            local i=1
+            for s in str:gmatch('[%da-fA-F]') do
+                values[i]=tonumber(s, 16)
+                i=i+1
+            end
+            if #values==3 then
+                for i=1,3 do values[i]=values[i]*17 end
+            else
+                for i=1,3 do
+                    values[i+1]=values[i+1]+(16*values[i])
+                    table.remove(values, i)
+                end
+            end
+        elseif str:gmatch('rgb') then
+            local i=1
+            for s in str:gmatch('(%d+)') do
+                values[i]=s
+                i=i+1
+            end
+        end
+        cached.r=values[1]
+        cached.g=values[2]
+        cached.b=values[3]
+    end
+    self._cached[str]=cached
+    return {r=cached.r, g=cached.g, b=cached.b, a=cached.a}
+end
+
+-- add two or more colors
+-- accepts either (color, color) or (color, tableOfColors)
+function Color:add(color1, color2)
+    local result={}
+    for k,_ in pairs(color1) do result[k]=color1[k] end
+    if color2.r then
+        for k,_ in pairs(color2) do
+            result[k]=result[k]+color2[k]
+        end
+    elseif color2[1].r then
+        for k,_ in pairs(color2) do
+            for l,_ in pairs(color2[k]) do
+                assert(result[l])
+                result[l]=result[l]+color2[k][l]
+            end
+        end
+    end
+    return result
+end
+
+-- add two or more colors
+-- accepts either (color, color) or (color, tableOfColors)
+-- Modifies first arg
+function Color:add_(color1, color2)
+    if color2.r then
+        for k,_ in pairs(color2) do
+            color1[k]=color1[k]+color2[k]
+        end
+    elseif color2[1].r then
+        for k,_ in pairs(color2) do
+            for l,_ in pairs(color2[k]) do
+                color1[l]=color1[l]+color2[k][l]
+            end
+        end
+    end
+    return color1
+end
+
+-- multiply (mix)two or more colors
+-- accepts either (color, color) or (color, tableOfColors)
+function Color:multiply(color1, color2)
+    local result={}
+    for k,_ in pairs(color1) do result[k]=color1[k] end
+    if color2.r then
+        for k,_ in pairs(color2) do
+            result[k]=math.round(result[k]*color2[k]/255)
+        end
+    elseif color2[1].r then
+        for k,_ in pairs(color2) do
+            for l,_ in pairs(color2[k]) do
+                result[l]=math.round(result[l]*color2[k][l]/255)
+            end
+        end
+    end
+    return result
+end
+
+-- multiply (mix)two or more colors
+-- accepts either (color, color) or (color, tableOfColors)
+-- Modifies first arg
+function Color:multiply_(color1, color2)
+    if color2.r then
+        for k,_ in pairs(color2) do
+            color1[k]=math.round(color1[k]*color2[k]/255)
+        end
+    elseif color2[1].r then
+        for k,_ in pairs(color2) do
+            for l,_ in pairs(color2[k]) do
+                color1[l]=math.round(color1[l]*color2[k][l]/255)
+            end
+        end
+    end
+    return color1
+end
+
+-- interpolate (blend) two colors with give factor
+function Color:interpolate(color1, color2, factor)
+    factor=factor and factor or .5
+    local result={}
+    for k,_ in pairs(color1) do result[k]=color1[k] end
+    for k,_ in pairs(color2) do
+        result[k]=math.round(result[k] + factor*(color2[k]-color1[k]))
+    end
+    return result
+end
+
+-- Interpolate (blend) two colors with a given factor in HSL mode
+function Color:interpolateHSL(color1, color2, factor)
+    factor=factor and factor or .5
+    local hsl1 = self:rgb2hsl(color1)
+    local hsl2 = self:rgb2hsl(color2)
+    for k,_ in pairs(hsl2) do
+        hsl1[k]= hsl1[k] + factor*(hsl2[k]-hsl1[k])
+    end
+    return self:hsl2rgb(hsl1)
+end
+
+-- Create a new random color based on this one
+function Color:randomize(color, diff)
+    self._rng:randomseed()
+    local result={}
+    for k,_ in pairs(color) do result[k]=color[k] end
+    if type(diff) ~= 'table' then
+        diff=self._rng:random(0,diff)
+        for k,_ in pairs(result) do result[k]=result[k]+diff end
+    else
+        assert(#diff>2, 'Color:randomize() can use a table of standard deviations, but it requires at least 3 elements in said table.')
+        result.r=result.r+self._rng:random(0,diff[1])
+        result.g=result.g+self._rng:random(0,diff[2])
+        result.b=result.b+self._rng:random(0,diff[3])
+    end
+    write(result.r)
+    write(result.g)
+    write(result.b)
+    return result
+end
+
+function Color:rgb2hsl(color)
+    r=color.r/255
+    g=color.g/255
+    b=color.b/255
+    local max=math.max(r, g, b)
+    local min=math.min(r, g, b)
+    local h,s,l=0,0,(max+min)/2
+
+    if max~=min then
+        local d=max-min
+        s=l>.5 and d/(2-max-min) or d/(max+min)
+        if max==r then
+            h=(g-b)/d + (g<b and 6 or 0)
+        elseif max==g then
+            h=(b-r)/d + 2
+        elseif max==b then
+            h=(r-g)/ d + 4
+        end
+            h=h/6
+    end
+    result={}
+    result.h=h
+    result.s=s
+    result.l=l
+    return result
+end
+
+function Color:hsl2rgb(color)
+    local result={r=0, g=0, b=0, a=255}
+    if color.s==0 then
+        for k,_ in pairs(result) do
+            result[k]=color.l*255
+        end
+        result.a=255
+        return result
+    else
+        local function hue2rgb(p, q, t)
+            if t<0 then t=t+1 end
+            if t>1 then t=t-1 end
+            if t<1/6 then return (p+(q-p)*6*t) end
+            if t<1/2 then return q end
+            if t<2/3 then return (p+(q-p)*(2/3-t)*6) end
+            return p
+        end
+        local s=color.s
+        local l=color.l
+        local q=l<.5 and l*(1+s) or l+s-l*s
+        local p=2*l-q
+        result.r=math.round(hue2rgb(p,q,color.h+1/3)*255)
+        result.g=math.round(hue2rgb(p,q,color.h)*255)
+        result.b=math.round(hue2rgb(p,q,color.h-1/3)*255)
+        result.a=255
+        return result
+    end
+end
+
+function Color:toRGB(color)
+    return 'rgb('..self:_clamp(color.r)..','..self:_clamp(color.g)..','..self:_clamp(color.b)..')'
+end
+
+function Color:toHex(color)
+    local function dec2hex(IN) -- thanks Lostgallifreyan(http://lua-users.org/lists/lua-l/2004-09/msg00054.html)
+        local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
+        while IN>0 do
+            I=I+1
+            IN,D=math.floor(IN/B),math.mod(IN,B)+1
+            OUT=string.sub(K,D,D)..OUT
+        end
+        return OUT
+    end
+
+    local parts={}
+    parts[1]=tostring(dec2hex(self:_clamp(color.r))):lpad('0',2)
+    parts[2]=tostring(dec2hex(self:_clamp(color.g))):lpad('0',2)
+    parts[3]=tostring(dec2hex(self:_clamp(color.b))):lpad('0',2)
+    return '#'..table.concat(parts)
+end
+
+function Color:_clamp(n)
+    return n<0 and 0 or n>255 and 255 or n
 end
 
 return Color

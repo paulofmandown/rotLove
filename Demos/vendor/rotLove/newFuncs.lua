@@ -111,13 +111,19 @@ function charNTimes(c, n)
 end
 -- left pad with c char, repeated n times
 function string:lpad(c, n)
-	s=charNTimes(c, n)
+    c=c and c or '0'
+    n=n and n or 2
+    local s=''
+    while #s < n-#self do s=s..c end
 	return s..self
 end
 -- right pad with c char, repeated n times
 function string:rpad(c, n)
-	s=charNTimes(c, n)
-	return self..s
+    c=c and c or '0'
+    n=n and n or 2
+    local s=''
+    while #s < n-#self do s=s..c end
+    return self..s
 end
 -- add js split function
 function string:split(delim, maxNb)

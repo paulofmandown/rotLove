@@ -16,6 +16,7 @@ Noise Generator  - Simplex Noise
 
 FOV              - Bresenham Line based Ray Casting
 
+Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
 
 Demos Folder
 ==========
@@ -29,8 +30,6 @@ To-Do
 Maps     - Rogue (*still has a fail-state, need to pin down)
 
 FOV      - Precise Shadow Casting
-
-Color    - Currently only supplies values defined by [Ascii Panel](https://github.com/trystan/AsciiPanel). Need to add functions defined with [rot.js](http://ondras.github.io/rot.js/hp/).
 
 Lighting
 
