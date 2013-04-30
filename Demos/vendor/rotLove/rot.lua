@@ -68,6 +68,7 @@ ROT.FOV.Precise      = require (ROTLOVE_PATH .. 'precise')
 ROT.Line             = require (ROTLOVE_PATH .. 'line')
 ROT.Point            = require (ROTLOVE_PATH .. 'point')
 ROT.FOV.Bresenham    = require (ROTLOVE_PATH .. 'bresenham')
+ROT.Color            = require (ROTLOVE_PATH .. 'color')
 
 return ROT
 

@@ -45,7 +45,6 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	self.full         = full and full or false
 	self.vsync        = vsync and vsync or false
 	self.fsaa         = fsaa and fsaa or 0
-	self.color=require (Display_Path .. 'color')
     self.scale=scale and scale or 1
 	self.charWidth=self.scale*9
 	self.charHeight=self.scale*16
@@ -58,8 +57,8 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	self.oldForegroundColors={{}}
 	love.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, self.full, self.vsync, self.fsaa)
 
-	self.defaultForegroundColor=dfg and dfg or self.color.white
-	self.defaultBackgroundColor=dbg and dgb or self.color.black
+	self.defaultForegroundColor=dfg and dfg or {r=235, g=235, b=235, a=255}
+	self.defaultBackgroundColor=dbg and dgb or {r=15, g=15, b=15, a=255}
 
 	love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
 									 self.defaultBackgroundColor.g,
@@ -143,7 +142,7 @@ function Display:setDefaultBackgroundColor(c)
 	self.defaultBackgroundColor=c and c or self.color.black
 end
 function Display:setDefaultForegroundColor(c)
-	self.defaultForegroundColor=c and c or self.color.white
+	self.defaultForegroundColor=c and c or {r=235, g=235, b=235, a=255}
 end
 
 

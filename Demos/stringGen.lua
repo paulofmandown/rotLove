@@ -15,7 +15,7 @@ function love.update(dt)
 	time=time+dt
 	if time<5 then return
 	else time=time-5 end
-	frame:clear(nil, nil, 2, nil, 22)
+	frame:clear(' ', nil, 2, nil, 22)
 	frame:write('Dunmer', 1, 23)
 	frame:write('Names',  1, 24)
 	for i=2,24 do

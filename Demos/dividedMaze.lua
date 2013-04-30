@@ -4,13 +4,17 @@ function love.load()
 	f =ROT.Display(80,24)
 	dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
 	dm:create(calbak)
+	dm=nil
 end
 function love.draw() f:draw() end
 local update=false
 function love.update()
 	if update then
         update=false
+        f:clear()
+        dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
     	dm:create(calbak)
+    	dm=nil
     end
 end
 function calbak(x,y,val)

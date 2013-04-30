@@ -12,7 +12,7 @@
 			--require 'engine'
 
 			-- [[ String Generator ]]--
-			--require 'stringGen'
+			require 'stringGen'
 
 			--[[ Random Number Generator ]]--
 			--require 'rng'   --state get/set
@@ -38,6 +38,6 @@
 			--require 'precise'
 
 			--[[ Ray Casting ]]--
-			require 'bresenham'
+			--require 'bresenham'
 
 
