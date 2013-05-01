@@ -20,6 +20,8 @@ Color            - 147 Predefined colors; generate valid colors from string; add
 
 Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
 
+Lighting         - compute light emission and blending, ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+
 Demos Folder
 ==========
 In Demos/main.lua, uncomment the line for the demo you'd like to see.
@@ -32,5 +34,3 @@ To-Do
 Maps     - Rogue (*still has a fail-state, need to pin down)
 
 FOV      - Precise Shadow Casting
-
-Lighting

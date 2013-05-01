@@ -69,7 +69,7 @@ ROT.Line             = require (ROTLOVE_PATH .. 'line')
 ROT.Point            = require (ROTLOVE_PATH .. 'point')
 ROT.FOV.Bresenham    = require (ROTLOVE_PATH .. 'bresenham')
 ROT.Color            = require (ROTLOVE_PATH .. 'color')
-
+ROT.Lighting         = require (ROTLOVE_PATH .. 'lighting')
 ROT.Path             = require (ROTLOVE_PATH .. 'path')
 ROT.Path.Dijkstra    = require (ROTLOVE_PATH .. 'dijkstra')
 ROT.Path.AStar       = require (ROTLOVE_PATH .. 'astar')

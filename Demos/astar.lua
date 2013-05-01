@@ -11,7 +11,7 @@ function love.load()
 
     rng=ROT.RNG.Twister:new()
     rng:randomseed()
-    map=ROT.Map.Uniform(f:getWidth(), f:getHeight(), {dugPercentage=.7})
+    map=ROT.Map.Uniform(f:getWidth(), f:getHeight())
     doTheThing()
 end
 
