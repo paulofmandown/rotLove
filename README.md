@@ -18,6 +18,8 @@ FOV              - Bresenham Line based Ray Casting
 
 Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
 
+Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+
 Demos Folder
 ==========
 In Demos/main.lua, uncomment the line for the demo you'd like to see.
@@ -32,5 +34,3 @@ Maps     - Rogue (*still has a fail-state, need to pin down)
 FOV      - Precise Shadow Casting
 
 Lighting
-
-Path     - Dijkstra, AStar

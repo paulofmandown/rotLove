@@ -41,4 +41,9 @@
 			--require 'bresenham'
 
             --[[ Color ]]--
-            require 'color'
+            --require 'color'
+
+            --[[ Path Finding ]]--
+            --require 'dijkstra'
+            --require 'astar'
+

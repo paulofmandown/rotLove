@@ -3,8 +3,20 @@ local class  =require (Color_PATH .. 'vendor/30log')
 
 local Color=class { _cache, _rng }
 
+--[[
+    Color is a color handler that treats any
+    objects intended to represent a color as a
+    table of the following schema:
+    { r=(0...255),
+      g=(0...255),
+      b=(0...255),
+      a=(0...255)
+    }
+]]
+
 function Color:__init()
     self._rng = ROT.RNG.Twister:new()
+    self._rng:randomseed()
     self._cached={
 			black= {r=0,g=0,b=0,a=255},
 			navy= {r=0,g=0,b=128,a=255},
@@ -155,6 +167,13 @@ function Color:__init()
 	}
 end
 
+-- Convert one of several formats of string to what
+-- Color interperets as a color object
+    -- rgb(0..255, 0..255, 0..255)
+    -- #5fe
+    -- #5FE
+    -- #254eff
+    -- goldenrod
 function Color:fromString(str)
     local cached={r=0,g=0,b=0,a=255}
     local r
@@ -289,7 +308,6 @@ end
 
 -- Create a new random color based on this one
 function Color:randomize(color, diff)
-    self._rng:randomseed()
     local result={}
     for k,_ in pairs(color) do result[k]=color[k] end
     if type(diff) ~= 'table' then
@@ -301,12 +319,10 @@ function Color:randomize(color, diff)
         result.g=result.g+self._rng:random(0,diff[2])
         result.b=result.b+self._rng:random(0,diff[3])
     end
-    write(result.r)
-    write(result.g)
-    write(result.b)
     return result
 end
 
+-- Convert rgb color to hsl
 function Color:rgb2hsl(color)
     r=color.r/255
     g=color.g/255
@@ -334,6 +350,7 @@ function Color:rgb2hsl(color)
     return result
 end
 
+-- Convert hsl color to rgb
 function Color:hsl2rgb(color)
     local result={r=0, g=0, b=0, a=255}
     if color.s==0 then
@@ -363,10 +380,12 @@ function Color:hsl2rgb(color)
     end
 end
 
+-- Convert color to RGB string
 function Color:toRGB(color)
     return 'rgb('..self:_clamp(color.r)..','..self:_clamp(color.g)..','..self:_clamp(color.b)..')'
 end
 
+-- Convert color to Hex string
 function Color:toHex(color)
     local function dec2hex(IN) -- thanks Lostgallifreyan(http://lua-users.org/lists/lua-l/2004-09/msg00054.html)
         local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
@@ -385,6 +404,7 @@ function Color:toHex(color)
     return '#'..table.concat(parts)
 end
 
+-- limit a number to 0..255
 function Color:_clamp(n)
     return n<0 and 0 or n>255 and 255 or n
 end

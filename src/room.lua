@@ -78,7 +78,6 @@ function Room:createRandom(availWidth, availHeight, options, rng)
 	local y1=math.floor(rng:random()*top)
 	local x2=x1+width
 	local y2=y1+height
-write(x1..','..y1..','..x2..','..y2)
 	return Room:new(x1, y1, x2, y2)
 end
 
