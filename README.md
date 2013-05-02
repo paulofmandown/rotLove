@@ -6,7 +6,7 @@ Currently Implemented:
 
 Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation rather than full font support.
 
-rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424), doesn't support state export
+rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424). Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.
 
 String Generator - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
 
@@ -14,7 +14,7 @@ Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeon
 
 Noise Generator  - Simplex Noise
 
-FOV              - Bresenham Line based Ray Casting
+FOV              - Bresenham Line based Ray Casting, Precise Shadow Casting
 
 Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
 
@@ -31,6 +31,4 @@ Then, from the Demos directory in the shell, run `love .`
 
 To-Do
 ==========
-Maps     - Rogue (*still has a fail-state, need to pin down)
-
-FOV      - Precise Shadow Casting
+Maps     - Rogue and Uniform (*still have fail-state, need to pin down)

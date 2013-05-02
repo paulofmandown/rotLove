@@ -20,10 +20,10 @@ function FOV:_getCircle(cx, cy, r)
         countFactor=1
         startOffset={0,1}
         dirs={
-              ROT.DIRS.EIGHT[7],
-              ROT.DIRS.EIGHT[1],
-              ROT.DIRS.EIGHT[3],
-              ROT.DIRS.EIGHT[5]
+              ROT.DIRS.EIGHT[8],
+              ROT.DIRS.EIGHT[2],
+              ROT.DIRS.EIGHT[4],
+              ROT.DIRS.EIGHT[6]
              }
     elseif topo==8 then
         dirs=ROT.DIRS.FOUR
@@ -40,6 +40,18 @@ function FOV:_getCircle(cx, cy, r)
             x=x+dirs[i][1]
             y=y+dirs[i][2]
         end
+    end
+    return result
+end
+
+function FOV:_getRealCircle(cx, cy, r)
+    local i=0
+    local result={}
+    while i<2*math.pi do
+        i=i+0.05
+        x = cx + r * math.cos(i)
+        y = cy + r * math.sin(i)
+        table.insert(result, {x,y})
     end
     return result
 end

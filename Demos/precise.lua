@@ -3,7 +3,7 @@ ROT=require 'vendor/rotLove/rot'
 
 function calbak(x, y, val)
     map[x..','..y]=val
-    f:write(val==1 and '#' or '.', x, y)
+    f:write(val==1 and '#' or '.', x, y, {r=75, g=75, b=75, a=255})
 end
 
 function lightCalbak(fov, x, y)
@@ -20,6 +20,7 @@ function computeCalbak(x, y, r, v)
     local color= {r=121, g=121, b=0, a=255}
     f:write(r>0 and f:getCharacter(x, y) or '@', x, y, nil, color)
 end
+
 local player={x=1, y=1}
 function placePlayer()
     local key =nil
@@ -42,12 +43,15 @@ function love.load()
     map={}
     doTheThing()
 end
+
 function doTheThing()
     uni=ROT.Map.Uniform:new(f:getWidth(), f:getHeight())
     uni:create(calbak)
-    fov=ROT.FOV.Precise:new(lightCalbak)
+    fov=ROT.FOV.Precise:new(lightCalbak)--, {topology=4})
     placePlayer()
-    fov:compute(player.x, player.y, 2, computeCalbak)
+    local start=os.clock()
+    fov:compute(player.x, player.y, 10, computeCalbak)
+    write('fov compute in '..os.clock()-start)
 end
 local update=false
 function love.update()

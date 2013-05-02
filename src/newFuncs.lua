@@ -52,44 +52,6 @@ function table.indexOf(values,value)
 	return 0
 end
 
--- js splice
-function table.splice(t, i, n, addTable)
-    local removed = {}
-    local tableSize = table.getn(t) -- Table size
-    -- Lua 5.0 handling of vararg...
-    local argNb = addTable and table.getn(addTable) or 0 -- Number of elements to insert
-    -- Check parameter validity
-    if i < 1 then i = 1 end
-    if n < 0 then n = 0 end
-    if i > tableSize then
-        i = tableSize + 1 -- At end
-        n = 0 -- Nothing to delete
-    end
-    if i + n  > tableSize then
-        n = tableSize - i -- Adjust to number of elements at i
-    end
-
-    local argIdx = 1 -- i in addTable
-    -- Replace min(n, argNb) entries
-    for pos = i, i + math.min(n, argNb) - 1 do
-        -- Copy removed entry
-        table.insert(removed, t[pos])
-        -- Overwrite entry
-        t[pos] = addTable[argIdx]
-        argIdx = argIdx + 1
-    end
-    argIdx = argIdx - 1
-    -- If n > argNb, remove extra entries
-    for i = 1, n - argNb do
-        table.insert(removed, table.remove(t, i + argIdx))
-    end
-    -- If n < argNb, insert remaining new entries
-    for i = argNb - n, 1, -1 do
-        table.insert(t, i + n, addTable[argIdx + i])
-    end
-    return removed
-end
-
 -- asserts the type of 'theTable' is table
 function isATable(theTable)
 	assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")

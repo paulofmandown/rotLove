@@ -1,26 +1,26 @@
---[[ Uncomment the Demo you'd like to run! ]]--
+-- [[ Uncomment the Demo you'd like to run! ]] --
 
-			-- [[ Event Queue ]]--
+			-- [[ Event Queue ]] --
 			--require 'event'
 
-			-- [[ Schedulers ]]--
+			-- [[ Schedulers ]] --
 			--require 'simple'
 			--require 'speed'
 			--require 'action'
 
-			-- [[ Engine ]]--
+			-- [[ Engine ]] --
 			--require 'engine'
 
-			-- [[ String Generator ]]--
+			-- [[ String Generator ]] --
 			--require 'stringGen'
 
 			--[[ Random Number Generator ]]--
 			--require 'rng'   --state get/set
 
-			-- [[ Disply ]]--
+			-- [[ Disply ]] --
 			--require 'display'
 
-			-- [[ Map Generators ]]--
+			-- [[ Map Generators ]] --
 			--require 'arena'
 			--require 'dividedMaze'
 			--require 'iceyMaze'
@@ -30,23 +30,24 @@
 			--require 'uniform'
 			--require 'rogue'
 
-			-- [[ Noise Generator ]]--
+			-- [[ Noise Generator ]] --
 			--require 'simplex'
 
-			-- [[ FOV ]]--
-			-- [[ Shadow Casting ]]-- (WIP)
+			-- [[ FOV ]] --
+			-- [[ Shadow Casting ]] -- (WIP)
 			--require 'precise'
+            require 'preciseWithMovingPlayer' -- use numpad to move
 
-			--[[ Ray Casting ]]--
+			-- [[ Ray Casting ]] --
 			--require 'bresenham'
 
-            --[[ Color ]]--
+            -- [[ Color ]] --
             --require 'color'
 
-            --[[ Lighting ]]--
-            require 'lighting'
+            -- [[ Lighting ]] --
+            --require 'lighting'
 
-            --[[ Path Finding ]]--
+            -- [[ Path Finding ]] --
             --require 'dijkstra'
             --require 'astar'
 
