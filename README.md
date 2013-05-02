@@ -24,6 +24,6 @@ Lighting         - compute light emission and blending, ported from [rot.js](htt
 
 Demos Folder
 ==========
-In Demos/main.lua, uncomment the line for the demo you'd like to see.
+In Demos/main.lua (you'll want the demos branch), uncomment the line for the demo you'd like to see.
 
 Then, from the Demos directory in the shell, run `love .`
