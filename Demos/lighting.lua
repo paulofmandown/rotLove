@@ -31,7 +31,8 @@ function doTheThing()
     lighting:setFOV(fov)
     for i=1,3 do
         local point=getRandomFloor()
-        lighting:setLight(tonumber(point[1]),tonumber(point[2]), getRandomColor())
+        local color=getRandomColor()
+        lighting:setLight(tonumber(point[1]),tonumber(point[2]), color)
     end
     lighting:compute(lightingCallback)
     local ambientLight={r=100, g=100, b=100, a=255}

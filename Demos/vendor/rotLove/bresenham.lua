@@ -9,7 +9,6 @@ function Bresenham:__init(lightPassesCallback, options)
 end
 
 function Bresenham:compute(cx, cy, r, callback)
-	local start=os.clock()
     local notvisited={}
     for x=-r,r do
     	for y=-r,r do
@@ -20,7 +19,7 @@ function Bresenham:compute(cx, cy, r, callback)
 	callback(cx,cy,1,1)
     notvisited[ROT.Point(cx, cy):hashCode()]=nil
 
-    local thePoints=self:_getCircle(cx, cy, r+2)
+    local thePoints=self:_getCircle(cx, cy, r+3)
     for _,p in pairs(thePoints) do
         local x,y=p[1],p[2]
         local line=ROT.Line(cx,cy,x, y):getPoints()
@@ -28,7 +27,7 @@ function Bresenham:compute(cx, cy, r, callback)
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
             if notvisited[point:hashCode()] then
-                callback(point.x, point.y, i, 1-(i*i)/(r*r))
+                callback(point.x, point.y, i, 1-(i/r))
                 notvisited[point:hashCode()]=nil
             end
             if not self:_lightPasses(point.x, point.y) then
@@ -44,7 +43,7 @@ function Bresenham:compute(cx, cy, r, callback)
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
             if notvisited[point:hashCode()] then
-                callback(point.x, point.y, i, 1-(i*i)/(r*r))
+                callback(point.x, point.y, i, 1-(i/r))
                 notvisited[point:hashCode()]=nil
             end
             if not self:_lightPasses(point.x, point.y) then
@@ -53,11 +52,9 @@ function Bresenham:compute(cx, cy, r, callback)
         end
     end
 
-    write(os.clock()-start)
 end
 
 function Bresenham:computeThorough(cx, cy, r, callback)
-	local start=os.clock()
     local visited={}
 	callback(cx,cy,r)
     visited[ROT.Point(cx, cy):hashCode()]=0
@@ -75,17 +72,14 @@ function Bresenham:computeThorough(cx, cy, r, callback)
             end
         end
     end end
-
-    write(os.clock()-start)
 end
 
-function Bresenham:computeQuickAndSloppy(cx, cy, r, callback)
-	local start=os.clock()
+function Bresenham:computeQuick(cx, cy, r, callback)
 	visited={}
-	callback(cx,cy,r)
+	callback(cx,cy,1, 1)
     visited[ROT.Point(cx, cy):hashCode()]=0
 
-    local thePoints=self:_getCircle(cx, cy, r)
+    local thePoints=self:_getCircle(cx, cy, r+3)
     for _,p in pairs(thePoints) do
         local x,y=p[1],p[2]
         local line=ROT.Line(cx,cy,x, y):getPoints()
@@ -93,7 +87,7 @@ function Bresenham:computeQuickAndSloppy(cx, cy, r, callback)
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
             if not visited[point:hashCode()] then
-                callback(point.x, point.y, r)
+                callback(point.x, point.y, i, 1-(i*i)/(r*r))
                 visited[point:hashCode()]=0
             end
             if not self:_lightPasses(point.x, point.y) then
@@ -101,7 +95,6 @@ function Bresenham:computeQuickAndSloppy(cx, cy, r, callback)
             end
         end
     end
-    write(os.clock()-start)
 end
 
 function Bresenham:_oob(x, y, r)

@@ -76,7 +76,7 @@ function Lighting:_computeEmitters(litCells, doneCells)
     local result={}
     if not litCells then return nil end
     for k,_ in pairs(litCells) do
-        if not doneCells or not doneCells[k] then
+        if not doneCells[k] then
             local color=litCells[k]
 
             local reflectivity
@@ -100,7 +100,9 @@ function Lighting:_computeEmitters(litCells, doneCells)
                         intensity=intensity+part
                     end
                 end
-                if intensity>self._options.emissionThreshold then result[k]=emission end
+                if intensity>self._options.emissionThreshold then
+                    result[k]=emission
+                end
             end
         end
     end

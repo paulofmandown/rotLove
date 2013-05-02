@@ -228,11 +228,13 @@ function Display:validateY(y)
 end
 function Display:validateForegroundColor(c)
 	c = c and c or self.defaultForegroundColor
+    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
 	assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
 	return c
 end
 function Display:validateBackgroundColor(c)
 	c = c and c or self.defaultBackgroundColor
+    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
 	assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
 	return c
 end
@@ -246,5 +248,7 @@ function Display:setColor(c)
 	c = c and c or self.defaultForegroundColor
 	love.graphics.setColor(c.r, c.g, c.b, c.a)
 end
-
+function Display:_clamp(n)
+    return n<0 and 0 or n>255 and 255 or n
+end
 return Display
