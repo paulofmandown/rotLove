@@ -1,4 +1,4 @@
-ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
+local ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
 local class  =require (ROTLOVE_PATH .. 'vendor/30log')
 
 ROT=class {

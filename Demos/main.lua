@@ -27,7 +27,7 @@
 			--require 'ellerMaze'
 			--require 'cellular'
 			--require 'digger'
-			--require 'uniform'
+			require 'uniform'
 			--require 'rogue'
 
 			-- [[ Noise Generator ]] --
@@ -36,7 +36,7 @@
 			-- [[ FOV ]] --
 			-- [[ Shadow Casting ]] -- (WIP)
 			--require 'precise'
-            require 'preciseWithMovingPlayer' -- use numpad to move
+            --require 'preciseWithMovingPlayer' -- use numpad to move
 
 			-- [[ Ray Casting ]] --
 			--require 'bresenham'

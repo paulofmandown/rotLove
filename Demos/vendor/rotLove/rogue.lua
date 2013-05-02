@@ -234,7 +234,6 @@ end
 
 function Rogue:_getWallPosition(aRoom, aDirection)
     local rx, ry, door
-    roomDebug(aRoom)
     if aDirection==1 or aDirection==3 then
         rx=self:_getRandomInt(aRoom.x, aRoom.x+aRoom.width-1)
         if aDirection==1 then
@@ -271,46 +270,38 @@ function Rogue:_drawCorridore(startPosition, endPosition)
     local yOffset=endPosition[2]-startPosition[2]
     local xpos   =startPosition[1]
     local ypos   =startPosition[2]
-
-    write('st: '..table.concat(startPosition, ','))
-    write('en: '..table.concat(endPosition, ','))
-
-    local tempDist, move
     local moves={}
-
     local xAbs=math.abs(xOffset)
     local yAbs=math.abs(yOffset)
-
     local firstHalf =self._rng:random()
     local secondHalf=1-firstHalf
-
     local xDir=xOffset>0 and 3 or 7
     local yDir=yOffset>0 and 5 or 1
-    write('dir: '..xDir..','..yDir)
-    write('xa, ya: '..xAbs..','..yAbs)
     if xAbs<yAbs then
-        tempDist=math.ceil(yAbs*firstHalf)
+        local tempDist=math.ceil(yAbs*firstHalf)
         table.insert(moves, {yDir, tempDist})
         table.insert(moves, {xDir, xAbs})
-        tempDist=math.floor(yAbs*secondHalf)
+        local tempDist=math.floor(yAbs*secondHalf)
         table.insert(moves, {yDir, tempDist})
     else
-        tempDist=math.ceil(xAbs*firstHalf)
+        local tempDist=math.ceil(xAbs*firstHalf)
         table.insert(moves, {xDir, tempDist})
         table.insert(moves, {yDir, yAbs})
-        tempDist=math.floor(xAbs*secondHalf)
+        local tempDist=math.floor(xAbs*secondHalf)
         table.insert(moves, {xDir, tempDist})
     end
 
     local dirs=ROT.DIRS.EIGHT
     self.map[xpos][ypos]=0
     while #moves>0 do
-        move=table.remove(moves)
-        while move[2]>0 do
-            xpos=xpos+dirs[move[1]][1]
-            ypos=ypos+dirs[move[1]][2]
-            self.map[xpos][ypos]=0
-            move[2]=move[2]-1
+        local move=table.remove(moves)
+        if move and move[1] and move[1]<9 and move[1]>0 then
+            while move[2]>0 do
+                xpos=xpos+dirs[move[1]][1]
+                ypos=ypos+dirs[move[1]][2]
+                self.map[xpos][ypos]=0
+                move[2]=move[2]-1
+            end
         end
     end
 end

@@ -8,7 +8,7 @@ function love.load()
 end
 function love.draw() f:draw() end
 function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
-update=false
+--update=false
 function love.update()
     if update then
         update=false
