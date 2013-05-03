@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Rotlove : Love2D port of rot.js" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>rotLove</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/paulofmandown/rotLove">View on GitHub</a>
+
+          <h1 id="project_title">Rotlove</h1>
+          <h2 id="project_tagline">Love2D port of rot.js</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/paulofmandown/rotLove/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/paulofmandown/rotLove/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <div class="highlight"><pre>            <span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+                <span class="c1">-- Display(widthInCharacters, heightInCharacters, characterScale</span>
+                <span class="c1">--         defaultForegroundColor, defaultBackgroundColor,</span>
+                <span class="c1">--         useFullScreen, useVSync, numberOfFsaaSamples)</span>
+                <span class="c1">-- Defaults shown here</span>
+                <span class="n">frame</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="n">rand</span> <span class="o">=</span> <span class="nb">math.random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span> <span class="ow">or</span>
+                      <span class="n">rand</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">LCG</span><span class="p">:</span><span class="n">new</span><span class="p">()</span> <span class="ow">or</span>
+                      <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">MWC</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+                <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
+            <span class="k">end</span>
+            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
+                <span class="n">frame</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+            <span class="k">end</span>
+
+            <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+
+            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">80</span> <span class="k">then</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
+                <span class="k">else</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">24</span> <span class="ow">and</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
+                <span class="k">end</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">255</span> <span class="ow">and</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
+                <span class="n">frame</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="nb">string.char</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">getRandomColor</span><span class="p">(),</span> <span class="n">getRandomColor</span><span class="p">())</span>
+            <span class="k">end</span>
+
+            <span class="k">function</span> <span class="nf">getRandomColor</span><span class="p">()</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="n">r</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
+                         <span class="n">g</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
+                         <span class="n">b</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
+                         <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
+            <span class="k">end</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Rotlove maintained by <a href="https://github.com/paulofmandown">paulofmandown</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
