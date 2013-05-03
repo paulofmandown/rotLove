@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Rotlove : Love2D port of rot.js" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Rotlove</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/paulofmandown/rotLove">View on GitHub</a>
+
+          <h1 id="project_title">Rotlove</h1>
+          <h2 id="project_tagline">Love2D port of rot.js</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/paulofmandown/rotLove/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/paulofmandown/rotLove/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>RogueLike Toolkit in Love</h1>
+
+<p>Bringing <a href="http://ondras.github.io/rot.js/hp/">rot.js</a> functionality to Love2D</p>
+
+<p>Currently Implemented:</p>
+
+<p>Display          - via <a href="https://github.com/paulofmandown/rlLove">rlLove</a>, only supports cp437 emulation rather than full font support.</p>
+
+<p>rng              - via <a href="http://love2d.org/forums/viewtopic.php?f=5&amp;t=3424">RandmLua</a>. Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.</p>
+
+<p>String Generator - Direct Port from <a href="http://ondras.github.io/rot.js/hp/">rot.js</a></p>
+
+<p>Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeons. Ported from <a href="http://ondras.github.io/rot.js/hp/">rot.js</a>.</p>
+
+<p>Noise Generator  - Simplex Noise</p>
+
+<p>FOV              - Bresenham Line based Ray Casting, Precise Shadow Casting</p>
+
+<p>Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from <a href="http://ondras.github.io/rot.js/hp/">rot.js</a>)</p>
+
+<p>Path Finding     - Dijkstra and AStar pathfinding ported from <a href="http://ondras.github.io/rot.js/hp/">rot.js</a>.</p>
+
+<p>Lighting         - compute light emission and blending, ported from <a href="http://ondras.github.io/rot.js/hp/">rot.js</a>.</p>
+
+<h1>Demos Folder</h1>
+
+<p>In Demos/main.lua (you'll want the demos branch), uncomment the line for the demo you'd like to see.</p>
+
+<p>Then, from the Demos directory in the shell, run <code>love .</code></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Rotlove maintained by <a href="https://github.com/paulofmandown">paulofmandown</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
