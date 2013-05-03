@@ -2,7 +2,7 @@ RogueLike Toolkit in Love
 =========
 Bringing [rot.js](http://ondras.github.io/rot.js/hp/) functionality to Love2D
 
-Currently Implemented:
+See [this page](http://paulofmandown.github.io/rotLove/) for a quick and dirty run down of all the functionalit provided.
 
 Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation rather than full font support.
 
