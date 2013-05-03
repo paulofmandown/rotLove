@@ -498,6 +498,169 @@ It's very quick and awesome, and I highly suggest using it over bresenham.</p>
 <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
 </pre></div>
 
+<h1>Color </h1>
+
+<p>Color is a basic color toolset. It can generate usable colors from strings, add/multiply/interpolate multiple colors, and it also provides ~140 colors to start.</p>
+
+<div class="highlight"><pre><span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="n">colorHandler</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Color</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="c1">-- build a color from a string</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">rgb(10, 128, 230)'</span><span class="p">)</span>   <span class="c1">-- js style rgb</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">#faa'</span><span class="p">)</span>                <span class="c1">-- 3-character hex</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">#83fcc4'</span><span class="p">)</span>             <span class="c1">-- 6-character hex</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">goldenrod'</span><span class="p">)</span>           <span class="c1">-- a color name defined by ROT.Color</span>
+
+    <span class="c1">-- Explicitly define a color object - This is how all elements of rotLove see colors</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">51</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">51</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
+
+    <span class="c1">-- add multiple colors. first argument is a base color, the second argument can be one color or a table of colors</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">add</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="p">{{</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}})</span>
+
+    <span class="c1">-- multiply multiple colors</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">multiply</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">goldenrod'</span><span class="p">),</span>
+                             <span class="p">{</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">lightcyan'</span><span class="p">),</span>
+                              <span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">lightcoral'</span><span class="p">)})</span>
+
+    <span class="c1">-- interpolate two colors</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">interpolate</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">interpolateHSL</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
+
+    <span class="c1">-- generate a random color from a base color and a set of standard deviations</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
+    <span class="n">c</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
+
+    <span class="n">c</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">)</span>
+
+    <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> 
+    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="c1">-- Wipe the screen with one of the colors</span>
+    <span class="n">f</span><span class="p">:</span><span class="n">clear</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">end</span>
+</pre></div>
+
+<h1>Lighting</h1>
+
+<p>Lighting is probably my favorite thing, ever. With it you can set a light source at a given point with a given color. It will emit light based on a provided FOV. If two lights overlap, their colors will mix together.</p>
+
+<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
+
+    <span class="c1">-- We'll use a color object to mix the light sources with the ambient light.</span>
+    <span class="n">colorhandler</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Color</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
+
+    <span class="c1">-- to store map data</span>
+    <span class="n">mapData</span><span class="o">=</span><span class="p">{}</span>
+
+    <span class="c1">-- to store lighting data</span>
+    <span class="n">lightData</span><span class="o">=</span><span class="p">{}</span>
+
+    <span class="c1">-- making a cave</span>
+    <span class="n">map</span><span class="o">=</span> <span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Cellular</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
+    <span class="n">map</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span> <span class="k">do</span> <span class="n">map</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">mapCallback</span><span class="p">)</span> <span class="k">end</span>
+
+    <span class="c1">-- We'll need an FOV object to pass to lighting</span>
+    <span class="n">fov</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">FOV</span><span class="p">.</span><span class="n">Precise</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">lightPasses</span><span class="p">,</span> <span class="p">{</span><span class="n">topology</span><span class="o">=</span><span class="mi">4</span><span class="p">})</span>
+
+    <span class="c1">-- get a lighting object</span>
+    <span class="n">lighting</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Lighting</span><span class="p">(</span><span class="n">reflectivityCB</span><span class="p">,</span> <span class="p">{</span><span class="n">range</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">passes</span><span class="o">=</span><span class="mi">2</span><span class="p">})</span>
+
+    <span class="c1">-- pass the fov object to lighting</span>
+    <span class="n">lighting</span><span class="p">:</span><span class="n">setFOV</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+    <span class="c1">-- randomly place some lights</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span>  <span class="k">do</span>
+        <span class="kd">local</span> <span class="n">point</span><span class="o">=</span><span class="n">getRandomFloor</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">*'</span><span class="p">,</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">lighting</span><span class="p">:</span><span class="n">setLight</span><span class="p">(</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">getRandomColor</span><span class="p">())</span>
+    <span class="k">end</span>
+
+    <span class="c1">-- this will generate the lighting data</span>
+    <span class="n">lighting</span><span class="p">:</span><span class="n">compute</span><span class="p">(</span><span class="n">lightingCallback</span><span class="p">)</span>
+
+    <span class="c1">-- a default ambient light value for all cells</span>
+    <span class="kd">local</span> <span class="n">ambientLight</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
+
+    <span class="c1">-- loop through all of the cells</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">mapData</span><span class="p">)</span> <span class="k">do</span>
+        <span class="c1">-- get the cell position</span>
+        <span class="kd">local</span> <span class="n">parts</span><span class="o">=</span><span class="n">k</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">x</span>    <span class="o">=</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="kd">local</span> <span class="n">y</span>    <span class="o">=</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="c1">-- a base color for wall or floor cells</span>
+        <span class="kd">local</span> <span class="n">baseColor</span><span class="o">=</span><span class="n">mapData</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span> <span class="ow">or</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
+
+        <span class="c1">-- mix the lighting values with the default ambient light values</span>
+        <span class="kd">local</span> <span class="n">light</span><span class="o">=</span><span class="n">ambientLight</span>
+        <span class="k">if</span> <span class="n">lightData</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">then</span>
+            <span class="n">light</span><span class="o">=</span><span class="n">colorhandler</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">lightData</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">end</span>
+
+        <span class="c1">-- mix the base color of cells with the lighting value</span>
+        <span class="kd">local</span> <span class="n">finalColor</span><span class="o">=</span><span class="n">colorhandler</span><span class="p">:</span><span class="n">multiply</span><span class="p">(</span><span class="n">baseColor</span><span class="p">,</span> <span class="n">light</span><span class="p">)</span>
+
+        <span class="c1">-- if we set a character at this cell earlier, get it</span>
+        <span class="kd">local</span> <span class="n">char</span><span class="o">=</span><span class="n">f</span><span class="p">:</span><span class="n">getCharacter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="c1">-- write the light and character to the display</span>
+        <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">char</span> <span class="ow">and</span> <span class="n">char</span> <span class="ow">or</span> <span class="s1">'</span><span class="s"> '</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
+
+<span class="k">function</span> <span class="nf">lightingCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
+    <span class="n">lightData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">color</span>
+<span class="k">end</span>
+
+<span class="c1">-- generate a totally random subtle color</span>
+<span class="k">function</span> <span class="nf">getRandomColor</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="n">r</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
+             <span class="n">g</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
+             <span class="n">b</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
+             <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1">-- to get a random floor cell</span>
+<span class="k">function</span> <span class="nf">getRandomFloor</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="kc">nil</span>
+    <span class="k">while</span> <span class="kc">true</span> <span class="k">do</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">())</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">mapData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="k">then</span>
+            <span class="k">return</span> <span class="n">key</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1">-- floor cells near to a light source can potentially emit light themselves. this callback is passed to the lighting object at creation to assist with that.</span>
+<span class="k">function</span> <span class="nf">reflectivityCB</span><span class="p">(</span><span class="n">lighting</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
+    <span class="k">return</span> <span class="n">mapData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="mf">.3</span> <span class="ow">or</span> <span class="mi">0</span>
+<span class="k">end</span>
+
+<span class="c1">-- to determine if light can pass through a cell</span>
+<span class="k">function</span> <span class="nf">lightPasses</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="c1">-- the standard map callback</span>
+<span class="k">function</span> <span class="nf">mapCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="n">mapData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+<span class="k">end</span>
+</pre></div>
+
 <h1>Path Finding - Dijkstra and AStar</h1>
 
 <p>Dijkstra was built using a simplified version of <a href="http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra's Algorithm</a> where all edges have a length of 1.</p>
