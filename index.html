@@ -31,39 +31,125 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <div class="highlight"><pre>            <span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-                <span class="c1">-- Display(widthInCharacters, heightInCharacters, characterScale</span>
-                <span class="c1">--         defaultForegroundColor, defaultBackgroundColor,</span>
-                <span class="c1">--         useFullScreen, useVSync, numberOfFsaaSamples)</span>
-                <span class="c1">-- Defaults shown here</span>
-                <span class="n">frame</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-                <span class="n">rand</span> <span class="o">=</span> <span class="nb">math.random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-                <span class="n">rng</span> <span class="o">=</span> <span class="n">rand</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span> <span class="ow">or</span>
-                      <span class="n">rand</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">LCG</span><span class="p">:</span><span class="n">new</span><span class="p">()</span> <span class="ow">or</span>
-                      <span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">MWC</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-                <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
-            <span class="k">end</span>
-            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
-                <span class="n">frame</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
-            <span class="k">end</span>
+        <p>rotLove is mostly a direct port of rot.js. I love roguelikes and love2D, and (being a beginner struggling to break in to intermediacy) I thought it would be fun to create something that duplicated the functionality found in libtcod and rot.js.</p>
 
-            <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span>
+<p>Following are some simple examples of a few of the classes available with rotLove. I'll be adding more here as I get time, but for now I've included a <a href="https://github.com/paulofmandown/rotLove/tree/demos">demos branch</a> that has examples for every bit of functionality offered.</p>
 
-            <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">80</span> <span class="k">then</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span>
-                <span class="k">else</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">24</span> <span class="ow">and</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
-                <span class="k">end</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">255</span> <span class="ow">and</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
-                <span class="n">frame</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="nb">string.char</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">getRandomColor</span><span class="p">(),</span> <span class="n">getRandomColor</span><span class="p">())</span>
-            <span class="k">end</span>
+<h1>Display</h1>
 
-            <span class="k">function</span> <span class="nf">getRandomColor</span><span class="p">()</span>
-                <span class="k">return</span> <span class="p">{</span> <span class="n">r</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
-                         <span class="n">g</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
-                         <span class="n">b</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)),</span>
-                         <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-            <span class="k">end</span>
+<p>Display started out as rlLove, which itself was a port of <a href="https://github.com/trystan/">Trystan Spangler's</a> Java-based <a href="https://github.com/trystan/AsciiPanel">Ascii Panel</a> to Love2D.</p>
+
+<p>It is not as robust as rot.js' Display feature, in that is effectively a code page 437 ASCII terminal emulator.</p>
+
+<div class="highlight"><pre><span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+  <span class="c1">-- create a display object with the following.</span>
+    <span class="c1">-- Display(widthInCharacters(80), heightInCharacters(24), characterScale(1)</span>
+    <span class="c1">--         defaultForegroundColor({r=235, g=235, b=235, a=255}),</span>
+    <span class="c1">--         defaultBackgroundColor({r=15 , g=15 , b=15 , a=255}),</span>
+    <span class="c1">--         useFullScreen, useVSync, numberOfFsaaSamples (false, false, 0))</span>
+    <span class="n">display</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+  <span class="c1">-- and write some things out.</span>
+    <span class="kd">local</span> <span class="n">x_position</span><span class="o">=</span><span class="mi">1</span>
+    <span class="kd">local</span> <span class="n">y_position</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">display</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">some string or character'</span><span class="p">,</span> <span class="n">x_position</span><span class="p">,</span> <span class="n">y_position</span><span class="p">)</span>
+
+  <span class="c1">-- or write something to the center</span>
+    <span class="n">y_position</span><span class="o">=</span><span class="mi">5</span>
+    <span class="n">display</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">another string/character'</span><span class="p">,</span> <span class="n">y_position</span><span class="p">)</span>
+
+  <span class="c1">-- you can clear the display with:</span>
+  <span class="c1">-- display:clear()</span>
+
+  <span class="c1">-- and you can specify an area to clear with:</span>
+  <span class="c1">-- display:clear(char, x_position, y_position, width, height)</span>
+    <span class="c1">-- defaults are: ' ', 1, 1, displayWidthInChars, displayHeightInChars</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> <span class="k">end</span>
+</pre></div>
+
+<h1>String Generator</h1>
+
+<p>The string generator can be given words to learn from, and then provide you with randomly generated words based on what it has learned.</p>
+
+<div class="highlight"><pre><span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="c1">-- make your display</span>
+    <span class="n">frame</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+
+    <span class="c1">-- now make your string generator</span>
+    <span class="n">sg</span> <span class="o">=</span> <span class="n">ROT</span><span class="p">.</span><span class="n">StringGenerator</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+
+    <span class="c1">-- read in your names.</span>
+    <span class="c1">-- where names.txt is a plain-text list of mixed-case names (one per line)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="nb">io.lines</span><span class="p">(</span><span class="s1">'</span><span class="s">names.txt'</span><span class="p">)</span> <span class="k">do</span>
+        <span class="c1">-- .observe(string) reads a string and learns from it.</span>
+        <span class="n">sg</span><span class="p">:</span><span class="n">observe</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="c1">-- .getStats() will tell you how many distinct characters your string gen will use</span>
+                              <span class="c1">-- how many different contexts it has seen</span>
+                                 <span class="c1">-- (i.e.: the context of the letter 'n' in seen is 'see')</span>
+                              <span class="c1">-- and how many words your string gen has seen</span>
+    <span class="n">frame</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="n">sg</span><span class="p">:</span><span class="n">getStats</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="mi">24</span> <span class="k">do</span>
+        <span class="c1">-- .generate() will return a random string weighted on the words it has seen with .observe()</span>
+        <span class="kd">local</span> <span class="n">name</span> <span class="o">=</span> <span class="n">sg</span><span class="p">:</span><span class="n">generate</span><span class="p">()</span>
+        <span class="n">frame</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> <span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">frame</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
+</pre></div>
+
+<h1>EventQueue</h1>
+
+<p>The event queue is the base element of all of the schedulers. It can receive any object and feed it back to you when it's turn comes up.</p>
+
+<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="c1">-- create the event queue</span>
+    <span class="n">q</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">EventQueue</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="c1">-- use add(object, timeToTurn) to add events</span>
+    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e1'</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e2'</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e3'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="c1">-- remove(object) will remove the next instance of the provided object from the queue</span>
+    <span class="n">q</span><span class="p">:</span><span class="n">remove</span><span class="p">(</span><span class="s1">'</span><span class="s">e2'</span><span class="p">)</span>
+
+    <span class="c1">-- get() returns the next object from the queue</span>
+    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">get</span><span class="p">()),</span> <span class="mi">11</span><span class="p">)</span>
+    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">get</span><span class="p">()),</span> <span class="mi">12</span><span class="p">)</span>
+
+    <span class="c1">-- getTime() returns the number of time units that have passed since the queue was initiated</span>
+    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">getTime</span><span class="p">()),</span> <span class="mi">13</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
+</pre></div>
+
+<h1>Simple Scheduler</h1>
+
+<p>Simple scheduler is a turn scheduler that takes in objects and returns them in order. It has an additional parameter for repeating events.</p>
+
+<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Scheduler</span><span class="p">.</span><span class="n">Simple</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="c1">-- use add to add objects. the second argument (if true) will tell the scheduler to re-insert the event after every turn it gets.</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span> <span class="k">do</span> <span class="n">s</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
+    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
+    <span class="c1">-- use next() to get the next event</span>
+    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">TURN: '</span><span class="o">..</span><span class="n">s</span><span class="p">:</span><span class="nb">next</span><span class="p">())</span>
+<span class="k">end</span>
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
 </pre></div>
       </section>
     </div>
@@ -76,7 +162,7 @@
       </footer>
     </div>
 
-
+    
 
   </body>
 </html>
