@@ -1,3 +1,7 @@
+--- The RNG Prototype.
+-- The base class that is extended by all rng classes
+-- @module ROT.RNG
+
 local RNG_PATH =({...})[1]:gsub("[%.\\/]rng$", "") .. '/'
 local class  =require (RNG_PATH .. 'vendor/30log')
 
@@ -46,6 +50,9 @@ function RNG:bit_xor(a, b)
     return self:normalize(r)
 end
 
+--- Seed.
+-- get the host system's time in milliseconds as a positive 32 bit number
+-- @return number
 function RNG:seed()
     --return self:normalize(tonumber(tostring(os.time()):reverse()))
     return self:normalize(os.time())

@@ -1,3 +1,7 @@
+--- Visual Display.
+-- A Code Page 437 terminal emulator based on AsciiPanel.
+-- @module ROT.Display
+
 local Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
 local class=require (Display_Path .. 'vendor/30log')
 
@@ -24,20 +28,17 @@ local Display = class {
 	canvas
 }
 
---[[ Init/Constructor
-	   Create a new 'terminal' with:
-	      rlLove  ='Path/to/RLLove_Folder/rlLove'
-	      terminal=RLLove(w, h, dfg, dbg, full, vsync, fsaa)
-	    where
-	    w    = width of terminal in number of characters (dictates what populates love.graphics.setMode)
-	    h    = height of terminal in number of characters (dictates what populates love.graphics.setMode)
-        scale= glyphSize (1: charWidth=9, charHeight=16)
-	    dfg  = default foreground color of type [red, green, blue, alpha]
-	    dbg  = default background color of type [red, green, blue, alpha]
-	    full = boolean for use full screen (populates love.graphics.setMode)
-	    vsync= boolean for use vsync (populates love.graphics.setMode)
-	    fsaa = number of fsaa samples (populates love.graphics.setMode)
-  ]]
+--- Constructor.
+-- The display constructor. Called when ROT.Display:new() is called.
+-- @tparam[opt=80] int w Width of display in number of characters
+-- @tparam[opt=24] int h Height of display in number of characters
+-- @tparam[opt=1] float scale Scale factor applied to characters
+-- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
+-- @tparam[opt] table dbg Default background color
+-- @tparam[opt=false] boolean full Use fullscreen
+-- @tparam[opt=false] boolean vsync Use vsync
+-- @tparam[opt=0] int fsaa Number of fsaa passes
+-- @return nil
 function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	self.__name='Display'
 	self.widthInChars = w and w or 80
@@ -57,8 +58,8 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	self.oldForegroundColors={{}}
 	love.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, self.full, self.vsync, self.fsaa)
 
-	self.defaultForegroundColor=dfg and dfg or {r=235, g=235, b=235, a=255}
-	self.defaultBackgroundColor=dbg and dgb or {r=15, g=15, b=15, a=255}
+	self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
+	self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
 	love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
 									 self.defaultBackgroundColor.g,
@@ -67,7 +68,6 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 
 	self.canvas=love.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
-	-- Populate the glyph image table
 	self.glyphSprite=love.graphics.newImage(Display_Path .. 'img/cp437.png')
 	for i=0,255 do
 		sx=(i%32)*9
@@ -93,6 +93,8 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
 	end
 end
 
+--- Draw.
+-- The main draw function. This should be called from love.draw() to display any written characters to screen
 function Display:draw()
 	love.graphics.setCanvas(self.canvas)
 	for x=1,self.widthInChars do
@@ -106,11 +108,11 @@ function Display:draw()
 			   self.oldBackgroundColors[x][y] ~= bg or
 			   self.oldForegroundColors[x][y] ~= fg then
 
-		   		self:setColor(bg)
+		   		self:_setColor(bg)
 		   		love.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
                 if c~=32 and c~=255 then
     		   		local qd=self.glyphs[c]
-	       	   		self:setColor(fg)
+	       	   		self:_setColor(fg)
 		      		love.graphics.drawq(self.glyphSprite, qd, px, py, nil, self.scale)
                 end
 
@@ -125,7 +127,6 @@ function Display:draw()
 	love.graphics.draw(self.canvas)
 end
 
--- Gets
 function Display:getCharHeight() return self.charHeight end
 function Display:getCharWidth() return self.charWidth end
 function Display:getWidth() return self:getWidthInChars() end
@@ -134,28 +135,53 @@ function Display:getHeightInChars() return self.heightInChars end
 function Display:getWidthInChars() return self.widthInChars end
 function Display:getDefaultBackgroundColor() return self.defaultBackgroundColor end
 function Display:getDefaultForegroundColor() return self.defaultForegroundColor end
+
+--- Get a character.
+-- returns the character being displayed at position x, y
+-- @tparam int x The x-position of the character
+-- @tparam int y The y-position of the character
+-- @treturn string The character
 function Display:getCharacter(x, y) return string.char(self.chars[x][y]) end
+
+--- Get a background color.
+-- returns the current background color of the character written to position x, y
+-- @tparam int x The x-position of the character
+-- @tparam int y The y-position of the character
+-- @treturn table The background color as a table defined as {r,g,b,a}
 function Display:getBackgroundColor(x, y) return self.backgroundColors[x][y] end
+
+--- Get a foreground color.
+-- returns the current foreground color of the character written to position x, y
+-- @tparam int x The x-position of the character
+-- @tparam int y The y-position of the character
+-- @treturn table The foreground color as a table defined as {r,g,b,a}
 function Display:getForegroundColor(x, y) return self.foregroundColors[x][y] end
--- Sets
+
+--- Set Default Background Color.
+-- Sets the background color to be used when it is not provided
+-- @tparam table c The background color as a table defined as {r,g,b,a}
 function Display:setDefaultBackgroundColor(c)
-	self.defaultBackgroundColor=c and c or self.color.black
+	self.defaultBackgroundColor=c and c or self.defaultBackgroundColor
 end
+
+--- Set Defaul Foreground Color.
+-- Sets the foreground color to be used when it is not provided
+-- @tparam table c The foreground color as a table defined as {r,g,b,a}
 function Display:setDefaultForegroundColor(c)
-	self.defaultForegroundColor=c and c or {r=235, g=235, b=235, a=255}
+	self.defaultForegroundColor=c and c or self.defaultForegroundColor
 end
 
-
--- other
---[[ Clear a designated rectangle of space with specified char and colors
-	 c  = Character to use in wipe (nil defaults to space)
-	 x  = x-coord of top-left of clearing box (defaults to 1)
-	 y  = y-coord of top-left of clearing box (defaults to 1)
-	 w  = distance x of clearing box (defaults to widthInChars)
-	 h  = distance y of clearing box (defaults to heightInChars)
-	 fg = foreground color to use (defaults to defaultForegroundColor)
-	 bg = background color to use (defaults to defaultBackgroundColor)
-]]
+--- Clear the screen.
+-- By default wipes the screen to the default background color.
+-- You can provide a character, x-position, y-position, width, height, fore-color and back-color
+-- and write the same character to a portion of the screen
+-- @tparam[opt=' '] string c A character to write to the screen - may fail for strings with a length > 1
+-- @tparam[opt=1] int x The x-position from which to begin the wipe
+-- @tparam[opt=1] int y The y-position from which to begin the wipe
+-- @tparam[opt] int w The number of chars to wipe in the x direction
+-- @tparam[opt] int h Then number of chars to wipe in the y direction
+-- @tparam[opt] table fg The color used to write the provided character
+-- @tparam[opt] table bg the color used to fill in the background of the cleared space
 function Display:clear(c, x, y, w, h, fg, bg)
 	c =c and c or ' '
 	w =w and w or self.widthInChars
@@ -163,50 +189,58 @@ function Display:clear(c, x, y, w, h, fg, bg)
 	for i=1,w do
 		s=s..c
 	end
-	x =self:validateX(x, s)
-	y =self:validateY(y)
-	h =self:validateHeight(y, h)
-	fg=self:validateForegroundColor(fg)
-	bg=self:validateBackgroundColor(bg)
+	x =self:_validateX(x, s)
+	y =self:_validateY(y)
+	h =self:_validateHeight(y, h)
+	fg=self:_validateForegroundColor(fg)
+	bg=self:_validateBackgroundColor(bg)
 	for i=0,h do
-		self:writeValidatedString(s, x, y+i, fg, bg)
+		self:_writeValidatedString(s, x, y+i, fg, bg)
 	end
 end
 
+--- Clear canvas.
+-- runs the clear method of the Love2D canvas object being used to write to the screen
 function Display:clearCanvas()
 	self.canvas:clear()
 end
 
---[[ Write character or string to the display
-     s  = String/Char to write            (required)
-     x  = x Position in display           (optional)
-     y  = y Position in display           (optional)
-     fg = foreground color of char/string (optional)
-     bg = background color of char/string (optional)
-]]
+--- Write.
+-- Writes a string to the screen
+-- @tparam string s The string to be written
+-- @tparam[opt=1] int x The x-position where the string will be written
+-- @tparam[opt=1] int y The y-position where the string will be written
+-- @tparam[opt] table fg The color used to write the provided string
+-- @tparam[opt] table bg the color used to fill in the string's background
 function Display:write(s, x, y, fg, bg)
 	assert(s, "Display:write() must have string as param")
-	x = self:validateX(x, s)
-	y = self:validateY(y, s)
-	fg= self:validateForegroundColor(fg)
-	bg= self:validateBackgroundColor(bg)
+	x = self:_validateX(x, s)
+	y = self:_validateY(y, s)
+	fg= self:_validateForegroundColor(fg)
+	bg= self:_validateBackgroundColor(bg)
 
-	self:writeValidatedString(s, x, y, fg, bg)
+	self:_writeValidatedString(s, x, y, fg, bg)
 end
 
+--- Write Center.
+-- write a string centered on the middle of the screen
+-- @tparam string s The string to be written
+-- @tparam[opt=1] int y The y-position where the string will be written
+-- @tparam[opt] table fg The color used to write the provided string
+-- @tparam[opt] table bg the color used to fill in the string's background
 function Display:writeCenter(s, y, fg, bg)
 	assert(s, "Display:writeCenter() must have string as param")
 	assert(#s<self.widthInChars, "Length of "..s.." is greater than screen width")
 	y = y and y or math.floor((self:getHeightInChars() - 1) / 2)
-	y = self:validateY(y, s)
-	fg= self:validateForegroundColor(fg)
-	bg= self:validateBackgroundColor(bg)
+	y = self:_validateY(y, s)
+	fg= self:_validateForegroundColor(fg)
+	bg= self:_validateBackgroundColor(bg)
 
 	local x=math.floor((self.widthInChars-#s)/2)
 	self:writeValidatedString(s, x, y, fg, bg)
 end
 
-function Display:writeValidatedString(s, x, y, fg, bg)
+function Display:_writeValidatedString(s, x, y, fg, bg)
 	for i=1,#s do
 		self.backgroundColors[x+i-1][y] = bg
 		self.foregroundColors[x+i-1][y] = fg
@@ -215,36 +249,36 @@ function Display:writeValidatedString(s, x, y, fg, bg)
 end
 
 
-function Display:validateX(x, s)
+function Display:_validateX(x, s)
 	x = x and x or 1
 	assert(x>0 and x<=self.widthInChars, "X value must be between 0 and "..self.widthInChars)
 	assert((x+#s)-1<=self.widthInChars, "X value plus length of String must be between 0 and "..self.widthInChars)
 	return x
 end
-function Display:validateY(y)
+function Display:_validateY(y)
 	y = y and y or 1
 	assert(y>0 and y<=self.heightInChars, "Y value must be between 0 and "..self.heightInChars)
 	return y
 end
-function Display:validateForegroundColor(c)
+function Display:_validateForegroundColor(c)
 	c = c and c or self.defaultForegroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
 	assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
 	return c
 end
-function Display:validateBackgroundColor(c)
+function Display:_validateBackgroundColor(c)
 	c = c and c or self.defaultBackgroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
 	assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
 	return c
 end
-function Display:validateHeight(y, h)
+function Display:_validateHeight(y, h)
 	h=h and h or self.heightInChars-y
 	assert(h>0, "Height must be greater than 0. Height provided: "..h)
 	assert(y+h<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
 	return h
 end
-function Display:setColor(c)
+function Display:_setColor(c)
 	c = c and c or self.defaultForegroundColor
 	love.graphics.setColor(c.r, c.g, c.b, c.a)
 end

@@ -1,8 +1,17 @@
+--- The Icey Maze Map Generator.
+-- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
+-- @module ROT.Map.IceyMaze
+
 local IceyMaze_PATH =({...})[1]:gsub("[%.\\/]iceyMaze$", "") .. '/'
 local class  =require (IceyMaze_PATH .. 'vendor/30log')
 
 local IceyMaze = ROT.Map:extends { _regularity, _rng }
 
+--- Constructor.
+-- Called with ROT.Map.IceyMaze:new(width, height, regularity)
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
 function IceyMaze:__init(width, height, regularity)
 	assert(ROT or twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')
 	IceyMaze.super.__init(self, width, height)
@@ -12,6 +21,13 @@ function IceyMaze:__init(width, height, regularity)
     self._rng:randomseed()
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.IceyMaze self
 function IceyMaze:create(callback)
 	local w=self._width
 	local h=self._height

@@ -1,13 +1,27 @@
+--- The Divided Maze Map Generator.
+-- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
+-- @module ROT.Map.DividedMaze
 local DividedMaze_PATH =({...})[1]:gsub("[%.\\/]dividedMaze$", "") .. '/'
 local class  =require (DividedMaze_PATH .. 'vendor/30log')
 
 local DividedMaze = ROT.Map:extends { }
 
+--- Constructor.
+-- Called with ROT.Map.DividedMaze:new(width, height)
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
 function DividedMaze:__init(width, height)
 	DividedMaze.super.__init(self, width, height)
 	self.__name = 'DividedMaze'
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.DividedMaze self
 function DividedMaze:create(callback)
 	local w=self._width
 	local h=self._height

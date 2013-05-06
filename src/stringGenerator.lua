@@ -1,3 +1,6 @@
+--- Random String Generator.
+-- Learns from provided strings, and generates similar strings.
+-- @module ROT.StringGenerator
 local StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
 local class  =require (StringGen_Path .. 'vendor/30log')
 
@@ -11,6 +14,13 @@ local StringGenerator = class {
 	_data,
     _rng
 }
+
+--- Constructor.
+-- Called with ROT.StringGenerator:new()
+-- @tparam table options A table with the following fields:
+    -- @tparam[opt=false] boolean options.words Use word mode
+    -- @tparam[opt=3] int options.order Number of letters/words to be used as context
+    -- @tparam[opt=0.001] number options.prior A default priority for characters/words
 function StringGenerator:__init(options)
 	self.__name   ='StringGenerator'
 	self._options = {words=false,
@@ -36,11 +46,14 @@ function StringGenerator:__init(options)
     self._rng:randomseed()
 end
 
+--- Remove all learned data
 function StringGenerator:clear()
 	self._data={}
 	self._priorValues={}
 end
 
+--- Generate a string
+-- @treturn string The generated string
 function StringGenerator:generate()
 	local result={self:_sample(self._prefix)}
 	local i=0
@@ -51,8 +64,11 @@ function StringGenerator:generate()
 	return table.concat(result)
 end
 
-function StringGenerator:observe(string)
-	local tokens = self:_split(string)
+--- Observe
+-- Learn from a string
+-- @tparam string s The string to observe
+function StringGenerator:observe(s)
+	local tokens = self:_split(s)
 	for i=1,#tokens do
 		self._priorValues[tokens[i]] = self._options.prior
 	end
@@ -72,6 +88,9 @@ function StringGenerator:observe(string)
 	end
 end
 
+--- get Stats
+-- Get info about learned strings
+-- @treturn string Number of observed strings, number of contexts, number of possible characters/words
 function StringGenerator:getStats()
 	local parts={}
 	local prC=0
