@@ -43,9 +43,9 @@
   <li><a href="../modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
   <li><a href="../modules/ROT.FOV.Bresenham.html">ROT.FOV.Bresenham</a></li>
   <li><a href="../modules/ROT.FOV.Precise.html">ROT.FOV.Precise</a></li>
-  <li><a href="../modules/ROT.Lighting.html">ROT.Lighting</a></li>
+  <li><strong>ROT.Lighting</strong></li>
   <li><a href="../modules/ROT.Map.Arena.html">ROT.Map.Arena</a></li>
-  <li><strong>ROT.Map.Cellular</strong></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">ROT.Map.Cellular</a></li>
   <li><a href="../modules/ROT.Map.Corridor.html">ROT.Map.Corridor</a></li>
   <li><a href="../modules/ROT.Map.Digger.html">ROT.Map.Digger</a></li>
   <li><a href="../modules/ROT.Map.DividedMaze.html">ROT.Map.DividedMaze</a></li>
@@ -73,29 +73,31 @@
 
 <div id="content">
 
-<h1>Module <code>ROT.Map.Cellular</code></h1>
+<h1>Module <code>ROT.Lighting</code></h1>
 
-<p>Cellular Automaton Map Generator</p>
-<p></p>
+<p>Lighting Calculator.</p>
+<p>
+ based on a traditional FOV for multiple light sources and multiple passes.</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:__init">Cellular:__init&nbsp;(width, height [, options])</a></td>
+	<td class="name" nowrap><a href="#Lighting:__init">Lighting:__init&nbsp;(reflectivityCallback, options)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:randomize">Cellular:randomize&nbsp;(prob)</a></td>
-	<td class="summary">Randomize cells.</td>
+	<td class="name" nowrap><a href="#Lighting:setFOV">Lighting:setFOV&nbsp;(fov)</a></td>
+	<td class="summary">Set FOV
+ Set the Field of View algorithm used to calculate light emission</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:set">Cellular:set&nbsp;(x, y, value)</a></td>
-	<td class="summary">Set.</td>
+	<td class="name" nowrap><a href="#Lighting:setLight">Lighting:setLight&nbsp;(x, y, color)</a></td>
+	<td class="summary">Add or remove a light source</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:create">Cellular:create&nbsp;(callback)</a></td>
-	<td class="summary">Create.</td>
+	<td class="name" nowrap><a href="#Lighting:compute">Lighting:compute&nbsp;(lightingCallback)</a></td>
+	<td class="summary">Compute.</td>
 	</tr>
 </table>
 
@@ -106,32 +108,35 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "Cellular:__init"></a>
-    <strong>Cellular:__init&nbsp;(width, height [, options])</strong>
+    <a name = "Lighting:__init"></a>
+    <strong>Lighting:__init&nbsp;(reflectivityCallback, options)</strong>
     </dt>
     <dd>
     Constructor.
- Called with ROT.Map.Cellular:new()
+ Called with ROT.Color:new()
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">width</span>
+        <li><span class="parameter">reflectivityCallback</span> Callback to retrieve cell reflectivity must return float(0..1)
+        <ul>
+        <li><span class="parameter">x</span>
             <span class="types"><span class="type">int</span></span>
-         Width in cells of the map</li>
-        <li><span class="parameter">height</span>
+         x-position of cell</li>
+        <li><span class="parameter">y</span>
             <span class="types"><span class="type">int</span></span>
-         Height in cells of the map</li>
+         y-position of cell</li>
+        </li></ul>
         <li><span class="parameter">options</span> Options
         <ul>
-        <li><span class="parameter">born</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         List of neighbor counts for a new cell to be born in empty space</li>
-        <li><span class="parameter">survive</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         List of neighbor counts for an existing  cell to survive</li>
-        <li><span class="parameter">topology</span>
+        <li><span class="parameter">passes</span>
             <span class="types"><span class="type">int</span></span>
-         Topology. Accepted values: 4, 8</li>
+         Number of passes. 1 equals to simple FOV of all light sources, >1 means a *highly simplified* radiosity-like algorithm.</li>
+        <li><span class="parameter">emissionThreshold</span>
+            <span class="types"><span class="type">int</span></span>
+         Cells with emissivity > threshold will be treated as light source in the next pass.</li>
+        <li><span class="parameter">range</span>
+            <span class="types"><span class="type">int</span></span>
+         Max light range</li>
         </li></ul>
     </ul>
 
@@ -141,85 +146,90 @@
 
 </dd>
     <dt>
-    <a name = "Cellular:randomize"></a>
-    <strong>Cellular:randomize&nbsp;(prob)</strong>
+    <a name = "Lighting:setFOV"></a>
+    <strong>Lighting:setFOV&nbsp;(fov)</strong>
     </dt>
     <dd>
-    Randomize cells.
- Random fill map with 0 or 1. Call this first when creating a map.
+    Set FOV
+ Set the Field of View algorithm used to calculate light emission
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">prob</span>
-            <span class="types"><span class="type">number</span></span>
-         Probability that a cell will be a floor (0). Accepts values between 0 and 1</li>
+        <li><span class="parameter">fov</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Class/Module used to calculate fov Must have compute(x, y, range, cb) method. Typically you would supply ROT.FOV.Precise:new() here.</li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-          <span class="types"><a class="type" href="../modules/ROT.Map.Cellular.html#">ROT.Map.Cellular</a></span>
+          <span class="types"><a class="type" href="../modules/ROT.Lighting.html#">ROT.Lighting</a></span>
         self
     </ol>
 
 
-
-
-</dd>
-    <dt>
-    <a name = "Cellular:set"></a>
-    <strong>Cellular:set&nbsp;(x, y, value)</strong>
-    </dt>
-    <dd>
-    Set.
- Assign a value (0 or 1) to a cell on the map
-
-    <h3>Parameters:</h3>
+    <h3>see also:</h3>
     <ul>
-        <li><span class="parameter">x</span>
-            <span class="types"><span class="type">int</span></span>
-         x-position of the cell</li>
-        <li><span class="parameter">y</span>
-            <span class="types"><span class="type">int</span></span>
-         y-position of the cell</li>
-        <li><span class="parameter">value</span>
-            <span class="types"><span class="type">int</span></span>
-         Value to be assigned 0-Floor 1-Wall</li>
+         <li><a href="../modules/ROT.FOV.Precise.html#">ROT.FOV.Precise</a></li>
+         <li><a href="../modules/ROT.FOV.Bresenham.html#">ROT.FOV.Bresenham</a></li>
     </ul>
 
 
-
-
-
 </dd>
     <dt>
-    <a name = "Cellular:create"></a>
-    <strong>Cellular:create&nbsp;(callback)</strong>
+    <a name = "Lighting:setLight"></a>
+    <strong>Lighting:setLight&nbsp;(x, y, color)</strong>
     </dt>
     <dd>
-    Create.
- Creates a map.
+    Add or remove a light source
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">callback</span> This function will be called for every cell. It must accept the following parameters:
-        <ul>
         <li><span class="parameter">x</span>
             <span class="types"><span class="type">int</span></span>
-         The x-position of a cell in the map</li>
+         x-position of light source</li>
         <li><span class="parameter">y</span>
             <span class="types"><span class="type">int</span></span>
-         The y-position of a cell in the map</li>
-        <li><span class="parameter">value</span>
-            <span class="types"><span class="type">int</span></span>
-         A value representing the cell-type. 0==floor, 1==wall</li>
-        </li></ul>
+         y-position of light source</li>
+        <li><span class="parameter">color</span>
+            <span class="types"><span class="type">nil</span>, <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         An string accepted by Color:fromString(str) or a color table. A nil value here will remove the light source at x, y</li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-          <span class="types"><a class="type" href="../modules/ROT.Map.Cellular.html#">ROT.Map.Cellular</a></span>
+          <span class="types"><a class="type" href="../modules/ROT.Lighting.html#">ROT.Lighting</a></span>
+        self
+    </ol>
+
+
+    <h3>see also:</h3>
+    <ul>
+         <a href="../modules/ROT.Color.html#">ROT.Color</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "Lighting:compute"></a>
+    <strong>Lighting:compute&nbsp;(lightingCallback)</strong>
+    </dt>
+    <dd>
+    Compute.
+ Compute the light sources and lit cells
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">lightingCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         Will be called with (x, y, color) for every lit cell</li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+          <span class="types"><a class="type" href="../modules/ROT.Lighting.html#">ROT.Lighting</a></span>
         self
     </ol>
 

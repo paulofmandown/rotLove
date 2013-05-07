@@ -56,7 +56,7 @@
   <li><a href="../modules/ROT.Map.Room.html">ROT.Map.Room</a></li>
   <li><a href="../modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
   <li><a href="../modules/ROT.Noise.Simplex.html">ROT.Noise.Simplex</a></li>
-  <li><a href="../modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
+  <li><strong>ROT.Path.AStar</strong></li>
   <li><a href="../modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="../modules/ROT.RNG.html">ROT.RNG</a></li>
   <li><a href="../modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></li>
@@ -65,7 +65,7 @@
   <li><a href="../modules/ROT.Scheduler.html">ROT.Scheduler</a></li>
   <li><a href="../modules/ROT.Scheduler.Action.html">ROT.Scheduler.Action</a></li>
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
-  <li><strong>ROT.Scheduler.Speed</strong></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
 </ul>
 
@@ -73,33 +73,22 @@
 
 <div id="content">
 
-<h1>Module <code>ROT.Scheduler.Speed</code></h1>
+<h1>Module <code>ROT.Path.AStar</code></h1>
 
-<p>The Speed based scheduler</p>
+<p>A* Pathfinding
+ Simplified A* algorithm: all edges have a value of 1</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Speed:add">Speed:add&nbsp;(item, repeating)</a></td>
-	<td class="summary">Add.</td>
+	<td class="name" nowrap><a href="#AStar:__init">AStar:__init&nbsp;(toX, toY, passableCallback, options)</a></td>
+	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Speed:next">Speed:next&nbsp;()</a></td>
-	<td class="summary">Next.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Speed:getTime">Speed:getTime&nbsp;()</a></td>
-	<td class="summary">Get Time.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Speed:clear">Speed:clear&nbsp;()</a></td>
-	<td class="summary">Clear.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Speed:remove">Speed:remove&nbsp;(item)</a></td>
-	<td class="summary">Remove.</td>
+	<td class="name" nowrap><a href="#AStar:compute">AStar:compute&nbsp;(fromX, fromY, callback)</a></td>
+	<td class="summary">Compute the path from a starting point</td>
 	</tr>
 </table>
 
@@ -110,115 +99,56 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "Speed:add"></a>
-    <strong>Speed:add&nbsp;(item, repeating)</strong>
+    <a name = "AStar:__init"></a>
+    <strong>AStar:__init&nbsp;(toX, toY, passableCallback, options)</strong>
     </dt>
     <dd>
-    Add.
- Add an item to the schedule
+    Constructor.
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">item</span>
-            <span class="types"><span class="type">userdata</span></span>
-         Any class/module/userdata with a :getSpeed() function. The value returned by getSpeed() should be a number.</li>
-        <li><span class="parameter">repeating</span>
-            <span class="types"><span class="type">boolean</span></span>
-         If true, this item will be rescheduled once it is returned by .next()</li>
+        <li><span class="parameter">toX</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of destination cell</li>
+        <li><span class="parameter">toY</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of destination cell</li>
+        <li><span class="parameter">passableCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed</li>
+        <li><span class="parameter">options</span> Options
+        <ul>
+        <li><span class="parameter">topology</span>
+            <span class="types"><span class="type">int</span></span>
+         Directions for movement Accepted values (4 or 8)</li>
+        </li></ul>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><a class="type" href="../modules/ROT.Scheduler.Speed.html#">ROT.Scheduler.Speed</a></span>
-        self
-    </ol>
 
 
 
 
 </dd>
     <dt>
-    <a name = "Speed:next"></a>
-    <strong>Speed:next&nbsp;()</strong>
+    <a name = "AStar:compute"></a>
+    <strong>AStar:compute&nbsp;(fromX, fromY, callback)</strong>
     </dt>
     <dd>
-    Next.
- Get the next item from the scheduler and advance the appropriate amount time
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><span class="type">item</span> or <span class="type">nil</span></span>
-        The item previously added by .add() or nil if none are queued
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Speed:getTime"></a>
-    <strong>Speed:getTime&nbsp;()</strong>
-    </dt>
-    <dd>
-    Get Time.
- Get time counted since start()
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><span class="type">int</span></span>
-        elapsed time
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Speed:clear"></a>
-    <strong>Speed:clear&nbsp;()</strong>
-    </dt>
-    <dd>
-    Clear.
- Remove all items from scheduler()
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><a class="type" href="../modules/ROT.Scheduler.Speed.html#">ROT.Scheduler.Speed</a></span>
-        self
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Speed:remove"></a>
-    <strong>Speed:remove&nbsp;(item)</strong>
-    </dt>
-    <dd>
-    Remove.
- Find and remove an item from the scheduler(item)
+    Compute the path from a starting point
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">item</span>
-            <span class="types"><span class="type">any</span></span>
-         The previously added item to be removed</li>
+        <li><span class="parameter">fromX</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of starting point</li>
+        <li><span class="parameter">fromY</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of starting point</li>
+        <li><span class="parameter">callback</span>
+            <span class="types"><span class="type">function</span></span>
+         Will be called for every path item with arguments "x" and "y"</li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><span class="type">boolean</span></span>
-        true if an item was removed from the scheduler
-    </ol>
 
 
 

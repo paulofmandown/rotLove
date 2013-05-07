@@ -42,10 +42,10 @@
   <li><a href="../modules/ROT.Display.html">ROT.Display</a></li>
   <li><a href="../modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
   <li><a href="../modules/ROT.FOV.Bresenham.html">ROT.FOV.Bresenham</a></li>
-  <li><a href="../modules/ROT.FOV.Precise.html">ROT.FOV.Precise</a></li>
+  <li><strong>ROT.FOV.Precise</strong></li>
   <li><a href="../modules/ROT.Lighting.html">ROT.Lighting</a></li>
   <li><a href="../modules/ROT.Map.Arena.html">ROT.Map.Arena</a></li>
-  <li><strong>ROT.Map.Cellular</strong></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">ROT.Map.Cellular</a></li>
   <li><a href="../modules/ROT.Map.Corridor.html">ROT.Map.Corridor</a></li>
   <li><a href="../modules/ROT.Map.Digger.html">ROT.Map.Digger</a></li>
   <li><a href="../modules/ROT.Map.DividedMaze.html">ROT.Map.DividedMaze</a></li>
@@ -73,29 +73,23 @@
 
 <div id="content">
 
-<h1>Module <code>ROT.Map.Cellular</code></h1>
+<h1>Module <code>ROT.FOV.Precise</code></h1>
 
-<p>Cellular Automaton Map Generator</p>
-<p></p>
+<p>Precise Shadowcasting Field of View calculator.</p>
+<p>
+ The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
+ See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:__init">Cellular:__init&nbsp;(width, height [, options])</a></td>
+	<td class="name" nowrap><a href="#Precise:__init">Precise:__init&nbsp;(lightPassesCallback, options)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Cellular:randomize">Cellular:randomize&nbsp;(prob)</a></td>
-	<td class="summary">Randomize cells.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Cellular:set">Cellular:set&nbsp;(x, y, value)</a></td>
-	<td class="summary">Set.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Cellular:create">Cellular:create&nbsp;(callback)</a></td>
-	<td class="summary">Create.</td>
+	<td class="name" nowrap><a href="#Precise:compute">Precise:compute&nbsp;(x, y, R, callback)</a></td>
+	<td class="summary">Compute.</td>
 	</tr>
 </table>
 
@@ -106,32 +100,23 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "Cellular:__init"></a>
-    <strong>Cellular:__init&nbsp;(width, height [, options])</strong>
+    <a name = "Precise:__init"></a>
+    <strong>Precise:__init&nbsp;(lightPassesCallback, options)</strong>
     </dt>
     <dd>
     Constructor.
- Called with ROT.Map.Cellular:new()
+ Called with ROT.FOV.Precise:new()
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">width</span>
-            <span class="types"><span class="type">int</span></span>
-         Width in cells of the map</li>
-        <li><span class="parameter">height</span>
-            <span class="types"><span class="type">int</span></span>
-         Height in cells of the map</li>
+        <li><span class="parameter">lightPassesCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         A function with two parameters (x, y) that returns true if a map cell will allow light to pass through</li>
         <li><span class="parameter">options</span> Options
         <ul>
-        <li><span class="parameter">born</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         List of neighbor counts for a new cell to be born in empty space</li>
-        <li><span class="parameter">survive</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         List of neighbor counts for an existing  cell to survive</li>
         <li><span class="parameter">topology</span>
             <span class="types"><span class="type">int</span></span>
-         Topology. Accepted values: 4, 8</li>
+         Direction for light movement Accepted values: (4 or 8)</li>
         </li></ul>
     </ul>
 
@@ -141,87 +126,41 @@
 
 </dd>
     <dt>
-    <a name = "Cellular:randomize"></a>
-    <strong>Cellular:randomize&nbsp;(prob)</strong>
+    <a name = "Precise:compute"></a>
+    <strong>Precise:compute&nbsp;(x, y, R, callback)</strong>
     </dt>
     <dd>
-    Randomize cells.
- Random fill map with 0 or 1. Call this first when creating a map.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">prob</span>
-            <span class="types"><span class="type">number</span></span>
-         Probability that a cell will be a floor (0). Accepts values between 0 and 1</li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><a class="type" href="../modules/ROT.Map.Cellular.html#">ROT.Map.Cellular</a></span>
-        self
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Cellular:set"></a>
-    <strong>Cellular:set&nbsp;(x, y, value)</strong>
-    </dt>
-    <dd>
-    Set.
- Assign a value (0 or 1) to a cell on the map
+    Compute.
+ Get visibility from a given point
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">x</span>
             <span class="types"><span class="type">int</span></span>
-         x-position of the cell</li>
+         x-position of center of FOV</li>
         <li><span class="parameter">y</span>
             <span class="types"><span class="type">int</span></span>
-         y-position of the cell</li>
-        <li><span class="parameter">value</span>
+         y-position of center of FOV</li>
+        <li><span class="parameter">R</span>
             <span class="types"><span class="type">int</span></span>
-         Value to be assigned 0-Floor 1-Wall</li>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Cellular:create"></a>
-    <strong>Cellular:create&nbsp;(callback)</strong>
-    </dt>
-    <dd>
-    Create.
- Creates a map.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">callback</span> This function will be called for every cell. It must accept the following parameters:
+         radius of FOV (i.e.: At most, I can see for R cells)</li>
+        <li><span class="parameter">callback</span> A function that is called for every cell in view. Must accept four parameters.
         <ul>
         <li><span class="parameter">x</span>
             <span class="types"><span class="type">int</span></span>
-         The x-position of a cell in the map</li>
+         x-position of cell that is in view</li>
         <li><span class="parameter">y</span>
             <span class="types"><span class="type">int</span></span>
-         The y-position of a cell in the map</li>
-        <li><span class="parameter">value</span>
+         y-position of cell that is in view</li>
+        <li><span class="parameter">r</span>
             <span class="types"><span class="type">int</span></span>
-         A value representing the cell-type. 0==floor, 1==wall</li>
+         The cell's distance from center of FOV</li>
+        <li><span class="parameter">visibility</span>
+            <span class="types"><span class="type">number</span></span>
+         The cell's visibility rating (from 0-1). How well can you see this cell?</li>
         </li></ul>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-          <span class="types"><a class="type" href="../modules/ROT.Map.Cellular.html#">ROT.Map.Cellular</a></span>
-        self
-    </ol>
 
 
 
