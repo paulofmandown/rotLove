@@ -1,10 +1,21 @@
+--- Rogue Map Generator.
+-- A map generator based on the original Rogue map gen algorithm
+-- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
+-- @module ROT.Map.Rogue
 local Rogue_PATH =({...})[1]:gsub("[%.\\/]rogue$", "") .. '/'
 local class  =require (Rogue_PATH .. 'vendor/30log')
 
 local Rogue=ROT.Map:extends { _options, _rng }
 
+--- Constructor.
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam[opt] table options Options
+  -- @tparam int options.cellWidth Number of cells to create on the horizontal (number of rooms horizontally)
+  -- @tparam int options.cellHeight Number of cells to create on the vertical (number of rooms vertically)
+  -- @tparam int options.roomWidth Room min and max width
+  -- @tparam int options.roomHeight Room min and max height
 function Rogue:__init(width, height, options)
-    assert(ROT, 'require rot, please, sir')
     Rogue.super.__init(self, width, height)
     self.__name='Rogue'
     self._options={cellWidth=3, cellHeight=3}
@@ -28,6 +39,13 @@ function Rogue:__init(width, height, options)
     end
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.Cellular|nil self or nil if time limit is reached
 function Rogue:create(callback)
     self.map=self:_fillMap(1)
     self.rooms={}

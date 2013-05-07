@@ -1,8 +1,17 @@
+--- The Eller Maze Map Generator
+-- See http://homepages.cwi.nl/~tromp/maze.html for explanation
+-- @module ROT.Map.EllerMaze
+
 local EllerMaze_PATH =({...})[1]:gsub("[%.\\/]ellerMaze$", "") .. '/'
 local class  =require (EllerMaze_PATH .. 'vendor/30log')
 
 local EllerMaze = ROT.Map:extends { _rng }
 
+
+--- Constructor.
+-- Called with ROT.Map.EllerMaze:new(width, height)
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
 function EllerMaze:__init(width, height)
 	EllerMaze.super.__init(self, width, height)
 	self.__name='EllerMaze'
@@ -10,6 +19,13 @@ function EllerMaze:__init(width, height)
     self._rng:randomseed()
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.EllerMaze self
 function EllerMaze:create(callback)
 	local map =self:_fillMap(1)
 	local w   =math.ceil((self._width-2)/2)

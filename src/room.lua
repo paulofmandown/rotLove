@@ -1,9 +1,20 @@
+--- Room object.
+-- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
+-- @module ROT.Map.Room
 local Room_PATH =({...})[1]:gsub("[%.\\/]room$", "") .. '/'
 local class  =require (Room_PATH .. 'vendor/30log')
 
 local Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
+
+--- Constructor.
+-- creates a new room object with the assigned values
+-- @tparam int x1 Left wall
+-- @tparam int y1 Upper wall
+-- @tparam int x2 Right wall
+-- @tparam int y2 Bottom wall
+-- @tparam[opt] int x-position of door
+-- @tparam[opt] int y-position of door
 function Room:__init(x1, y1, x2, y2, doorX, doorY)
-	assert(ROT, 'require rot or RandomLua')
 	self._x1   =x1
 	self._x2   =x2
 	self._y1   =y1
@@ -15,10 +26,19 @@ function Room:__init(x1, y1, x2, y2, doorX, doorY)
 	self.__name='Room'
 	self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
-
 end
 
+--- Create Random with position
+-- @tparam int x x-position of room
+-- @tparam int y y-position of room
+-- @tparam int dx x-direction in which to build room 1==right -1==left
+-- @tparam int dy y-direction in which to build room 1==down  -1==up
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function Room:createRandomAt(x, y, dx, dy, options, rng)
+	rng=rng and rng or math.random
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
 	local width=min+math.floor(rng:random(min, max))
@@ -45,6 +65,13 @@ function Room:createRandomAt(x, y, dx, dy, options, rng)
 	end
 end
 
+--- Create Random with center position
+-- @tparam int cx x-position of room's center
+-- @tparam int cy y-position of room's center
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function Room:createRandomCenter(cx, cy, options, rng)
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]

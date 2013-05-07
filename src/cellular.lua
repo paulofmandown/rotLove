@@ -1,8 +1,19 @@
+--- Cellular Automaton Map Generator
+-- @module ROT.Map.Cellular
+
 local Cellular_PATH =({...})[1]:gsub("[%.\\/]cellular$", "") .. '/'
 local class  =require (Cellular_PATH .. 'vendor/30log')
 
 local Cellular = ROT.Map:extends { _rng, _options, _map }
 
+--- Constructor.
+-- Called with ROT.Map.Cellular:new()
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam[opt] table options Options
+  -- @tparam table options.born List of neighbor counts for a new cell to be born in empty space
+  -- @tparam table options.survive List of neighbor counts for an existing  cell to survive
+  -- @tparam int options.topology Topology. Accepted values: 4, 8
 function Cellular:__init(width, height, options)
 	assert(ROT, 'must require rot')
 	Cellular.super.__init(self, width, height)
@@ -23,9 +34,12 @@ function Cellular:__init(width, height, options)
 
 	self._rng = ROT.RNG.Twister:new()
     self._rng:randomseed()
-
 end
 
+--- Randomize cells.
+-- Random fill map with 0 or 1. Call this first when creating a map.
+-- @tparam number prob Probability that a cell will be a floor (0). Accepts values between 0 and 1
+-- @treturn ROT.Map.Cellular self
 function Cellular:randomize(prob)
 	if not self._map then self._map = self:_fillMap(0) end
 	for i=1,self._width do
@@ -36,10 +50,22 @@ function Cellular:randomize(prob)
 	return self
 end
 
+--- Set.
+-- Assign a value (0 or 1) to a cell on the map
+-- @tparam int x x-position of the cell
+-- @tparam int y y-position of the cell
+-- @tparam int value Value to be assigned 0-Floor 1-Wall
 function Cellular:set(x, y, value)
 	self._map[x][y]=value
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.Cellular self
 function Cellular:create(callback)
 	local newMap =self:_fillMap(0)
 	local born   =self._options.born

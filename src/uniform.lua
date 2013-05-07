@@ -1,8 +1,20 @@
+--- The Uniform Map Generator.
+-- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
+-- @module ROT.Map.Uniform
 local Uniform_PATH =({...})[1]:gsub("[%.\\/]uniform$", "") .. '/'
 local class  =require (Uniform_PATH .. 'vendor/30log')
 
 local Uniform=ROT.Map.Dungeon:extends { _options, _rng }
 
+--- Constructor.
+-- Called with ROT.Map.Uniform:new()
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam[opt] table options Options
+  -- @tparam[opt={4,9}] table options.roomWidth room minimum and maximum width
+  -- @tparam[opt={4,6}] table options.roomHeight room minimum and maximum height
+  -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
+  -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
 function Uniform:__init(width, height, options)
     Uniform.super.__init(self, width, height)
     assert(ROT, 'require rot')
@@ -10,7 +22,6 @@ function Uniform:__init(width, height, options)
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},
-                    corridorLength={3,7},
                     roomDugPercentage=0.2,
                     timeLimit=1000
                   }
@@ -27,6 +38,13 @@ function Uniform:__init(width, height, options)
     self._rng:randomseed()
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.Uniform self
 function Uniform:create(callback)
     local t1=os.clock()*1000
     while true do

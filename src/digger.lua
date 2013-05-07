@@ -1,8 +1,22 @@
+--- The Digger Map Generator.
+-- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
+-- @module ROT.Map.Digger
 local Digger_PATH =({...})[1]:gsub("[%.\\/]digger$", "") .. '/'
 local class  =require (Digger_PATH .. 'vendor/30log')
 
 local Digger=ROT.Map.Dungeon:extends { _options, _rng }
 
+--- Constructor.
+-- Called with ROT.Map.Digger:new()
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam[opt] table options Options
+  -- @tparam[opt={3,8}] table options.roomWidth room minimum and maximum width
+  -- @tparam[opt={3,5}] table options.roomHeight room minimum and maximum height
+  -- @tparam[opt={3,7}] table options.corridorLength corridor minimum and maximum length
+  -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
+  -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
+  -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
 function Digger:__init(width, height, options)
 	Digger.super.__init(self, width, height)
 	assert(ROT, 'require rot')
@@ -32,6 +46,13 @@ function Digger:__init(width, height, options)
     self._rng:randomseed()
 end
 
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @treturn ROT.Map.Digger self
 function Digger:create(callback)
 	self._rooms    ={}
 	self._corridors={}
