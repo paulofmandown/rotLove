@@ -1,4 +1,4 @@
---- A* Pathfinding
+--- A* Pathfinding.
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
 local AStar_PATH=({...})[1]:gsub("[%.\\/]astar$", "") .. '/'
