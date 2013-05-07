@@ -1,4 +1,4 @@
---- The Eller Maze Map Generator
+--- The Eller Maze Map Generator.
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
 

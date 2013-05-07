@@ -1,7 +1,17 @@
+--- Corridor object.
+-- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
+-- @module ROT.Map.Corridor
 local Corridor_PATH =({...})[1]:gsub("[%.\\/]corridor$", "") .. '/'
 local class  =require (Corridor_PATH .. 'vendor/30log')
 
 local Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng }
+
+--- Constructor.
+-- Called with ROT.Map.Corridor:new()
+-- @tparam int startX x-position of first floospace in corridor
+-- @tparam int startY y-position of first floospace in corridor
+-- @tparam int endX x-position of last floospace in corridor
+-- @tparam int endY y-position of last floospace in corridor
 function Corridor:__init(startX, startY, endX, endY)
 	assert(ROT, 'require rot')
 	self._startX       =startX
@@ -14,19 +24,34 @@ function Corridor:__init(startX, startY, endX, endY)
     self._rng:randomseed()
 end
 
+--- Create random with position.
+-- @tparam int x x-position of first floospace in corridor
+-- @tparam int y y-position of first floospace in corridor
+-- @tparam int dx x-direction of corridor (-1, 0, 1) for (left, none, right)
+-- @tparam int dy y-direction of corridor (-1, 0, 1) for (up, none, down)
+-- @tparam table options Options
+  -- @tparam table options.corridorLength a table for the min and max corridor lengths {min, max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function Corridor:createRandomAt(x, y, dx, dy, options, rng)
+    rng=rng and rng or math.random
 	local min   =options.corridorLength[1]
 	local max   =options.corridorLength[2]
 	local length=math.floor(rng:random(min, max))
 	return self:new(x, y, x+dx*length, y+dy*length)
 end
 
+--- Write various information about this corridor to the console.
 function Corridor:debug()
 	local command    = write and write or io.write
 	local debugString= 'corridor: '..self._startX..','..self._startY..','..self._endX..','..self._endY
 	command(debugString)
 end
 
+--- Use two callbacks to confirm corridor validity.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @treturn boolean true if corridor is valid.
 function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 	local sx    =self._startX
 	local sy    =self._startY
@@ -68,6 +93,10 @@ function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 	return true
 end
 
+--- Create.
+-- Function runs a callback to dig the corridor into a map
+-- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
+-- @tparam function digCallback The function responsible for digging the corridor into a map.
 function Corridor:create(gen, digCallback)
 	local sx    =self._startX
 	local sy    =self._startY
@@ -86,6 +115,10 @@ function Corridor:create(gen, digCallback)
 	return true
 end
 
+--- Mark walls as priority for a future feature.
+-- Use this for storing the three points at the end of the corridor that you probably want to make sure gets a room attached.
+-- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
+-- @tparam function priorityWallCallback The function responsible for receiving and processing the priority walls
 function Corridor:createPriorityWalls(gen, priorityWallCallback)
 	if not self._endsWithAWall then return end
 

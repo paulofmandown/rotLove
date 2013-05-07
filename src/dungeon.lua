@@ -1,4 +1,4 @@
---- The Dungeon-style map Prototype
+--- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
 

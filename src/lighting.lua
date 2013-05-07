@@ -1,8 +1,20 @@
+--- Lighting Calculator.
+-- based on a traditional FOV for multiple light sources and multiple passes.
+-- @module ROT.Lighting
 local Lighting_PATH=({...})[1]:gsub("[%.\\/]lighting$", "") .. '/'
 local class  =require (Lighting_PATH .. 'vendor/30log')
 
 local Lighting=class {  }
 
+--- Constructor.
+-- Called with ROT.Color:new()
+-- @tparam function reflectivityCallback Callback to retrieve cell reflectivity must return float(0..1)
+  -- @tparam int reflectivityCallback.x x-position of cell
+  -- @tparam int reflectivityCallback.y y-position of cell
+-- @tparam table options Options
+  -- @tparam[opt=1] int options.passes Number of passes. 1 equals to simple FOV of all light sources, >1 means a *highly simplified* radiosity-like algorithm.
+  -- @tparam[opt=100] int options.emissionThreshold Cells with emissivity > threshold will be treated as light source in the next pass.
+  -- @tparam[opt=10] int options.range Max light range
 function Lighting:__init(reflectivityCallback, options)
     self._reflectivityCallback=reflectivityCallback
     self._options={passes=1, emissionThreshold=100, range=10}
@@ -16,12 +28,24 @@ function Lighting:__init(reflectivityCallback, options)
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
 end
 
+--- Set FOV
+-- Set the Field of View algorithm used to calculate light emission
+-- @tparam userdata fov Class/Module used to calculate fov Must have compute(x, y, range, cb) method. Typically you would supply ROT.FOV.Precise:new() here.
+-- @treturn ROT.Lighting self
+-- @see ROT.FOV.Precise
+-- @see ROT.FOV.Bresenham
 function Lighting:setFOV(fov)
     self._fov=fov
     self._fovCache={}
     return self
 end
 
+--- Add or remove a light source
+-- @tparam int x x-position of light source
+-- @tparam int y y-position of light source
+-- @tparam nil|string|table color An string accepted by Color:fromString(str) or a color table. A nil value here will remove the light source at x, y
+-- @treturn ROT.Lighting self
+-- @see ROT.Color
 function Lighting:setLight(x, y, color)
     local key=x..','..y
     if color then
@@ -32,6 +56,10 @@ function Lighting:setLight(x, y, color)
     return self
 end
 
+--- Compute.
+-- Compute the light sources and lit cells
+-- @tparam function lightingCallback Will be called with (x, y, color) for every lit cell
+-- @treturn ROT.Lighting self
 function Lighting:compute(lightingCallback)
     local doneCells={}
     local emittingCells={}

@@ -7,7 +7,7 @@ local Speed= ROT.Scheduler:extends { __name='Speed' }
 
 --- Add.
 -- Add an item to the schedule
--- @tparam any item
+-- @tparam userdata item Any class/module/userdata with a :getSpeed() function. The value returned by getSpeed() should be a number.
 -- @tparam boolean repeating If true, this item will be rescheduled once it is returned by .next()
 -- @treturn ROT.Scheduler.Speed self
 function Speed:add(item, repeating)

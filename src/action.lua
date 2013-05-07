@@ -53,6 +53,7 @@ end
 
 --- set duration for the active item
 -- after calling next() this function defines the duration of that item's action
+-- @tparam int time The amount of time that the current item's action should last.
 -- @treturn ROT.Scheduler.Action self
 function Action:setDuration(time)
 	if self._current then self._duration=time end

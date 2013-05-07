@@ -1,13 +1,35 @@
+--- Bresenham Based Ray-Casting FOV calculator.
+-- See http://en.wikipedia.org/wiki/Bresenham's_line_algorithm.
+-- Included for sake of having options. Provides three functions for computing FOV
+-- @module ROT.FOV.Bresenham
 local Bresenham_PATH =({...})[1]:gsub("[%.\\/]bresenham$", "") .. '/'
 local class  =require (Bresenham_PATH .. 'vendor/30log')
 
 local Bresenham=ROT.FOV:extends { __name, _lightPasses, _options }
 
+--- Constructor.
+-- Called with ROT.FOV.Bresenham:new()
+-- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
+-- @tparam table options Options
+  -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
+  -- @tparam boolean options.useDiamond If true, the FOV will be a diamond shape as opposed to a circle shape.
 function Bresenham:__init(lightPassesCallback, options)
     Bresenham.super.__init(self, lightPassesCallback, options)
     self.__name='Bresenham'
 end
 
+--- Compute.
+-- Get visibility from a given point.
+-- This method cast's rays from center to points on a circle with a radius 3-units longer than the provided radius.
+-- A list of cell's within the radius is kept. This list is checked at the end to verify that each cell has been passed to the callback.
+-- @tparam int cx x-position of center of FOV
+-- @tparam int cy y-position of center of FOV
+-- @tparam int r radius of FOV (i.e.: At most, I can see for R cells)
+-- @tparam function callback A function that is called for every cell in view. Must accept four parameters.
+  -- @tparam int callback.x x-position of cell that is in view
+  -- @tparam int callback.y y-position of cell that is in view
+  -- @tparam int callback.r The cell's distance from center of FOV
+  -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:compute(cx, cy, r, callback)
     local notvisited={}
     for x=-r,r do
@@ -54,6 +76,18 @@ function Bresenham:compute(cx, cy, r, callback)
 
 end
 
+--- Compute Thorough.
+-- Get visibility from a given point.
+-- This method cast's rays from center to every cell within the given radius.
+-- This method is much slower, but is more likely to not generate any anomalies within the field.
+-- @tparam int cx x-position of center of FOV
+-- @tparam int cy y-position of center of FOV
+-- @tparam int r radius of FOV (i.e.: At most, I can see for R cells)
+-- @tparam function callback A function that is called for every cell in view. Must accept four parameters.
+  -- @tparam int callback.x x-position of cell that is in view
+  -- @tparam int callback.y y-position of cell that is in view
+  -- @tparam int callback.r The cell's distance from center of FOV
+  -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:computeThorough(cx, cy, r, callback)
     local visited={}
 	callback(cx,cy,r)
@@ -74,6 +108,18 @@ function Bresenham:computeThorough(cx, cy, r, callback)
     end end
 end
 
+--- Compute Thorough.
+-- Get visibility from a given point. The quickest method provided.
+-- This method cast's rays from center to points on a circle with a radius 3-units longer than the provided radius.
+-- Unlike compute() this method stops at that point. It will likely miss cell's for fields with a large radius.
+-- @tparam int cx x-position of center of FOV
+-- @tparam int cy y-position of center of FOV
+-- @tparam int r radius of FOV (i.e.: At most, I can see for R cells)
+-- @tparam function callback A function that is called for every cell in view. Must accept four parameters.
+  -- @tparam int callback.x x-position of cell that is in view
+  -- @tparam int callback.y y-position of cell that is in view
+  -- @tparam int callback.r The cell's distance from center of FOV
+  -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:computeQuick(cx, cy, r, callback)
 	visited={}
 	callback(cx,cy,1, 1)

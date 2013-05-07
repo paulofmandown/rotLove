@@ -1,18 +1,13 @@
+--- The Color Toolkit.
+-- Color is a color handler that treats any
+-- objects intended to represent a color as a
+-- table of the following schema:
+-- @module ROT.Color
+
 local Color_PATH=({...})[1]:gsub("[%.\\/]color$", "") .. '/'
 local class  =require (Color_PATH .. 'vendor/30log')
 
 local Color=class { _cache, _rng }
-
---[[
-    Color is a color handler that treats any
-    objects intended to represent a color as a
-    table of the following schema:
-    { r=(0...255),
-      g=(0...255),
-      b=(0...255),
-      a=(0...255)
-    }
-]]
 
 function Color:__init()
     self._rng = ROT.RNG.Twister:new()
@@ -167,13 +162,10 @@ function Color:__init()
 	}
 end
 
+--- Get color from string.
 -- Convert one of several formats of string to what
 -- Color interperets as a color object
-    -- rgb(0..255, 0..255, 0..255)
-    -- #5fe
-    -- #5FE
-    -- #254eff
-    -- goldenrod
+-- @tparam string str Accepted formats 'rgb(0..255, 0..255, 0..255)', '#5fe', '#5FE', '#254eff', 'goldenrod'
 function Color:fromString(str)
     local cached={r=0,g=0,b=0,a=255}
     local r
@@ -209,8 +201,11 @@ function Color:fromString(str)
     return {r=cached.r, g=cached.g, b=cached.b, a=cached.a}
 end
 
--- add two or more colors
+--- Add two or more colors.
 -- accepts either (color, color) or (color, tableOfColors)
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table or a table of color tables.
+-- @treturn table resulting color
 function Color:add(color1, color2)
     local result={}
     for k,_ in pairs(color1) do result[k]=color1[k] end
@@ -229,9 +224,12 @@ function Color:add(color1, color2)
     return result
 end
 
--- add two or more colors
+--- Add two or more colors.
 -- accepts either (color, color) or (color, tableOfColors)
 -- Modifies first arg
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table or a table of color tables.
+-- @treturn table resulting color
 function Color:add_(color1, color2)
     if color2.r then
         for k,_ in pairs(color2) do
@@ -247,8 +245,11 @@ function Color:add_(color1, color2)
     return color1
 end
 
--- multiply (mix)two or more colors
+-- multiply (mix) two or more colors.
 -- accepts either (color, color) or (color, tableOfColors)
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table or a table of color tables.
+-- @treturn table resulting color
 function Color:multiply(color1, color2)
     local result={}
     for k,_ in pairs(color1) do result[k]=color1[k] end
@@ -266,9 +267,12 @@ function Color:multiply(color1, color2)
     return result
 end
 
--- multiply (mix)two or more colors
+-- multiply (mix) two or more colors.
 -- accepts either (color, color) or (color, tableOfColors)
 -- Modifies first arg
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table or a table of color tables.
+-- @treturn table resulting color
 function Color:multiply_(color1, color2)
     if color2.r then
         for k,_ in pairs(color2) do
@@ -284,7 +288,11 @@ function Color:multiply_(color1, color2)
     return color1
 end
 
--- interpolate (blend) two colors with give factor
+--- Interpolate (blend) two colors with a given factor.
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table
+-- @tparam float factor A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
+-- @treturn table resulting color
 function Color:interpolate(color1, color2, factor)
     factor=factor and factor or .5
     local result={}
@@ -295,7 +303,11 @@ function Color:interpolate(color1, color2, factor)
     return result
 end
 
--- Interpolate (blend) two colors with a given factor in HSL mode
+--- Interpolate (blend) two colors with a given factor in HSL mode.
+-- @tparam table color1 A color table
+-- @tparam table color2 A color table
+-- @tparam float factor A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
+-- @treturn table resulting color
 function Color:interpolateHSL(color1, color2, factor)
     factor=factor and factor or .5
     local hsl1 = self:rgb2hsl(color1)
@@ -306,7 +318,9 @@ function Color:interpolateHSL(color1, color2, factor)
     return self:hsl2rgb(hsl1)
 end
 
--- Create a new random color based on this one
+--- Create a new random color based on this one
+-- @tparam table color A color table
+-- @tparam int|table diff One or more numbers to use for a standard deviation
 function Color:randomize(color, diff)
     local result={}
     for k,_ in pairs(color) do result[k]=color[k] end
@@ -380,12 +394,16 @@ function Color:hsl2rgb(color)
     end
 end
 
--- Convert color to RGB string
+--- Convert color to RGB string.
+-- Get a string that can be fed to Color:fromString()
+-- @tparam table color A color table
 function Color:toRGB(color)
     return 'rgb('..self:_clamp(color.r)..','..self:_clamp(color.g)..','..self:_clamp(color.b)..')'
 end
 
--- Convert color to Hex string
+--- Convert color to Hex string
+-- Get a string that can be fed to Color:fromString()
+-- @tparam table color A color table
 function Color:toHex(color)
     local function dec2hex(IN) -- thanks Lostgallifreyan(http://lua-users.org/lists/lua-l/2004-09/msg00054.html)
         local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
@@ -410,3 +428,154 @@ function Color:_clamp(n)
 end
 
 return Color
+
+--- Color cache
+    -- A table of predefined color tables
+    -- These keys can be passed to Color:fromString()
+    -- @field black {r=0,g=0,b=0,a=255}
+    -- @field navy {r=0,g=0,b=128,a=255}
+    -- @field darkblue {r=0,g=0,b=139,a=255}
+    -- @field mediumblue {r=0,g=0,b=205,a=255}
+    -- @field blue {r=0,g=0,b=255,a=255}
+    -- @field darkgreen {r=0,g=100,b=0,a=255}
+    -- @field green {r=0,g=128,b=0,a=255}
+    -- @field teal {r=0,g=128,b=128,a=255}
+    -- @field darkcyan {r=0,g=139,b=139,a=255}
+    -- @field deepskyblue {r=0,g=191,b=255,a=255}
+    -- @field darkturquoise {r=0,g=206,b=209,a=255}
+    -- @field mediumspringgreen {r=0,g=250,b=154,a=255}
+    -- @field lime {r=0,g=255,b=0,a=255}
+    -- @field springgreen {r=0,g=255,b=127,a=255}
+    -- @field aqua {r=0,g=255,b=255,a=255}
+    -- @field cyan {r=0,g=255,b=255,a=255}
+    -- @field midnightblue {r=25,g=25,b=112,a=255}
+    -- @field dodgerblue {r=30,g=144,b=255,a=255}
+    -- @field forestgreen {r=34,g=139,b=34,a=255}
+    -- @field seagreen {r=46,g=139,b=87,a=255}
+    -- @field darkslategray {r=47,g=79,b=79,a=255}
+    -- @field darkslategrey {r=47,g=79,b=79,a=255}
+    -- @field limegreen {r=50,g=205,b=50,a=255}
+    -- @field mediumseagreen {r=60,g=179,b=113,a=255}
+    -- @field turquoise {r=64,g=224,b=208,a=255}
+    -- @field royalblue {r=65,g=105,b=225,a=255}
+    -- @field steelblue {r=70,g=130,b=180,a=255}
+    -- @field darkslateblue {r=72,g=61,b=139,a=255}
+    -- @field mediumturquoise {r=72,g=209,b=204,a=255}
+    -- @field indigo {r=75,g=0,b=130,a=255}
+    -- @field darkolivegreen {r=85,g=107,b=47,a=255}
+    -- @field cadetblue {r=95,g=158,b=160,a=255}
+    -- @field cornflowerblue {r=100,g=149,b=237,a=255}
+    -- @field mediumaquamarine {r=102,g=205,b=170,a=255}
+    -- @field dimgray {r=105,g=105,b=105,a=255}
+    -- @field dimgrey {r=105,g=105,b=105,a=255}
+    -- @field slateblue {r=106,g=90,b=205,a=255}
+    -- @field olivedrab {r=107,g=142,b=35,a=255}
+    -- @field slategray {r=112,g=128,b=144,a=255}
+    -- @field slategrey {r=112,g=128,b=144,a=255}
+    -- @field lightslategray {r=119,g=136,b=153,a=255}
+    -- @field lightslategrey {r=119,g=136,b=153,a=255}
+    -- @field mediumslateblue {r=123,g=104,b=238,a=255}
+    -- @field lawngreen {r=124,g=252,b=0,a=255}
+    -- @field chartreuse {r=127,g=255,b=0,a=255}
+    -- @field aquamarine {r=127,g=255,b=212,a=255}
+    -- @field maroon {r=128,g=0,b=0,a=255}
+    -- @field purple {r=128,g=0,b=128,a=255}
+    -- @field olive {r=128,g=128,b=0,a=255}
+    -- @field gray {r=128,g=128,b=128,a=255}
+    -- @field grey {r=128,g=128,b=128,a=255}
+    -- @field skyblue {r=135,g=206,b=235,a=255}
+    -- @field lightskyblue {r=135,g=206,b=250,a=255}
+    -- @field blueviolet {r=138,g=43,b=226,a=255}
+    -- @field darkred {r=139,g=0,b=0,a=255}
+    -- @field darkmagenta {r=139,g=0,b=139,a=255}
+    -- @field saddlebrown {r=139,g=69,b=19,a=255}
+    -- @field darkseagreen {r=143,g=188,b=143,a=255}
+    -- @field lightgreen {r=144,g=238,b=144,a=255}
+    -- @field mediumpurple {r=147,g=112,b=216,a=255}
+    -- @field darkviolet {r=148,g=0,b=211,a=255}
+    -- @field palegreen {r=152,g=251,b=152,a=255}
+    -- @field darkorchid {r=153,g=50,b=204,a=255}
+    -- @field yellowgreen {r=154,g=205,b=50,a=255}
+    -- @field sienna {r=160,g=82,b=45,a=255}
+    -- @field brown {r=165,g=42,b=42,a=255}
+    -- @field darkgray {r=169,g=169,b=169,a=255}
+    -- @field darkgrey {r=169,g=169,b=169,a=255}
+    -- @field lightblue {r=173,g=216,b=230,a=255}
+    -- @field greenyellow {r=173,g=255,b=47,a=255}
+    -- @field paleturquoise {r=175,g=238,b=238,a=255}
+    -- @field lightsteelblue {r=176,g=196,b=222,a=255}
+    -- @field powderblue {r=176,g=224,b=230,a=255}
+    -- @field firebrick {r=178,g=34,b=34,a=255}
+    -- @field darkgoldenrod {r=184,g=134,b=11,a=255}
+    -- @field mediumorchid {r=186,g=85,b=211,a=255}
+    -- @field rosybrown {r=188,g=143,b=143,a=255}
+    -- @field darkkhaki {r=189,g=183,b=107,a=255}
+    -- @field silver {r=192,g=192,b=192,a=255}
+    -- @field mediumvioletred {r=199,g=21,b=133,a=255}
+    -- @field indianred {r=205,g=92,b=92,a=255}
+    -- @field peru {r=205,g=133,b=63,a=255}
+    -- @field chocolate {r=210,g=105,b=30,a=255}
+    -- @field tan {r=210,g=180,b=140,a=255}
+    -- @field lightgray {r=211,g=211,b=211,a=255}
+    -- @field lightgrey {r=211,g=211,b=211,a=255}
+    -- @field palevioletred {r=216,g=112,b=147,a=255}
+    -- @field thistle {r=216,g=191,b=216,a=255}
+    -- @field orchid {r=218,g=112,b=214,a=255}
+    -- @field goldenrod {r=218,g=165,b=32,a=255}
+    -- @field crimson {r=220,g=20,b=60,a=255}
+    -- @field gainsboro {r=220,g=220,b=220,a=255}
+    -- @field plum {r=221,g=160,b=221,a=255}
+    -- @field burlywood {r=222,g=184,b=135,a=255}
+    -- @field lightcyan {r=224,g=255,b=255,a=255}
+    -- @field lavender {r=230,g=230,b=250,a=255}
+    -- @field darksalmon {r=233,g=150,b=122,a=255}
+    -- @field violet {r=238,g=130,b=238,a=255}
+    -- @field palegoldenrod {r=238,g=232,b=170,a=255}
+    -- @field lightcoral {r=240,g=128,b=128,a=255}
+    -- @field khaki {r=240,g=230,b=140,a=255}
+    -- @field aliceblue {r=240,g=248,b=255,a=255}
+    -- @field honeydew {r=240,g=255,b=240,a=255}
+    -- @field azure {r=240,g=255,b=255,a=255}
+    -- @field sandybrown {r=244,g=164,b=96,a=255}
+    -- @field wheat {r=245,g=222,b=179,a=255}
+    -- @field beige {r=245,g=245,b=220,a=255}
+    -- @field whitesmoke {r=245,g=245,b=245,a=255}
+    -- @field mintcream {r=245,g=255,b=250,a=255}
+    -- @field ghostwhite {r=248,g=248,b=255,a=255}
+    -- @field salmon {r=250,g=128,b=114,a=255}
+    -- @field antiquewhite {r=250,g=235,b=215,a=255}
+    -- @field linen {r=250,g=240,b=230,a=255}
+    -- @field lightgoldenrodyellow {r=250,g=250,b=210,a=255}
+    -- @field oldlace {r=253,g=245,b=230,a=255}
+    -- @field red {r=255,g=0,b=0,a=255}
+    -- @field fuchsia {r=255,g=0,b=255,a=255}
+    -- @field magenta {r=255,g=0,b=255,a=255}
+    -- @field deeppink {r=255,g=20,b=147,a=255}
+    -- @field orangered {r=255,g=69,b=0,a=255}
+    -- @field tomato {r=255,g=99,b=71,a=255}
+    -- @field hotpink {r=255,g=105,b=180,a=255}
+    -- @field coral {r=255,g=127,b=80,a=255}
+    -- @field darkorange {r=255,g=140,b=0,a=255}
+    -- @field lightsalmon {r=255,g=160,b=122,a=255}
+    -- @field orange {r=255,g=165,b=0,a=255}
+    -- @field lightpink {r=255,g=182,b=193,a=255}
+    -- @field pink {r=255,g=192,b=203,a=255}
+    -- @field gold {r=255,g=215,b=0,a=255}
+    -- @field peachpuff {r=255,g=218,b=185,a=255}
+    -- @field navajowhite {r=255,g=222,b=173,a=255}
+    -- @field moccasin {r=255,g=228,b=181,a=255}
+    -- @field bisque {r=255,g=228,b=196,a=255}
+    -- @field mistyrose {r=255,g=228,b=225,a=255}
+    -- @field blanchedalmond {r=255,g=235,b=205,a=255}
+    -- @field papayawhip {r=255,g=239,b=213,a=255}
+    -- @field lavenderblush {r=255,g=240,b=245,a=255}
+    -- @field seashell {r=255,g=245,b=238,a=255}
+    -- @field cornsilk {r=255,g=248,b=220,a=255}
+    -- @field lemonchiffon {r=255,g=250,b=205,a=255}
+    -- @field floralwhite {r=255,g=250,b=240,a=255}
+    -- @field snow {r=255,g=250,b=250,a=255}
+    -- @field yellow {r=255,g=255,b=0,a=255}
+    -- @field lightyellow {r=255,g=255,b=224,a=255}
+    -- @field ivory {r=255,g=255,b=240,a=255}
+    -- @field white {r=255,g=255,b=255,a=255}
+    -- @table Color._cache

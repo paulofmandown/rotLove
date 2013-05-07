@@ -1,12 +1,31 @@
+--- Precise Shadowcasting Field of View calculator.
+-- The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
+-- See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript
+-- @module ROT.FOV.Precise
 local Precise_PATH =({...})[1]:gsub("[%.\\/]precise$", "") .. '/'
 local class  =require (Precise_PATH .. 'vendor/30log')
 
 local Precise=ROT.FOV:extends{ __name, _lightPasses, _options }
 
+--- Constructor.
+-- Called with ROT.FOV.Precise:new()
+-- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
+-- @tparam table options Options
+  -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
 function Precise:__init(lightPassesCallback, options)
     Precise.super.__init(self, lightPassesCallback, options)
 end
 
+--- Compute.
+-- Get visibility from a given point
+-- @tparam int x x-position of center of FOV
+-- @tparam int y y-position of center of FOV
+-- @tparam int R radius of FOV (i.e.: At most, I can see for R cells)
+-- @tparam function callback A function that is called for every cell in view. Must accept four parameters.
+  -- @tparam int callback.x x-position of cell that is in view
+  -- @tparam int callback.y y-position of cell that is in view
+  -- @tparam int callback.r The cell's distance from center of FOV
+  -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Precise:compute(x, y, R, callback)
     callback(x, y, 0, 1)
     local SHADOWS={}

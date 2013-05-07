@@ -12,8 +12,8 @@ local Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng 
 -- @tparam int y1 Upper wall
 -- @tparam int x2 Right wall
 -- @tparam int y2 Bottom wall
--- @tparam[opt] int x-position of door
--- @tparam[opt] int y-position of door
+-- @tparam[opt] int doorX x-position of door
+-- @tparam[opt] int doorY y-position of door
 function Room:__init(x1, y1, x2, y2, doorX, doorY)
 	self._x1   =x1
 	self._x2   =x2
@@ -28,7 +28,7 @@ function Room:__init(x1, y1, x2, y2, doorX, doorY)
     self._rng:randomseed()
 end
 
---- Create Random with position
+--- Create Random with position.
 -- @tparam int x x-position of room
 -- @tparam int y y-position of room
 -- @tparam int dx x-direction in which to build room 1==right -1==left
@@ -65,7 +65,7 @@ function Room:createRandomAt(x, y, dx, dy, options, rng)
 	end
 end
 
---- Create Random with center position
+--- Create Random with center position.
 -- @tparam int cx x-position of room's center
 -- @tparam int cy y-position of room's center
 -- @tparam table options Options
@@ -89,6 +89,13 @@ function Room:createRandomCenter(cx, cy, options, rng)
 	return Room:new(x1, y1, x2, y2)
 end
 
+--- Create random with no position.
+-- @tparam int availWidth Typically the width of the map.
+-- @tparam int availHeight Typically the height of the map
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function Room:createRandom(availWidth, availHeight, options, rng)
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
@@ -108,10 +115,17 @@ function Room:createRandom(availWidth, availHeight, options, rng)
 	return Room:new(x1, y1, x2, y2)
 end
 
+--- Place a door.
+-- adds an element to this rooms _doors table
+-- @tparam int x the x-position of the door
+-- @tparam int y the y-position of the door
 function Room:addDoor(x, y)
 	self._doors[x..','..y]=1
 end
 
+--- Get all doors.
+-- Runs the provided callback on all doors for this room
+-- @tparam function callback A function with two parameters (x, y) representing the position of the door.
 function Room:getDoors(callback)
 	for k,_ in pairs(self._doors) do
 		local parts=k:split(',')
@@ -119,11 +133,14 @@ function Room:getDoors(callback)
 	end
 end
 
+--- Reset the room's _doors table.
+-- @treturn ROT.Map.Room self
 function Room:clearDoors()
 	self._doors={}
 	return self
 end
 
+--- Write various information about this room to the console.
 function Room:debug()
 	local command    = write and write or io.write
 	local door='doors'
@@ -136,6 +153,11 @@ function Room:debug()
 	command(debugString)
 end
 
+--- Use two callbacks to confirm room validity.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @treturn boolean true if room is valid.
 function Room:isValid(gen, isWallCallback, canBeDugCallback)
 	local left  =self._x1-1
 	local right =self._x2+1
@@ -153,6 +175,10 @@ function Room:isValid(gen, isWallCallback, canBeDugCallback)
 	return true
 end
 
+--- Create.
+-- Function runs a callback to dig the room into a map
+-- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
+-- @tparam function digCallback The function responsible for digging the room into a map.
 function Room:create(gen, digCallback)
 	local left  =self._x1-1
 	local top   =self._y1-1
@@ -173,16 +199,24 @@ function Room:create(gen, digCallback)
 	end
 end
 
+--- Get center cell of room
+-- @treturn table {x-position, y-position}
 function Room:getCenter()
 	return {math.round((self._x1+self._x2)/2),
 			math.round((self._y1+self._y2)/2)}
 end
 
+--- Get Left most floor space.
+-- @treturn int left-most floor
 function Room:getLeft()   return self._x1 end
+--- Get right-most floor space.
+-- @treturn int right-most floor
 function Room:getRight()  return self._x2 end
+--- Get top most floor space.
+-- @treturn int top-most floor
 function Room:getTop()    return self._y1 end
+--- Get bottom-most floor space.
+-- @treturn int bottom-most floor
 function Room:getBottom() return self._y2 end
-
-
 
 return Room

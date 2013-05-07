@@ -1,8 +1,18 @@
+--- Simplex Noise Generator.
+-- Based on a simple 2d implementation of simplex noise by Ondrej Zara
+-- Which is based on a speed-improved simplex noise algorithm for 2D, 3D and 4D in Java.
+-- Which is based on example code by Stefan Gustavson (stegu@itn.liu.se).
+-- With Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
+-- Better rank ordering method by Stefan Gustavson in 2012.
+-- @module ROT.Noise.Simplex
 local Simplex_PATH =({...})[1]:gsub("[%.\\/]simplex$", "") .. '/'
 local class  =require (Simplex_PATH .. 'vendor/30log')
 
 local Simplex=ROT.Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
 
+--- Constructor.
+-- 2D simplex noise generator.
+-- @tparam int gradients The random values for the noise.
 function Simplex:__init(gradients)
     self.__name='Simplex'
     Simplex.super.__init(self)
@@ -37,6 +47,10 @@ function Simplex:__init(gradients)
     end
 end
 
+--- Get noise for a cell
+-- Iterate over this function to retrieve noise values
+-- @tparam int xin x-position of noise value
+-- @tparam int yin y-position of noise value
 function Simplex:get(xin, yin)
     local perms  =self._perms
     local indexes=self._indexes
