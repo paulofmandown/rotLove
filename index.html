@@ -1,750 +1,155 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
-
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Rotlove : Love2D port of rot.js" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Rotlove</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/paulofmandown/rotLove">View on GitHub</a>
-
-          <h1 id="project_title">Rotlove</h1>
-          <h2 id="project_tagline">Love2D port of rot.js</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/paulofmandown/rotLove/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/paulofmandown/rotLove/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>rotLove is mostly a direct port of rot.js. I love roguelikes and love2D, and (being a beginner struggling to break in to intermediacy) I thought it would be fun to create something that duplicated the functionality found in libtcod and rot.js.</p>
-
-<p>Following are some simple examples of a few of the classes available with rotLove. I'll be adding more here as I get time, but for now I've included a <a href="https://github.com/paulofmandown/rotLove/tree/demos">demos branch</a> that has examples for every bit of functionality offered.</p>
-
-<h1>Display</h1>
-
-<p>Display started out as rlLove, which itself was a port of <a href="https://github.com/trystan/">Trystan Spangler's</a> Java-based <a href="https://github.com/trystan/AsciiPanel">Ascii Panel</a> to Love2D.</p>
-
-<p>It is not as robust as rot.js' Display feature, in that is effectively a code page 437 ASCII terminal emulator.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-  <span class="c1">-- create a display object with the following.</span>
-    <span class="c1">-- Display(widthInCharacters(80), heightInCharacters(24), characterScale(1)</span>
-    <span class="c1">--         defaultForegroundColor({r=235, g=235, b=235, a=255}),</span>
-    <span class="c1">--         defaultBackgroundColor({r=15 , g=15 , b=15 , a=255}),</span>
-    <span class="c1">--         useFullScreen, useVSync, numberOfFsaaSamples (false, false, 0))</span>
-    <span class="n">display</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-  <span class="c1">-- and write some things out.</span>
-    <span class="kd">local</span> <span class="n">x_position</span><span class="o">=</span><span class="mi">1</span>
-    <span class="kd">local</span> <span class="n">y_position</span><span class="o">=</span><span class="mi">1</span>
-    <span class="n">display</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">some string or character'</span><span class="p">,</span> <span class="n">x_position</span><span class="p">,</span> <span class="n">y_position</span><span class="p">)</span>
-
-  <span class="c1">-- or write something to the center</span>
-    <span class="n">y_position</span><span class="o">=</span><span class="mi">5</span>
-    <span class="n">display</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">another string/character'</span><span class="p">,</span> <span class="n">y_position</span><span class="p">)</span>
-
-  <span class="c1">-- you can clear the display with:</span>
-  <span class="c1">-- display:clear()</span>
-
-  <span class="c1">-- and you can specify an area to clear with:</span>
-  <span class="c1">-- display:clear(char, x_position, y_position, width, height)</span>
-    <span class="c1">-- defaults are: ' ', 1, 1, displayWidthInChars, displayHeightInChars</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
-    <span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>String Generator</h1>
-
-<p>The string generator can be given words to learn from, and then provide you with randomly generated words based on what it has learned.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="c1">-- make your display</span>
-    <span class="n">frame</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-
-    <span class="c1">-- now make your string generator</span>
-    <span class="n">sg</span> <span class="o">=</span> <span class="n">ROT</span><span class="p">.</span><span class="n">StringGenerator</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-
-    <span class="c1">-- read in your names.</span>
-    <span class="c1">-- where names.txt is a plain-text list of mixed-case names (one per line)</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="k">in</span> <span class="nb">io.lines</span><span class="p">(</span><span class="s1">'</span><span class="s">names.txt'</span><span class="p">)</span> <span class="k">do</span>
-        <span class="c1">-- .observe(string) reads a string and learns from it.</span>
-        <span class="n">sg</span><span class="p">:</span><span class="n">observe</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">end</span>
-
-    <span class="c1">-- .getStats() will tell you how many distinct characters your string gen will use</span>
-                              <span class="c1">-- how many different contexts it has seen</span>
-                                 <span class="c1">-- (i.e.: the context of the letter 'n' in seen is 'see')</span>
-                              <span class="c1">-- and how many words your string gen has seen</span>
-    <span class="n">frame</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="n">sg</span><span class="p">:</span><span class="n">getStats</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="mi">24</span> <span class="k">do</span>
-        <span class="c1">-- .generate() will return a random string weighted on the words it has seen with .observe()</span>
-        <span class="kd">local</span> <span class="n">name</span> <span class="o">=</span> <span class="n">sg</span><span class="p">:</span><span class="n">generate</span><span class="p">()</span>
-        <span class="n">frame</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> <span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">frame</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>EventQueue</h1>
-
-<p>The event queue is the base element of all of the schedulers. It can receive any object and feed it back to you when it's turn comes up.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="c1">-- create the event queue</span>
-    <span class="n">q</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">EventQueue</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="c1">-- use add(object, timeToTurn) to add events</span>
-    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e1'</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e2'</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="n">q</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="s1">'</span><span class="s">e3'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-
-    <span class="c1">-- remove(object) will remove the next instance of the provided object from the queue</span>
-    <span class="n">q</span><span class="p">:</span><span class="n">remove</span><span class="p">(</span><span class="s1">'</span><span class="s">e2'</span><span class="p">)</span>
-
-    <span class="c1">-- get() returns the next object from the queue</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">get</span><span class="p">()),</span> <span class="mi">11</span><span class="p">)</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">get</span><span class="p">()),</span> <span class="mi">12</span><span class="p">)</span>
-
-    <span class="c1">-- getTime() returns the number of time units that have passed since the queue was initiated</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="n">q</span><span class="p">:</span><span class="n">getTime</span><span class="p">()),</span> <span class="mi">13</span><span class="p">)</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Simple Scheduler</h1>
-
-<p>Simple scheduler is a turn scheduler that takes in objects and returns them in order. It has an additional parameter for repeating events.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">s</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Scheduler</span><span class="p">.</span><span class="n">Simple</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="c1">-- use add to add objects. the second argument (if true) will tell the scheduler to re-insert the event after every turn it gets.</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span> <span class="k">do</span> <span class="n">s</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="k">end</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
-    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-    <span class="c1">-- use next() to get the next event</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">TURN: '</span><span class="o">..</span><span class="n">s</span><span class="p">:</span><span class="nb">next</span><span class="p">())</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Speed Scheduler</h1>
-
-<p>Speed Scheduler is a turn scheduler that takes in actors (the player or enemies or other entities that may need to take a turn), and returns them in order based on a speed rating.</p>
-
-<p>Actors provided to the speed scheduler will need to have a .getSpeed() method for retrieving their speed rating.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="n">class</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/vendor/30log'</span>
-
-<span class="c1">-- A simple actor class, implemented with 30log (yonaba.github.io/30log/‎)</span>
-<span class="n">actor</span><span class="o">=</span><span class="n">class</span> <span class="p">{</span> <span class="n">speed</span><span class="p">,</span> <span class="n">number</span> <span class="p">}</span>
-<span class="k">function</span> <span class="nf">actor</span><span class="p">:</span><span class="n">__init</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">speed</span><span class="o">=</span><span class="n">speed</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">number</span><span class="o">=</span><span class="n">number</span>
-<span class="k">end</span>
-<span class="c1">-- Give your actor class a method called getSpeed that will return a speed rating (where a higher rating is a faster actor).</span>
-<span class="k">function</span> <span class="nf">actor</span><span class="p">:</span><span class="n">getSpeed</span><span class="p">()</span> <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">speed</span> <span class="k">end</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-    <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>    <span class="c1">-- Using a rng to generate speed values</span>
-    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>             <span class="c1">-- Seed the rng</span>
-    <span class="n">s</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Scheduler</span><span class="p">.</span><span class="n">Speed</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>  <span class="c1">-- Create the speed scheduler</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span> <span class="k">do</span>
-        <span class="n">a</span><span class="o">=</span><span class="n">actor</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">i</span><span class="p">)</span>   <span class="c1">-- create an actor with random speed and an id (just for demo)</span>
-        <span class="n">s</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>                      <span class="c1">-- use .add(actor, repeating) to give the scheduler actors</span>
-
-        <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">Added '</span><span class="o">..</span><span class="n">i</span><span class="o">..</span><span class="s1">'</span><span class="s">, with speed: '</span><span class="o">..</span><span class="n">a</span><span class="p">:</span><span class="n">getSpeed</span><span class="p">(),</span> <span class="n">i</span><span class="p">)</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-<span class="n">y</span><span class="o">=</span><span class="mi">5</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
-    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">TURN: '</span><span class="o">..</span><span class="n">s</span><span class="p">:</span><span class="nb">next</span><span class="p">().</span><span class="n">number</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1">-- use.next to get your next actor</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">24</span> <span class="ow">and</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">5</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Action Scheduler</h1>
-
-<p>The action scheduler is more complex than the other two in that it is based around an actor's action taking a set amount of time to complete before the actor gets another turn.
-This requires that (after fetching the next actor) you tell the scheduler how long his action will take. After you update the scheduler with the current actor's action duration, you can move on and fetch the next actor.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span>  <span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-
-    <span class="c1">-- Create the action scheduler</span>
-    <span class="n">s</span>  <span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Scheduler</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-
-    <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
-
-    <span class="c1">-- add some actors, for the action scheduler, you can just provide an id that let's you know whose turn it is.</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span> <span class="k">do</span> <span class="n">s</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="kc">true</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">end</span>
-<span class="k">end</span>
-<span class="n">y</span><span class="o">=</span><span class="mi">1</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
-    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-
-    <span class="c1">-- get the next actor (or actor id, whichever you decide is best)</span>
-    <span class="n">c</span>  <span class="o">=</span><span class="n">s</span><span class="p">:</span><span class="nb">next</span><span class="p">()</span>
-
-    <span class="c1">-- get the action's duration</span>
-    <span class="n">dur</span><span class="o">=</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-
-    <span class="c1">-- give the scheduler the current actor's action duration</span>
-    <span class="n">s</span><span class="p">:</span><span class="n">setDuration</span><span class="p">(</span><span class="n">dur</span><span class="p">)</span>
-
-    <span class="n">f</span><span class="p">:</span><span class="n">writeCenter</span><span class="p">(</span><span class="s1">'</span><span class="s">TURN: '</span><span class="o">..</span><span class="n">c</span><span class="o">..</span><span class="s1">'</span><span class="s"> for '</span><span class="o">..</span><span class="n">dur</span><span class="o">..</span><span class="s1">'</span><span class="s"> units of time'</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">24</span> <span class="ow">and</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
-<span class="k">end</span>
-</pre></div>
-
-<h1>Map Generators</h1>
-
-<p>RotLove provides 8 different methods for creating a map layout. 
-One is a simple arena (everything is floor except the outermost border), three are based on maze algorithms, one is based on a cellular automata method (gives cave-like results), and the last three are more typical room/corridor dungeons.</p>
-
-<p>When creating the map generator, you should provide it with the intended width and height for the map.</p>
-
-<p>Every generator is callback based. When calling the generator's create method, you will provide it with a function that will be called for every cell of the level. </p>
-
-<p>This function should take three arguments: an x-value, a y-value, and a cell-type value. </p>
-
-<p>x will be a cell's x-position in the map. 
-y will be a cell's y-position in the map.
-the cell type will be a 1 or 0 (1 for wall, 0 for floor)</p>
-
-<h1>Arena</h1>
-
-<p>The arena map generator returns 1 for all border cells (x==1 or x==mapWidth or y==1 or y==mapHeight).</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span><span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-
-    <span class="c1">-- create the map generator</span>
-    <span class="c1">-- f:getWidth() returns the width of the terminal in number of characters, getHeight() does the same for height</span>
-    <span class="n">m</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Arena</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-
-    <span class="c1">-- create the callback that will be provided to the generator's create method    </span>
-    <span class="k">function</span> <span class="nf">callbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">val</span><span class="p">)</span>
-        <span class="c1">-- In this example we're simply writing a '#' or '.' to the display at the x/y position provided by the create</span>
-        <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">#'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
-        <span class="c1">-- another common implementation might store the data in a table to be referenced later.</span>
-        <span class="c1">-- i.e.: mapTable[x..','..y]=val</span>
-    <span class="k">end</span>
-
-    <span class="c1">-- call create and provide the callback</span>
-    <span class="n">m</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">callbak</span><span class="p">)</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Mazes</h1>
-
-<p>The divided maze generator is based on <a href="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method">the recursive division method.</a></p>
-
-<p>The IceyMaze is derived from the rot.js implementation of <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze#Maze_Generator_in_Visual_Basic_6">this</a> algorithm.</p>
-
-<p>Icey is unique in that it takes a third argument (an integer) for regularity, where 0 is the most random.</p>
-
-<p>The Eller Maze is based on <a href="http://homepages.cwi.nl/%7Etromp/maze.html">Eller's Algorithm</a>. It generates a perfect maze (there are no loops and there is one path between any two floor points) and it only requires one row's values to generate the next row.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span><span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="c1">-- Icey and divided work best with odd map width and height.</span>
-    <span class="n">f</span> <span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">(</span><span class="mi">81</span><span class="p">,</span><span class="mi">25</span><span class="p">)</span>
-
-    <span class="c1">-- create your callback</span>
-    <span class="k">function</span> <span class="nf">calbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">val</span><span class="p">)</span> <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">#'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">end</span>
-
-    <span class="c1">-- create your map generator</span>
-        <span class="c1">-- divided maze</span>
-        <span class="n">dm</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">DividedMaze</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-        <span class="c1">-- eller maze</span>
-        <span class="n">lr</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">EllerMaze</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-
-        <span class="c1">-- Icey Maze - remember you can opt to provide a regularity value here</span>
-        <span class="n">ic</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">IceyMaze</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="c1">-- call create on the generator and provide the callback</span>
-    <span class="n">dm</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">calbak</span><span class="p">)</span>
-     <span class="c1">-- lr:create(calbak)</span>
-     <span class="c1">-- ic:create(calbak)</span>
-
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Cellular</h1>
-
-<p>I'll let the rot.js author take this one:</p>
-
-<blockquote>
-<p>Interesting cave systems can be created using ROT.Map.Cellular, a generator which simulates a cellular automaton. Using this generator is a bit more complex, because it offers richer features and is more configurable.</p>
-
-<p>Apart from the traditional width and height arguments, ROT.Map.Cellular accepts also a configuration object with the following optional keys:</p>
-
-<p>born – array of neighbor counts; when an empty cell has this number of neighbors, a new cell is born</p>
-
-<p>survive – array of neighbor counts; when an existing cell has this number of neighbors, it will survive into next iteration</p>
-
-<p>topology – how are neighbors defined: a cell can have four, six or eight neighbors. Six neighbors correspond to the "hex" layouting algorithm of ROT.Display.</p>
-</blockquote>
-
-<p>For rotLove this optional config object takes the form of a table.</p>
-
-<div class="highlight"><pre><span class="kd">local</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="n">born</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span> 
-              <span class="n">survive</span> <span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span> 
-              <span class="n">topology</span><span class="o">=</span><span class="mi">8</span> 
-             <span class="p">}</span>
-</pre></div>
-
-<p>Unique to rotLove is that the create method for this generator returns a boolean indicating whether or not a change was made to the map.</p>
-
-<p>And for the full example:</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span><span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span> <span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-    <span class="n">cl</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Cellular</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-
-    <span class="c1">-- To start, you need to randomly populate the map</span>
-    <span class="n">cl</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-
-    <span class="c1">-- because the create method returns true on changes to the map</span>
-    <span class="c1">-- you can use a while loop to run the create as many times as you possibly can</span>
-    <span class="c1">-- this usually results in the smoothest possible map</span>
-    <span class="k">while</span> <span class="n">cl</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">calbak</span><span class="p">)</span> <span class="k">do</span> <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-<span class="k">function</span> <span class="nf">calbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">#'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Dungeons</h1>
-
-<p>Digger is based on <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm">this</a> algorithm designed by Mike Anderson. It uses a random location to build either a room or corridor and continues to do so until it has reached a time limit or has reached a threshold for floor cells.</p>
-
-<p>Uniform sets several rooms down and then tries to connect them together with corridors.</p>
-
-<p>Rogue is based on the original map algorithm used by Rogue.</p>
-
-<p>Digger and Uniform can both take a third options argument. The table takes the following form:</p>
-
-<div class="highlight"><pre><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="n">roomWidth</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span>
-         <span class="n">roomHeight</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">},</span>
-         <span class="n">corridorLength</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">},</span>
-         <span class="n">dugPercentage</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-         <span class="n">timeLimit</span><span class="o">=</span><span class="mi">1000</span>
-        <span class="p">}</span>
-</pre></div>
-
-<p>Digger usually results in a lot of dead-end corridors. That's not my intention for it, but I haven't been able to correct that behavior, yet. With that in mind, Digger's option table can have another element called nocorridorsmode. When options.nocorridorsmode is true, the generator only uses rooms to build the map.</p>
-
-<div class="highlight"><pre><span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="n">nocorridorsmode</span><span class="o">=</span><span class="kc">true</span><span class="p">}</span>
-    <span class="n">dgr</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Digger</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">(),</span> <span class="n">options</span><span class="p">)</span>
-    <span class="n">uni</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-    <span class="n">rog</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Rogue</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-    <span class="n">dgr</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">calbak</span><span class="p">)</span> <span class="c1">-- or rog:create(calbak) or uni:create(calbak)</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-<span class="k">function</span> <span class="nf">calbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">#'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Noise Generation</h1>
-
-<p>Noise generation can be used for lots of things (from map generation to enemy/item population). rot.js has a simplex noise generator that I ported over.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span><span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="c1">-- If you're interested in noise generation and haven't taken the time to peruse the source, yet,</span>
-    <span class="c1">-- this is a good time to point out that display takes a good bit of arguments.</span>
-    <span class="c1">-- Check out the source for a full list.</span>
-    <span class="c1">-- Here is an example of setting the width, height, and scale arguments.</span>
-    <span class="c1">-- width=256, height=100, and all tiles will be scaled down to 27.5% of their normal size.</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">.275</span><span class="p">)</span>
-
-    <span class="c1">-- instantiate the Simplex generator.</span>
-    <span class="n">sim</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Noise</span><span class="p">.</span><span class="n">Simplex</span><span class="p">()</span>
-
-    <span class="c1">-- you'll to make your own loop here, ROT.Noise is not callback-based.</span>
-    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">()</span> <span class="k">do</span>
-        <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">()</span> <span class="k">do</span>
-            <span class="c1">-- get will return your value when provided with an x,y position</span>
-            <span class="kd">local</span> <span class="n">val</span><span class="o">=</span><span class="n">sim</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">20</span><span class="p">,</span> <span class="n">j</span><span class="o">/</span><span class="mi">20</span><span class="p">)</span><span class="o">*</span><span class="mi">255</span>
-            <span class="n">red</span>  <span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">val</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">green</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">val</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="o">-</span><span class="n">val</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-
-            <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s"> '</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">green</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-        <span class="k">end</span>
-    <span class="k">end</span>    
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Field of View</h1>
-
-<p>Provided with rotLove are two fov calculating algorithms.
-Each requires two callbacks. One for determining whether a tile is passable, and one that is used when determining whether a tile is in sight.</p>
-
-<h1>Bresenham - Ray Casting</h1>
-
-<p>This is a very straight-forward Ray Casting implementation. A number of lines are cast from the center point, and we stop calling the callback when an impassable tile is reached.</p>
-
-<p>It's considerably slower than shadow casting because tiles close to center are checked many times.</p>
-
-<h1>Precise Shadow Casting</h1>
-
-<p>Precise was built using <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript">this</a> algorithm from rot.js.
-It's very quick and awesome, and I highly suggest using it over bresenham.</p>
-
-<p>It stores a set of arcs for each shadow around the center, so each tile is only ever checked once.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span><span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">player</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">}</span>
-    <span class="n">f</span>  <span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-    <span class="c1">-- This will store the map data for later reference</span>
-    <span class="n">map</span><span class="o">=</span><span class="p">{}</span>
-    <span class="n">mapgen</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Uniform</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-    <span class="n">mapgen</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">calbak</span><span class="p">)</span>
-
-    <span class="c1">-- Build the fov calculator</span>
-    <span class="n">fov</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">FOV</span><span class="p">.</span><span class="n">Bresenham</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">lightCalbak</span><span class="p">)</span>  <span class="c1">-- or fov=ROT.FOV.Precise:new(lightCalbak)</span>
-    <span class="c1">-- determine a center point for the field</span>
-    <span class="n">placePlayer</span><span class="p">()</span>
-    <span class="c1">-- and run the computeCallback on the viewable tiles</span>
-    <span class="n">fov</span><span class="p">:</span><span class="n">compute</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">computeCalbak</span><span class="p">)</span>
-<span class="k">end</span>
-
-<span class="c1">-- This will be the callback for map generation</span>
-<span class="k">function</span> <span class="nf">calbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-    <span class="n">map</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
-    <span class="n">defaultForeground</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span> <span class="c1">-- color for out of view tiles</span>
-    <span class="n">defaultBackground</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>       <span class="c1">-- background color for out of view tiles</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">#'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">defaultForeground</span><span class="p">,</span> <span class="n">defaultBackground</span><span class="p">)</span>
-<span class="k">end</span>
-
-<span class="c1">-- This will be the callback to determine whether tiles are passable</span>
-<span class="k">function</span> <span class="nf">lightCalbak</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
-    <span class="k">if</span> <span class="n">map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">then</span>
-        <span class="k">return</span> <span class="n">map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span>
-    <span class="k">end</span>
-    <span class="k">return</span> <span class="kc">false</span>
-<span class="k">end</span>
-
-<span class="c1">-- This will be the callback used on every cell within view.</span>
-<span class="k">function</span> <span class="nf">computeCalbak</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">key</span>  <span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">then</span> <span class="k">return</span> <span class="k">end</span>
-    <span class="kd">local</span> <span class="n">color</span><span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">121</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">121</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">f</span><span class="p">:</span><span class="n">getCharacter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">@'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
-<span class="k">end</span>
-
-<span class="c1">-- This is just for the demo, it will place the player (center of fov) in a random passable cell.</span>
-<span class="k">function</span> <span class="nf">placePlayer</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">key</span> <span class="o">=</span><span class="kc">nil</span>
-    <span class="kd">local</span> <span class="n">char</span><span class="o">=</span><span class="s1">'</span><span class="s">#'</span>
-    <span class="kd">local</span> <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
-    <span class="k">while</span> <span class="kc">true</span> <span class="k">do</span>
-        <span class="n">key</span><span class="o">=</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">())</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="n">key</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
-            <span class="n">player</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">y</span><span class="o">=</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">@'</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
-            <span class="k">break</span>
-        <span class="k">end</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-</pre></div>
-
-<h1>Color </h1>
-
-<p>Color is a basic color toolset. It can generate usable colors from strings, add/multiply/interpolate multiple colors, and it also provides ~140 colors to start.</p>
-
-<div class="highlight"><pre><span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">colorHandler</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Color</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="c1">-- build a color from a string</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">rgb(10, 128, 230)'</span><span class="p">)</span>   <span class="c1">-- js style rgb</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">#faa'</span><span class="p">)</span>                <span class="c1">-- 3-character hex</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">#83fcc4'</span><span class="p">)</span>             <span class="c1">-- 6-character hex</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">goldenrod'</span><span class="p">)</span>           <span class="c1">-- a color name defined by ROT.Color</span>
-
-    <span class="c1">-- Explicitly define a color object - This is how all elements of rotLove see colors</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">51</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">102</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">51</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-
-    <span class="c1">-- add multiple colors. first argument is a base color, the second argument can be one color or a table of colors</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">add</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">230</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},</span> <span class="p">{{</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}})</span>
-
-    <span class="c1">-- multiply multiple colors</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">multiply</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">goldenrod'</span><span class="p">),</span>
-                             <span class="p">{</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">lightcyan'</span><span class="p">),</span>
-                              <span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">lightcoral'</span><span class="p">)})</span>
-
-    <span class="c1">-- interpolate two colors</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">interpolate</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">interpolateHSL</span><span class="p">({</span><span class="n">r</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">},{</span><span class="n">r</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">g</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-
-    <span class="c1">-- generate a random color from a base color and a set of standard deviations</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
-    <span class="n">c</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">),</span> <span class="p">{</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">})</span>
-
-    <span class="n">c</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span><span class="o">=</span><span class="n">colorHandler</span><span class="p">:</span><span class="n">fromString</span><span class="p">(</span><span class="s1">'</span><span class="s">silver'</span><span class="p">)</span>
-
-    <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
-<span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> 
-    <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-    <span class="c1">-- Wipe the screen with one of the colors</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">clear</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
-<span class="k">end</span>
-</pre></div>
-
-<h1>Lighting</h1>
-
-<p>Lighting is probably my favorite thing, ever. With it you can set a light source at a given point with a given color. It will emit light based on a provided FOV. If two lights overlap, their colors will mix together.</p>
-
-<div class="highlight"><pre><span class="n">ROT</span><span class="o">=</span> <span class="nb">require</span> <span class="s1">'</span><span class="s">vendor/rotLove/rot'</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">f</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">()</span>
-
-    <span class="c1">-- We'll use a color object to mix the light sources with the ambient light.</span>
-    <span class="n">colorhandler</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Color</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
-
-    <span class="c1">-- to store map data</span>
-    <span class="n">mapData</span><span class="o">=</span><span class="p">{}</span>
-
-    <span class="c1">-- to store lighting data</span>
-    <span class="n">lightData</span><span class="o">=</span><span class="p">{}</span>
-
-    <span class="c1">-- making a cave</span>
-    <span class="n">map</span><span class="o">=</span> <span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Cellular</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-    <span class="n">map</span><span class="p">:</span><span class="n">randomize</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span> <span class="k">do</span> <span class="n">map</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">mapCallback</span><span class="p">)</span> <span class="k">end</span>
-
-    <span class="c1">-- We'll need an FOV object to pass to lighting</span>
-    <span class="n">fov</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">FOV</span><span class="p">.</span><span class="n">Precise</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="n">lightPasses</span><span class="p">,</span> <span class="p">{</span><span class="n">topology</span><span class="o">=</span><span class="mi">4</span><span class="p">})</span>
-
-    <span class="c1">-- get a lighting object</span>
-    <span class="n">lighting</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Lighting</span><span class="p">(</span><span class="n">reflectivityCB</span><span class="p">,</span> <span class="p">{</span><span class="n">range</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">passes</span><span class="o">=</span><span class="mi">2</span><span class="p">})</span>
-
-    <span class="c1">-- pass the fov object to lighting</span>
-    <span class="n">lighting</span><span class="p">:</span><span class="n">setFOV</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
-
-    <span class="c1">-- randomly place some lights</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span>  <span class="k">do</span>
-        <span class="kd">local</span> <span class="n">point</span><span class="o">=</span><span class="n">getRandomFloor</span><span class="p">()</span>
-        <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">*'</span><span class="p">,</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-        <span class="n">lighting</span><span class="p">:</span><span class="n">setLight</span><span class="p">(</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">getRandomColor</span><span class="p">())</span>
-    <span class="k">end</span>
-
-    <span class="c1">-- this will generate the lighting data</span>
-    <span class="n">lighting</span><span class="p">:</span><span class="n">compute</span><span class="p">(</span><span class="n">lightingCallback</span><span class="p">)</span>
-
-    <span class="c1">-- a default ambient light value for all cells</span>
-    <span class="kd">local</span> <span class="n">ambientLight</span><span class="o">=</span><span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-
-    <span class="c1">-- loop through all of the cells</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">mapData</span><span class="p">)</span> <span class="k">do</span>
-        <span class="c1">-- get the cell position</span>
-        <span class="kd">local</span> <span class="n">parts</span><span class="o">=</span><span class="n">k</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
-        <span class="kd">local</span> <span class="n">x</span>    <span class="o">=</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="kd">local</span> <span class="n">y</span>    <span class="o">=</span><span class="nb">tonumber</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-
-        <span class="c1">-- a base color for wall or floor cells</span>
-        <span class="kd">local</span> <span class="n">baseColor</span><span class="o">=</span><span class="n">mapData</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span> <span class="ow">or</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-
-        <span class="c1">-- mix the lighting values with the default ambient light values</span>
-        <span class="kd">local</span> <span class="n">light</span><span class="o">=</span><span class="n">ambientLight</span>
-        <span class="k">if</span> <span class="n">lightData</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">then</span>
-            <span class="n">light</span><span class="o">=</span><span class="n">colorhandler</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">lightData</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="k">end</span>
-
-        <span class="c1">-- mix the base color of cells with the lighting value</span>
-        <span class="kd">local</span> <span class="n">finalColor</span><span class="o">=</span><span class="n">colorhandler</span><span class="p">:</span><span class="n">multiply</span><span class="p">(</span><span class="n">baseColor</span><span class="p">,</span> <span class="n">light</span><span class="p">)</span>
-
-        <span class="c1">-- if we set a character at this cell earlier, get it</span>
-        <span class="kd">local</span> <span class="n">char</span><span class="o">=</span><span class="n">f</span><span class="p">:</span><span class="n">getCharacter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
-        <span class="c1">-- write the light and character to the display</span>
-        <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">char</span> <span class="ow">and</span> <span class="n">char</span> <span class="ow">or</span> <span class="s1">'</span><span class="s"> '</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">finalColor</span><span class="p">)</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
-
-<span class="k">function</span> <span class="nf">lightingCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
-    <span class="n">lightData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">color</span>
-<span class="k">end</span>
-
-<span class="c1">-- generate a totally random subtle color</span>
-<span class="k">function</span> <span class="nf">getRandomColor</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">{</span> <span class="n">r</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
-             <span class="n">g</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
-             <span class="n">b</span><span class="o">=</span><span class="nb">math.floor</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">)),</span>
-             <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">}</span>
-<span class="k">end</span>
-
-<span class="c1">-- to get a random floor cell</span>
-<span class="k">function</span> <span class="nf">getRandomFloor</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="kc">nil</span>
-    <span class="k">while</span> <span class="kc">true</span> <span class="k">do</span>
-        <span class="n">key</span><span class="o">=</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">())</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">mapData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="k">then</span>
-            <span class="k">return</span> <span class="n">key</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
-        <span class="k">end</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="c1">-- floor cells near to a light source can potentially emit light themselves. this callback is passed to the lighting object at creation to assist with that.</span>
-<span class="k">function</span> <span class="nf">reflectivityCB</span><span class="p">(</span><span class="n">lighting</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span>
-    <span class="k">return</span> <span class="n">mapData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="mf">.3</span> <span class="ow">or</span> <span class="mi">0</span>
-<span class="k">end</span>
-
-<span class="c1">-- to determine if light can pass through a cell</span>
-<span class="k">function</span> <span class="nf">lightPasses</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">mapData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span>
-<span class="k">end</span>
-
-<span class="c1">-- the standard map callback</span>
-<span class="k">function</span> <span class="nf">mapCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-    <span class="n">mapData</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
-<span class="k">end</span>
-</pre></div>
-
-<h1>Path Finding - Dijkstra and AStar</h1>
-
-<p>Dijkstra was built using a simplified version of <a href="http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra's Algorithm</a> where all edges have a length of 1.</p>
-
-<p>AStar was built using a simplified version of <a href="http://en.wikipedia.org/wiki/A*">the A* algorithm</a> where all edges have a length of 1.</p>
-
-<div class="highlight"><pre><span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
-    <span class="c1">--f=ROT.Display:new()</span>
-    <span class="n">rng</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">RNG</span><span class="p">.</span><span class="n">Twister</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
-    <span class="n">rng</span><span class="p">:</span><span class="n">randomseed</span><span class="p">()</span>
-    <span class="n">mapGen</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Map</span><span class="p">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">(),</span> <span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-
-    <span class="c1">-- A place to store the map data</span>
-    <span class="n">data</span><span class="o">=</span><span class="p">{}</span>
-
-    <span class="n">mapGen</span><span class="p">:</span><span class="n">create</span><span class="p">(</span><span class="n">mapCallback</span><span class="p">)</span>
-
-    <span class="c1">-- Get three random points to path through</span>
-    <span class="n">p1</span><span class="o">=</span><span class="n">getRandomFloor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1">-- An endpoint</span>
-    <span class="n">p2</span><span class="o">=</span><span class="n">getRandomFloor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1">-- A Start</span>
-    <span class="n">p3</span><span class="o">=</span><span class="n">getRandomFloor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1">-- A Start</span>
-
-    <span class="c1">-- build a path finder providing the endpoint</span>
-    <span class="n">astar</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Path</span><span class="p">.</span><span class="n">AStar</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">passableCallback</span><span class="p">)</span>
-    <span class="c1">-- or dkstr=ROT.Path.Dijkstra(p1[1], p1[2], passableCallback)</span>
-
-    <span class="c1">-- Calculate the path to the endpoint from a point</span>
-    <span class="n">astar</span><span class="p">:</span><span class="n">compute</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pathCallback</span><span class="p">)</span>
-    <span class="n">astar</span><span class="p">:</span><span class="n">compute</span><span class="p">(</span><span class="n">p3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p3</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pathCallback</span><span class="p">)</span>
-
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">S'</span><span class="p">,</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">E'</span><span class="p">,</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">E'</span><span class="p">,</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p3</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">tonumber</span><span class="p">(</span><span class="n">p3</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-<span class="k">end</span>
-
-<span class="c1">-- A callback used on every cell in the calculated path</span>
-<span class="k">function</span> <span class="nf">pathCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s">.'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="mi">136</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
-<span class="k">end</span>
-
-<span class="c1">-- Callback used to determine whether a cell is passable</span>
-<span class="k">function</span> <span class="nf">passableCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="k">end</span>
-
-<span class="c1">-- A function to get a random floor cell</span>
-<span class="k">function</span> <span class="nf">getRandomFloor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">key</span><span class="o">=</span><span class="kc">nil</span>
-    <span class="k">while</span> <span class="kc">true</span> <span class="k">do</span>
-        <span class="n">key</span><span class="o">=</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getWidth</span><span class="p">())</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">f</span><span class="p">:</span><span class="n">getHeight</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span> <span class="k">then</span>
-            <span class="k">return</span> <span class="n">key</span><span class="p">:</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="s">,'</span><span class="p">)</span>
-        <span class="k">end</span>
-    <span class="k">end</span>
-<span class="k">end</span>
-
-<span class="c1">-- The map generators callback</span>
-<span class="k">function</span> <span class="nf">mapCallback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="o">..</span><span class="s1">'</span><span class="s">,'</span><span class="o">..</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
-    <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="n">val</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="s1">'</span><span class="s">.'</span> <span class="ow">or</span> <span class="s1">'</span><span class="s">#'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="k">end</span>
-</pre></div>
-
-<p>Thanks for checking this out!</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Rotlove maintained by <a href="https://github.com/paulofmandown">paulofmandown</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-40653955-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-
-  </body>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+
+
+
+<h2>Modules</h2>
+<ul>
+  <li><a href="modules/ROT.Display.html">ROT.Display</a></li>
+  <li><a href="modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
+  <li><a href="modules/ROT.Map.Arena.html">ROT.Map.Arena</a></li>
+  <li><a href="modules/ROT.Map.Cellular.html">ROT.Map.Cellular</a></li>
+  <li><a href="modules/ROT.Map.Digger.html">ROT.Map.Digger</a></li>
+  <li><a href="modules/ROT.Map.DividedMaze.html">ROT.Map.DividedMaze</a></li>
+  <li><a href="modules/ROT.Map.Dungeon.html">ROT.Map.Dungeon</a></li>
+  <li><a href="modules/ROT.Map.EllerMaze.html">ROT.Map.EllerMaze</a></li>
+  <li><a href="modules/ROT.Map.IceyMaze.html">ROT.Map.IceyMaze</a></li>
+  <li><a href="modules/ROT.Map.Rogue.html">ROT.Map.Rogue</a></li>
+  <li><a href="modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
+  <li><a href="modules/ROT.RNG.html">ROT.RNG</a></li>
+  <li><a href="modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></li>
+  <li><a href="modules/ROT.RNG.MWC.html">ROT.RNG.MWC</a></li>
+  <li><a href="modules/ROT.RNG.Twister.html">ROT.RNG.Twister</a></li>
+  <li><a href="modules/ROT.Scheduler.html">ROT.Scheduler</a></li>
+  <li><a href="modules/ROT.Scheduler.Action.html">ROT.Scheduler.Action</a></li>
+  <li><a href="modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
+  <li><a href="modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
+  <li><a href="modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<div id="custom">See <a href="oldIndex.html">this page</a> for a large list of examples. I'll include all of these soon as part of the LDoc </div>
+
+<h2>Modules</h2>
+<table class="module_list">
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Display.html">ROT.Display</a></td>
+		<td class="summary">Visual Display.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.EventQueue.html">ROT.EventQueue</a></td>
+		<td class="summary">Stores and retrieves events based on time.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Arena.html">ROT.Map.Arena</a></td>
+		<td class="summary">The Arena map generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Cellular.html">ROT.Map.Cellular</a></td>
+		<td class="summary">Cellular Automaton Map Generator</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Digger.html">ROT.Map.Digger</a></td>
+		<td class="summary">The Digger Map Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.DividedMaze.html">ROT.Map.DividedMaze</a></td>
+		<td class="summary">The Divided Maze Map Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Dungeon.html">ROT.Map.Dungeon</a></td>
+		<td class="summary">The Dungeon-style map Prototype
+ This class is extended by ROT.Map.Digger and ROT.Map.Uniform</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.EllerMaze.html">ROT.Map.EllerMaze</a></td>
+		<td class="summary">The Eller Maze Map Generator
+ See http://homepages.cwi.nl/~tromp/maze.html for explanation</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.IceyMaze.html">ROT.Map.IceyMaze</a></td>
+		<td class="summary">The Icey Maze Map Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Rogue.html">ROT.Map.Rogue</a></td>
+		<td class="summary">Rogue Map Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></td>
+		<td class="summary">The Uniform Map Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.RNG.html">ROT.RNG</a></td>
+		<td class="summary">The RNG Prototype.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></td>
+		<td class="summary">Linear Congruential Generator.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.RNG.MWC.html">ROT.RNG.MWC</a></td>
+		<td class="summary">Multiply With Carry.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.RNG.Twister.html">ROT.RNG.Twister</a></td>
+		<td class="summary">Mersenne Twister.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Scheduler.html">ROT.Scheduler</a></td>
+		<td class="summary">The Scheduler Prototype</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Scheduler.Action.html">ROT.Scheduler.Action</a></td>
+		<td class="summary">Action based turn scheduler.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></td>
+		<td class="summary">The simple scheduler</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></td>
+		<td class="summary">The Speed based scheduler</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.StringGenerator.html">ROT.StringGenerator</a></td>
+		<td class="summary">Random String Generator.</td>
+	</tr>
+</table>
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3.11</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
 </html>
