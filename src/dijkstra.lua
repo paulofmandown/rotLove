@@ -1,4 +1,4 @@
---- Dijkstra Pathfinding
+--- Dijkstra Pathfinding.
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
 local Dijkstra_PATH=({...})[1]:gsub("[%.\\/]dijkstra$", "") .. '/'

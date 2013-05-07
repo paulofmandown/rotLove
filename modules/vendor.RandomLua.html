@@ -30,10 +30,6 @@
   <li><a href="../index.html">Index</a></li>
 </ul>
 
-<h2>Contents</h2>
-<ul>
-<li><a href="#Functions">Functions</a></li>
-</ul>
 
 
 <h2>Modules</h2>
@@ -57,7 +53,7 @@
   <li><a href="../modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
   <li><a href="../modules/ROT.Noise.Simplex.html">ROT.Noise.Simplex</a></li>
   <li><a href="../modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
-  <li><strong>ROT.Path.Dijkstra</strong></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="../modules/ROT.RNG.html">ROT.RNG</a></li>
   <li><a href="../modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></li>
   <li><a href="../modules/ROT.RNG.MWC.html">ROT.RNG.MWC</a></li>
@@ -67,94 +63,27 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+  <li><strong>vendor.RandomLua</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>ROT.Path.Dijkstra</code></h1>
+<h1>Module <code>vendor.RandomLua</code></h1>
 
-<p>Dijkstra Pathfinding.</p>
+<p>RandomLua v0.3.1
+Pure Lua Pseudo-Random Numbers Generator
+Under the MIT license.</p>
 <p>
- Simplified Dijkstra's algorithm: all edges have a value of 1</p>
+copyright(c) 2011 linux-man</p>
 
 
-<h2><a href="#Functions">Functions</a></h2>
-<table class="function_list">
-	<tr>
-	<td class="name" nowrap><a href="#Dijkstra:__init">Dijkstra:__init&nbsp;(toX, toY, passableCallback, options)</a></td>
-	<td class="summary">Constructor.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Dijkstra:compute">Dijkstra:compute&nbsp;(fromX, fromY, callback)</a></td>
-	<td class="summary">Compute the path from a starting point</td>
-	</tr>
-</table>
 
 <br/>
 <br/>
 
 
-    <h2><a name="Functions"></a>Functions</h2>
-    <dl class="function">
-    <dt>
-    <a name = "Dijkstra:__init"></a>
-    <strong>Dijkstra:__init&nbsp;(toX, toY, passableCallback, options)</strong>
-    </dt>
-    <dd>
-    Constructor.
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">toX</span>
-            <span class="types"><span class="type">int</span></span>
-         x-position of destination cell</li>
-        <li><span class="parameter">toY</span>
-            <span class="types"><span class="type">int</span></span>
-         y-position of destination cell</li>
-        <li><span class="parameter">passableCallback</span>
-            <span class="types"><span class="type">function</span></span>
-         Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed</li>
-        <li><span class="parameter">options</span> Options
-        <ul>
-        <li><span class="parameter">topology</span>
-            <span class="types"><span class="type">int</span></span>
-         Directions for movement Accepted values (4 or 8)</li>
-        </li></ul>
-    </ul>
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Dijkstra:compute"></a>
-    <strong>Dijkstra:compute&nbsp;(fromX, fromY, callback)</strong>
-    </dt>
-    <dd>
-    Compute the path from a starting point
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">fromX</span>
-            <span class="types"><span class="type">int</span></span>
-         x-position of starting point</li>
-        <li><span class="parameter">fromY</span>
-            <span class="types"><span class="type">int</span></span>
-         y-position of starting point</li>
-        <li><span class="parameter">callback</span>
-            <span class="types"><span class="type">function</span></span>
-         Will be called for every path item with arguments "x" and "y"</li>
-    </ul>
-
-
-
-
-
-</dd>
-</dl>
 
 
 </div> <!-- id="content" -->
