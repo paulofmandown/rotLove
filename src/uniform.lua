@@ -167,7 +167,7 @@ function Uniform:_connectRooms(room1, room2)
     local index2=3-index
 
     local start=self:_placeInWall(room1, dirIndex1)
-    if #start<1 then return false end
+    if not start or #start<1 then return false end
     local endTbl={}
 
     if start[index] >= min and start[index] <= max then
