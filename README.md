@@ -8,9 +8,11 @@ Included:
 
  * Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation rather than full font support.
 
- * rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424). Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.
+ * TextDisplay      - Text based display, accepts supplied fonts
 
- * String Generator - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
+ * RNG              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424). Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.
+
+ * StringGenerator  - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
 
  * Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeons. Ported from [rot.js](http://ondras.github.io/rot.js/hp/).
 
