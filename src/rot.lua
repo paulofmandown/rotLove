@@ -41,6 +41,7 @@ ROT.RNG.MWC          = require (ROTLOVE_PATH .. 'mwc')
 --[[--------------------------------]]--
 
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
+ROT.TextDisplay      = require (ROTLOVE_PATH .. 'textDisplay')
 ROT.StringGenerator  = require (ROTLOVE_PATH .. 'stringGenerator')
 ROT.EventQueue       = require (ROTLOVE_PATH .. 'eventQueue')
 ROT.Scheduler        = require (ROTLOVE_PATH .. 'scheduler')
