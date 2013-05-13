@@ -237,7 +237,7 @@ function Display:writeCenter(s, y, fg, bg)
 	bg= self:_validateBackgroundColor(bg)
 
 	local x=math.floor((self.widthInChars-#s)/2)
-	self:writeValidatedString(s, x, y, fg, bg)
+	self:_writeValidatedString(s, x, y, fg, bg)
 end
 
 function Display:_writeValidatedString(s, x, y, fg, bg)
