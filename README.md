@@ -4,23 +4,39 @@ Bringing [rot.js](http://ondras.github.io/rot.js/hp/) functionality to Love2D
 
 See [this page](http://paulofmandown.github.io/rotLove/) for a quick and dirty run down of all the functionalit provided.
 
-Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation rather than full font support.
+Included:
 
-rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424). Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.
+ * Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation rather than full font support.
 
-String Generator - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
+ * rng              - via [RandmLua](http://love2d.org/forums/viewtopic.php?f=5&t=3424). Multiply With Carry, Linear congruential generator, and Mersenne Twister. Extended with set/getState methods.
 
-Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeons. Ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+ * String Generator - Direct Port from [rot.js](http://ondras.github.io/rot.js/hp/)
 
-Noise Generator  - Simplex Noise
+ * Map              - Arena, Divided/Icey/Eller Maze, Digger/Uniform/Rogue* Dungeons. Ported from [rot.js](http://ondras.github.io/rot.js/hp/).
 
-FOV              - Bresenham Line based Ray Casting, Precise Shadow Casting
+ * Noise Generator  - Simplex Noise
 
-Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
+ * FOV              - Bresenham Line based Ray Casting, Precise Shadow Casting
 
-Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+ * Color            - 147 Predefined colors; generate valid colors from string; add, multiply, or interpolate colors; generate a random color from a reference and set of standard deviations (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
 
-Lighting         - compute light emission and blending, ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+ * Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+
+ * Lighting         - compute light emission and blending, ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+
+Getting started
+==========
+`git clone git://github.com/paulofmandown/rotLove.git`
+
+Add the rotLove folder/directory to your project and require the rotLove file.
+```lua
+ROT=require 'rotLove/rotLove'
+function love.load()
+    f=ROT.Display()
+    f:writeCenter('You did it!', math.floor(f:getHeight()/2))
+end
+function love.draw() f:draw() end
+```
 
 Demos Folder
 ==========
