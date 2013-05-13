@@ -49,7 +49,7 @@
 <h2>Modules</h2>
 <ul>
   <li><a href="../modules/ROT.Color.html">ROT.Color</a></li>
-  <li><strong>ROT.Display</strong></li>
+  <li><a href="../modules/ROT.Display.html">ROT.Display</a></li>
   <li><a href="../modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
   <li><a href="../modules/ROT.FOV.Bresenham.html">ROT.FOV.Bresenham</a></li>
   <li><a href="../modules/ROT.FOV.Precise.html">ROT.FOV.Precise</a></li>
@@ -77,64 +77,60 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
-  <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
+  <li><strong>ROT.TextDisplay</strong></li>
 </ul>
 
 </div>
 
 <div id="content">
 
-<h1>Module <code>ROT.Display</code></h1>
+<h1>Module <code>ROT.TextDisplay</code></h1>
 
 <p>Visual Display.</p>
 <p>
- A Code Page 437 terminal emulator based on AsciiPanel.</p>
+ A UTF-8 based text display.</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Display:__init">Display:__init&nbsp;( [w=80 [, h=24 [, scale=1 [, dfg [, dbg [, full=false [, vsync=false [, fsaa=0]]]]]]]])</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:__init">TextDisplay:__init&nbsp;( [w=80 [, h=24 [, font [, size=10 [, dfg [, dbg [, full=false [, vsync=false [, fsaa=0]]]]]]]]])</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:draw">Display:draw&nbsp;()</a></td>
-	<td class="summary">Draw.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#Display:getCharacter">Display:getCharacter&nbsp;(x, y)</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:getCharacter">TextDisplay:getCharacter&nbsp;(x, y)</a></td>
 	<td class="summary">Get a character.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:getBackgroundColor">Display:getBackgroundColor&nbsp;(x, y)</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:getBackgroundColor">TextDisplay:getBackgroundColor&nbsp;(x, y)</a></td>
 	<td class="summary">Get a background color.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:getForegroundColor">Display:getForegroundColor&nbsp;(x, y)</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:getForegroundColor">TextDisplay:getForegroundColor&nbsp;(x, y)</a></td>
 	<td class="summary">Get a foreground color.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:setDefaultBackgroundColor">Display:setDefaultBackgroundColor&nbsp;(c)</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:setDefaultBackgroundColor">TextDisplay:setDefaultBackgroundColor&nbsp;(c)</a></td>
 	<td class="summary">Set Default Background Color.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:setDefaultForegroundColor">Display:setDefaultForegroundColor&nbsp;(c)</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:setDefaultForegroundColor">TextDisplay:setDefaultForegroundColor&nbsp;(c)</a></td>
 	<td class="summary">Set Defaul Foreground Color.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:clear">Display:clear&nbsp;( [c=' ' [, x=1 [, y=1 [, w [, h [, fg [, bg]]]]]]])</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:clear">TextDisplay:clear&nbsp;( [c=' ' [, x=1 [, y=1 [, w [, h [, fg [, bg]]]]]]])</a></td>
 	<td class="summary">Clear the screen.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:clearCanvas">Display:clearCanvas&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:clearCanvas">TextDisplay:clearCanvas&nbsp;()</a></td>
 	<td class="summary">Clear canvas.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:write">Display:write&nbsp;(s [, x=1 [, y=1 [, fg [, bg]]]])</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:write">TextDisplay:write&nbsp;(s [, x=1 [, y=1 [, fg [, bg]]]])</a></td>
 	<td class="summary">Write.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#Display:writeCenter">Display:writeCenter&nbsp;(s [, y=1 [, fg [, bg]]])</a></td>
+	<td class="name" nowrap><a href="#TextDisplay:writeCenter">TextDisplay:writeCenter&nbsp;(s [, y=1 [, fg [, bg]]])</a></td>
 	<td class="summary">Write Center.</td>
 	</tr>
 </table>
@@ -146,12 +142,12 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "Display:__init"></a>
-    <strong>Display:__init&nbsp;( [w=80 [, h=24 [, scale=1 [, dfg [, dbg [, full=false [, vsync=false [, fsaa=0]]]]]]]])</strong>
+    <a name = "TextDisplay:__init"></a>
+    <strong>TextDisplay:__init&nbsp;( [w=80 [, h=24 [, font [, size=10 [, dfg [, dbg [, full=false [, vsync=false [, fsaa=0]]]]]]]]])</strong>
     </dt>
     <dd>
     Constructor.
- The display constructor. Called when ROT.Display:new() is called.
+ The display constructor. Called when ROT.TextDisplay:new() is called.
 
     <h3>Parameters:</h3>
     <ul>
@@ -161,9 +157,12 @@
         <li><span class="parameter">h</span>
             <span class="types"><span class="type">int</span></span>
          Height of display in number of characters</li>
-        <li><span class="parameter">scale</span>
-            <span class="types"><span class="type">float</span></span>
-         Scale factor applied to characters</li>
+        <li><span class="parameter">font</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a>, <span class="type">file</span> or <span class="type">data</span></span>
+         Any valid object accepted by love.graphics.newFont</li>
+        <li><span class="parameter">size</span>
+            <span class="types"><span class="type">int</span></span>
+         font size</li>
         <li><span class="parameter">dfg</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
          Default foreground color as a table defined as {r,g,b,a}</li>
@@ -192,22 +191,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:draw"></a>
-    <strong>Display:draw&nbsp;()</strong>
-    </dt>
-    <dd>
-    Draw.
- The main draw function. This should be called from love.draw() to display any written characters to screen
-
-
-
-
-
-
-</dd>
-    <dt>
-    <a name = "Display:getCharacter"></a>
-    <strong>Display:getCharacter&nbsp;(x, y)</strong>
+    <a name = "TextDisplay:getCharacter"></a>
+    <strong>TextDisplay:getCharacter&nbsp;(x, y)</strong>
     </dt>
     <dd>
     Get a character.
@@ -235,8 +220,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:getBackgroundColor"></a>
-    <strong>Display:getBackgroundColor&nbsp;(x, y)</strong>
+    <a name = "TextDisplay:getBackgroundColor"></a>
+    <strong>TextDisplay:getBackgroundColor&nbsp;(x, y)</strong>
     </dt>
     <dd>
     Get a background color.
@@ -264,8 +249,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:getForegroundColor"></a>
-    <strong>Display:getForegroundColor&nbsp;(x, y)</strong>
+    <a name = "TextDisplay:getForegroundColor"></a>
+    <strong>TextDisplay:getForegroundColor&nbsp;(x, y)</strong>
     </dt>
     <dd>
     Get a foreground color.
@@ -293,8 +278,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:setDefaultBackgroundColor"></a>
-    <strong>Display:setDefaultBackgroundColor&nbsp;(c)</strong>
+    <a name = "TextDisplay:setDefaultBackgroundColor"></a>
+    <strong>TextDisplay:setDefaultBackgroundColor&nbsp;(c)</strong>
     </dt>
     <dd>
     Set Default Background Color.
@@ -313,8 +298,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:setDefaultForegroundColor"></a>
-    <strong>Display:setDefaultForegroundColor&nbsp;(c)</strong>
+    <a name = "TextDisplay:setDefaultForegroundColor"></a>
+    <strong>TextDisplay:setDefaultForegroundColor&nbsp;(c)</strong>
     </dt>
     <dd>
     Set Defaul Foreground Color.
@@ -333,8 +318,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:clear"></a>
-    <strong>Display:clear&nbsp;( [c=' ' [, x=1 [, y=1 [, w [, h [, fg [, bg]]]]]]])</strong>
+    <a name = "TextDisplay:clear"></a>
+    <strong>TextDisplay:clear&nbsp;( [c=' ' [, x=1 [, y=1 [, w [, h [, fg [, bg]]]]]]])</strong>
     </dt>
     <dd>
     Clear the screen.
@@ -373,8 +358,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:clearCanvas"></a>
-    <strong>Display:clearCanvas&nbsp;()</strong>
+    <a name = "TextDisplay:clearCanvas"></a>
+    <strong>TextDisplay:clearCanvas&nbsp;()</strong>
     </dt>
     <dd>
     Clear canvas.
@@ -387,8 +372,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:write"></a>
-    <strong>Display:write&nbsp;(s [, x=1 [, y=1 [, fg [, bg]]]])</strong>
+    <a name = "TextDisplay:write"></a>
+    <strong>TextDisplay:write&nbsp;(s [, x=1 [, y=1 [, fg [, bg]]]])</strong>
     </dt>
     <dd>
     Write.
@@ -419,8 +404,8 @@
 
 </dd>
     <dt>
-    <a name = "Display:writeCenter"></a>
-    <strong>Display:writeCenter&nbsp;(s [, y=1 [, fg [, bg]]])</strong>
+    <a name = "TextDisplay:writeCenter"></a>
+    <strong>TextDisplay:writeCenter&nbsp;(s [, y=1 [, fg [, bg]]])</strong>
     </dt>
     <dd>
     Write Center.
