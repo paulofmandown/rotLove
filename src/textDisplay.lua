@@ -214,7 +214,7 @@ function TextDisplay:_writeValidatedString(s, x, y, fg, bg)
     for i=1,#s do
         self._backgroundColors[x+i-1][y] = bg
         self._foregroundColors[x+i-1][y] = fg
-        self._chars[x+i-1][y]            = s
+        self._chars[x+i-1][y]            = s:sub(i, i)
     end
 end
 
