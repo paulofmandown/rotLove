@@ -1295,7 +1295,7 @@ end
 -- @treturn boolean true if an item was removed from the scheduler
 function ROT.Scheduler:remove(item)
     local result=self._queue:remove(item)
-    local index=table.indexOf(self._events, item)
+    local index=table.indexOf(self._repeat, item)
     if index~=0 then table.remove(self._repeat, index) end
     if self._current==item then self._current=nil end
     return result
