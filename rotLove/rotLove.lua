@@ -53,7 +53,7 @@ local ROT=class {
                }
           }
 }
-
+ROT.__name='ROT'
 -- New Table Functions
 -- returns random table element, nil if length is 0
 function table.random(theTable)
@@ -101,8 +101,24 @@ end
 -- add js indexOf function
 function table.indexOf(values,value)
     if values then
-        for i=1,#values do
-            if values[i] == value then return i end
+        for k,v in ipairs(values) do
+            if v==value then return k end
+        end
+    end
+    if type(value)=='table' then return table.indexOfTable(values, value) end
+    return 0
+end
+
+-- extended for use with tables of tables
+function table.indexOfTable(values, value)
+    if type(value)~='table' then return 0 end
+    for k,v in ipairs(values) do
+        if #v==#value then
+            local match=true
+            for i=1,#v do
+                if v[i]~=value[i] then match=false end
+            end
+            if match then return k end
         end
     end
     return 0
@@ -192,9 +208,7 @@ end
 -- The base class that is extended by all rng classes
 -- @module ROT.RNG
 ROT.RNG=class {  }
-function ROT.RNG:__init()
-    self.__name='RNG'
-end
+ROT.RNG.__name='RNG'
 
 function ROT.RNG:normalize(n) --keep numbers at (positive) 32 bits
     return n % 0x80000000
@@ -247,9 +261,9 @@ end
 --- Mersenne Twister. A random number generator based on RandomLua
 -- @module ROT.RNG.Twister
 ROT.RNG.Twister=ROT.RNG:extends { __name, mt, index, _seed }
+ROT.RNG.Twister.__name='Twister'
 
 function ROT.RNG.Twister:__init()
-    self.__name='Twister'
     self.mt={}
     self.index=0
 end
@@ -325,12 +339,12 @@ end
 --- Linear Congruential Generator. A random number generator based on RandomLua
 -- @module ROT.RNG.LCG
 ROT.RNG.LCG=ROT.RNG:extends { __name, mt, index, a, c, m, x, _seed }
+ROT.RNG.LCG.__name='LCG'
 
 --- Constructor.
 -- Called with ROT.RNG.LCG:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
 function ROT.RNG.LCG:__init(r)
-    self.__name='LCG'
     self.a= 1103515245   -- Ansi C
     self.c= 12345
     self.m= 0x10000
@@ -393,13 +407,11 @@ end
 --- Multiply With Carry. A random number generator based on RandomLua
 -- @module ROT.RNG.MWC
 ROT.RNG.MWC=ROT.RNG:extends { __name, mt, index, a, c, ic, m, x, _seed }
-
+ROT.RNG.MWC.__name='MWC'
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
 function ROT.RNG.MWC:__init(r)
-    self.__name='MWC'
-
     self.a= 1103515245
     self.c= 12345
     self.ic=self.c
@@ -474,7 +486,6 @@ end
 -- @module ROT.Display
 local Display_Path = ({...})[1]:gsub("[%.\\/]rotLove$", "") .. '/'
 ROT.Display = class {
-    __name,
     color,
     widthInChars,
     heightInChars,
@@ -495,7 +506,7 @@ ROT.Display = class {
     oldForegroundColors,
     canvas
 }
-
+ROT.Display.__name='Display'
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
 -- @tparam[opt=80] int w Width of display in number of characters
@@ -508,7 +519,6 @@ ROT.Display = class {
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
 function ROT.Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
-    self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
     self.full         = full and full or false
@@ -758,6 +768,7 @@ end
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
 ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
+ROT.TextDisplay.__name='TextDisplay'
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -1013,6 +1024,7 @@ end
 -- Learns from provided strings, and generates similar strings.
 -- @module ROT.StringGenerator
 ROT.StringGenerator = class { __name, _options, _boundary, _suffix, _prefix, _priorValues, _data, _rng }
+ROT.StringGenerator.__name='StringGenerator'
 
 --- Constructor.
 -- Called with ROT.StringGenerator:new()
@@ -1021,7 +1033,6 @@ ROT.StringGenerator = class { __name, _options, _boundary, _suffix, _prefix, _pr
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
 function ROT.StringGenerator:__init(options)
-    self.__name   ='StringGenerator'
     self._options = {words=false,
                      order=3,
                      prior=0.001
@@ -1180,11 +1191,11 @@ end
 --- Stores and retrieves events based on time.
 -- @module ROT.EventQueue
 ROT.EventQueue = class {
-    __name     ='EventQueue',
     _time      =0,
-    _events    ={},
+    _repeat    ={},
     _eventTimes={}
 }
+ROT.EventQueue.__name='EventQueue'
 
 --- Get Time.
 -- Get time counted since start
@@ -1197,7 +1208,7 @@ end
 -- Remove all events from queue
 -- @treturn ROT.EventQueue self
 function ROT.EventQueue:clear()
-    self._events    ={}
+    self._repeat    ={}
     self._eventTimes={}
     return self
 end
@@ -1217,7 +1228,7 @@ function ROT.EventQueue:add(event, time)
             index=i+1
         end
     end
-    table.insert(self._events, index, event)
+    table.insert(self._repeat, index, event)
     table.insert(self._eventTimes, index, time)
 end
 
@@ -1225,7 +1236,7 @@ end
 -- Get the next event from the queue and advance the appropriate amount time
 -- @treturn event|nil The event previously added by .add() or nil if none are queued
 function ROT.EventQueue:get()
-    if #self._events<1 then return nil end
+    if #self._repeat<1 then return nil end
     local time = table.remove(self._eventTimes, 1)
     if time>0 then
         self._time=self._time+time
@@ -1233,7 +1244,7 @@ function ROT.EventQueue:get()
             self._eventTimes[i]=self._eventTimes[i]-time
         end
     end
-    return table.remove(self._events, 1)
+    return table.remove(self._repeat, 1)
 end
 
 --- Remove.
@@ -1241,22 +1252,22 @@ end
 -- @tparam any event The previously added event to be removed
 -- @treturn boolean true if an event was removed from the queue
 function ROT.EventQueue:remove(event)
-    local index=table.indexOf(self._events, event)
+    local index=table.indexOf(self._repeat, event)
     if index==0 then return false end
     self:_remove(index)
     return true
 end
 
 function ROT.EventQueue:_remove(index)
-    table.remove(self._events, index)
+    table.remove(self._repeat, index)
     table.remove(self._eventTimes, index)
 end
 
 --- The Scheduler Prototype
 -- @module ROT.Scheduler
 ROT.Scheduler = class {    __name,    _queue,    _repeat,    _current}
+ROT.Scheduler.__name='Scheduler'
 function ROT.Scheduler:__init()
-    self.__name  ='Scheduler'
     self._queue=ROT.EventQueue:new()
     self._repeat ={}
     self._current=nil
@@ -1311,8 +1322,8 @@ end
 
 --- The simple scheduler
 -- @module ROT.Scheduler.Simple
-ROT.Scheduler.Simple= ROT.Scheduler:extends { __name='Simple' }
-
+ROT.Scheduler.Simple= ROT.Scheduler:extends { __name }
+ROT.Scheduler.Simple.__name='Simple'
 --- Add.
 -- Add an item to the schedule
 -- @tparam any item
@@ -1351,7 +1362,8 @@ end
 
 --- The Speed based scheduler
 -- @module ROT.Scheduler.Speed
-ROT.Scheduler.Speed= ROT.Scheduler:extends { __name='Speed' }
+ROT.Scheduler.Speed= ROT.Scheduler:extends { __name }
+ROT.Scheduler.Speed.__name='Speed'
 
 --- Add.
 -- Add an item to the schedule
@@ -1392,10 +1404,10 @@ end
 --- Action based turn scheduler.
 -- @module ROT.Scheduler.Action
 ROT.Scheduler.Action= ROT.Scheduler:extends { _defaultDuration, _duration }
+ROT.Scheduler.Action.__name='Action'
 
 function ROT.Scheduler.Action:__init()
     ROT.Scheduler.Action.super.__init(self)
-    self.__name='Action'
     self._defaultDuration=1
     self._duration=self._defaultDuration
 end
@@ -1448,6 +1460,7 @@ function ROT.Scheduler.Action:setDuration(time)
 end
 
 ROT.Engine = class { _scheduler, _lock }
+ROT.Engine.__name='Engine'
 function ROT.Engine:__init(scheduler)
     self.__name='Engine'
     self._scheduler=scheduler
@@ -1474,8 +1487,8 @@ function ROT.Engine:unlock()
 end
 
 ROT.Map=class { __name, _width, _height}
+ROT.Map.__name='Map'
 function ROT.Map:__init(width, height)
-    self.__name= 'Map'
     self._width = width and width or ROT.DEFAULT_WIDTH
     self._height= height and height or ROT.DEFAULT_HEIGHT
 end
@@ -1495,6 +1508,7 @@ end
 -- Generates an arena style map. All cells except for the extreme borders are floors. The borders are walls.
 -- @module ROT.Map.Arena
 ROT.Map.Arena = ROT.Map:extends { }
+ROT.Map.Arena.__name='Arena'
 
 --- Constructor.
 -- Called with ROT.Map.Arena:new(width, height)
@@ -1502,7 +1516,6 @@ ROT.Map.Arena = ROT.Map:extends { }
 -- @tparam int height Height in cells of the map
 function ROT.Map.Arena:__init(width, height)
     Arena.super.__init(self, width, height)
-    self.__name = 'Arena'
 end
 
 --- Create.
@@ -1528,6 +1541,7 @@ end
 -- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
 -- @module ROT.Map.DividedMaze
 ROT.Map.DividedMaze = ROT.Map:extends { }
+ROT.Map.DividedMaze.__name='DividedMaze'
 
 --- Constructor.
 -- Called with ROT.Map.DividedMaze:new(width, height)
@@ -1535,7 +1549,6 @@ ROT.Map.DividedMaze = ROT.Map:extends { }
 -- @tparam int height Height in cells of the map
 function ROT.Map.DividedMaze:__init(width, height)
     ROT.Map.DividedMaze.super.__init(self, width, height)
-    self.__name = 'DividedMaze'
 end
 
 --- Create.
@@ -1646,7 +1659,7 @@ end
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
 -- @module ROT.Map.IceyMaze
 ROT.Map.IceyMaze = ROT.Map:extends { _regularity, _rng }
-
+ROT.Map.IceyMaze.__name='IceyMaze'
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map
@@ -1655,7 +1668,6 @@ ROT.Map.IceyMaze = ROT.Map:extends { _regularity, _rng }
 function ROT.Map.IceyMaze:__init(width, height, regularity)
     assert(ROT or twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')
     IceyMaze.super.__init(self, width, height)
-    self.__name     ='IceyMaze'
     self._regularity= regularity and regularity or 0
     self._rng       =ROT.RNG.Twister:new()
     self._rng:randomseed()
@@ -1758,7 +1770,7 @@ end
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
 ROT.Map.EllerMaze = ROT.Map:extends { _rng }
-
+ROT.Map.EllerMaze.__name='EllerMaze'
 
 --- Constructor.
 -- Called with ROT.Map.EllerMaze:new(width, height)
@@ -1766,7 +1778,6 @@ ROT.Map.EllerMaze = ROT.Map:extends { _rng }
 -- @tparam int height Height in cells of the map
 function ROT.Map.EllerMaze:__init(width, height)
     ROT.Map.EllerMaze.super.__init(self, width, height)
-    self.__name='EllerMaze'
     self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end
@@ -1848,7 +1859,7 @@ end
 --- Cellular Automaton Map Generator
 -- @module ROT.Map.Cellular
 ROT.Map.Cellular = ROT.Map:extends { _rng, _options, _map }
-
+ROT.Map.Cellular.__name='Cellular'
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map
@@ -1860,7 +1871,6 @@ ROT.Map.Cellular = ROT.Map:extends { _rng, _options, _map }
 function ROT.Map.Cellular:__init(width, height, options)
     assert(ROT, 'must require rot')
     ROT.Map.Cellular.super.__init(self, width, height)
-    self.__name='Cellular'
     self._options={
                     born    ={5,6,7,8},
                     survive ={4,5,6,7,8},
@@ -1949,6 +1959,7 @@ end
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
 ROT.Map.Dungeon = ROT.Map:extends { _rooms, _corridors }
+ROT.Map.Dungeon.__name='Dungeon'
 
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
@@ -1970,7 +1981,8 @@ function ROT.Map.Dungeon:getRooms() return self._rooms end
 -- @treturn table A table containing objects of the type ROT.Map.Corridor
 function ROT.Map.Dungeon:getCorridors() return self._corridors end
 
-ROT.Map.Feature = class { __name='Feature' }
+ROT.Map.Feature = class { __name }
+ROT.Map.Feature.__name='Feature'
 function ROT.Map.Feature:isValid(gen, canBeDugCallback) end
 function ROT.Map.Feature:create(gen, digCallback) end
 function ROT.Map.Feature:debug() end
@@ -1980,7 +1992,7 @@ function ROT.Map.Feature:createRandomAt(x, y, dx, dy, options) end
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
 ROT.Map.Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
-
+ROT.Map.Room.__name='Room'
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -1998,7 +2010,6 @@ function ROT.Map.Room:__init(x1, y1, x2, y2, doorX, doorY)
     if doorX then
         self._doors[doorX..','..doorY] = 1
     end
-    self.__name='Room'
     self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end
@@ -2198,7 +2209,7 @@ function ROT.Map.Room:getBottom() return self._y2 end
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
 ROT.Map.Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng }
-
+ROT.Map.Corridor.__name='Corridor'
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
 -- @tparam int startX x-position of first floospace in corridor
@@ -2212,7 +2223,6 @@ function ROT.Map.Corridor:__init(startX, startY, endX, endY)
     self._endX         =endX
     self._endY         =endY
     self._endsWithAWall=true
-    self.__name        ='Corridor'
     self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end
@@ -2335,7 +2345,7 @@ end
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Digger
 ROT.Map.Digger=ROT.Map.Dungeon:extends { _options, _rng }
-
+ROT.Map.Digger.__name='Digger'
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
 -- @tparam int width Width in cells of the map
@@ -2349,7 +2359,6 @@ ROT.Map.Digger=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
 function ROT.Map.Digger:__init(width, height, options)
     ROT.Map.Digger.super.__init(self, width, height)
-    assert(ROT, 'require rot')
 
     self._options={
                     roomWidth={3,8},
@@ -2551,7 +2560,7 @@ end
 --- The Uniform Map Generator.
 -- See http://www.roguebasin.rogue
 ROT.Map.Uniform=ROT.Map.Dungeon:extends { _options, _rng }
-
+ROT.Map.Uniform.__name='Uniform'
 --- Constructor.
 -- Called with ROT.Map.Uniform:new()
 -- @tparam int width Width in cells of the map
@@ -2563,8 +2572,6 @@ ROT.Map.Uniform=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
 function ROT.Map.Uniform:__init(width, height, options)
     ROT.Map.Uniform.super.__init(self, width, height)
-    assert(ROT, 'require rot')
-    self.__name='Uniform'
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},
@@ -2850,7 +2857,7 @@ end
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
 ROT.Map.Rogue=ROT.Map:extends { _options, _rng }
-
+ROT.Map.Rogue.__name='Rogue'
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -2861,7 +2868,6 @@ ROT.Map.Rogue=ROT.Map:extends { _options, _rng }
   -- @tparam int options.roomHeight Room min and max height
 function ROT.Map.Rogue:__init(width, height, options)
     ROT.Map.Rogue.super.__init(self, width, height)
-    self.__name='Rogue'
     self._options={cellWidth=3, cellHeight=3}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=ROT.RNG.Twister:new()
@@ -3193,10 +3199,7 @@ function ROT.Map.Rogue:_createCorridors()
 end
 
 ROT.Noise=class{ __name }
-
-function ROT.Noise:__init()
-    self.__name='Noise'
-end
+ROT.Noise.__name='Noise'
 
 function ROT.Noise:get(x, y) end
 
@@ -3208,14 +3211,11 @@ function ROT.Noise:get(x, y) end
 -- Better rank ordering method by Stefan Gustavson in 2012.
 -- @module ROT.Noise.Simplex
 ROT.Noise.Simplex=ROT.Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
-
+ROT.Noise.Simplex.__name='Simplex'
 --- Constructor.
 -- 2D simplex noise generator.
 -- @tparam int gradients The random values for the noise.
 function ROT.Noise.Simplex:__init(gradients)
-    self.__name='Simplex'
-    ROT.Noise.Simplex.super.__init(self)
-
     self._F2=.5*(math.sqrt(3)-1)
     self._G2=(3-math.sqrt(3))/6
 

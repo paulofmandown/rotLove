@@ -49,7 +49,23 @@ function table.indexOf(values,value)
 			if values[i] == value then return i end
 		end
 	end
+    if type(value)=='table' then return table.indexOfTable(values, value) end
 	return 0
+end
+
+-- extended for use with tables of tables
+function table.indexOfTable(values, value)
+    if type(value)~='table' then return 0 end
+    for k,v in ipairs(values) do
+        if #v==#value then
+            local match=true
+            for i=1,#v do
+                if v[i]~=value[i] then match=false end
+            end
+            if match then return k end
+        end
+    end
+    return 0
 end
 
 -- asserts the type of 'theTable' is table
