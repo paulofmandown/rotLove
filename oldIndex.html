@@ -49,6 +49,8 @@
     <span class="c1">--         defaultBackgroundColor({r=15 , g=15 , b=15 , a=255}),</span>
     <span class="c1">--         useFullScreen, useVSync, numberOfFsaaSamples (false, false, 0))</span>
     <span class="n">display</span><span class="o">=</span><span class="n">ROT</span><span class="p">.</span><span class="n">Display</span><span class="p">:</span><span class="n">new</span><span class="p">()</span>
+    <span class="c1">-- or to use a text based display</span>
+    <span class="c1">-- tDisplay=ROT.TextDisplay(widthInCharacters, heightInCharacters, fontObject, fontSize)</span>
   <span class="c1">-- and write some things out.</span>
     <span class="kd">local</span> <span class="n">x_position</span><span class="o">=</span><span class="mi">1</span>
     <span class="kd">local</span> <span class="n">y_position</span><span class="o">=</span><span class="mi">1</span>
@@ -232,7 +234,7 @@ This requires that (after fetching the next actor) you tell the scheduler how lo
 
 <h1>Map Generators</h1>
 
-<p>RotLove provides 8 different methods for creating a map layout. 
+<p>RotLove provides 8 different methods for creating a map layout.
 One is a simple arena (everything is floor except the outermost border), three are based on maze algorithms, one is based on a cellular automata method (gives cave-like results), and the last three are more typical room/corridor dungeons.</p>
 
 <p>When creating the map generator, you should provide it with the intended width and height for the map.</p>
@@ -241,7 +243,7 @@ One is a simple arena (everything is floor except the outermost border), three a
 
 <p>This function should take three arguments: an x-value, a y-value, and a cell-type value. </p>
 
-<p>x will be a cell's x-position in the map. 
+<p>x will be a cell's x-position in the map.
 y will be a cell's y-position in the map.
 the cell type will be a 1 or 0 (1 for wall, 0 for floor)</p>
 
@@ -326,9 +328,9 @@ the cell type will be a 1 or 0 (1 for wall, 0 for floor)</p>
 
 <p>For rotLove this optional config object takes the form of a table.</p>
 
-<div class="highlight"><pre><span class="kd">local</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="n">born</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span> 
-              <span class="n">survive</span> <span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span> 
-              <span class="n">topology</span><span class="o">=</span><span class="mi">8</span> 
+<div class="highlight"><pre><span class="kd">local</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="n">born</span><span class="o">=</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span>
+              <span class="n">survive</span> <span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">},</span>
+              <span class="n">topology</span><span class="o">=</span><span class="mi">8</span>
              <span class="p">}</span>
 </pre></div>
 
@@ -412,7 +414,7 @@ the cell type will be a 1 or 0 (1 for wall, 0 for floor)</p>
 
             <span class="n">f</span><span class="p">:</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="s"> '</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="p">{</span><span class="n">r</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">green</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">255</span><span class="p">})</span>
         <span class="k">end</span>
-    <span class="k">end</span>    
+    <span class="k">end</span>
 <span class="k">end</span>
 <span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span> <span class="n">f</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span> <span class="k">end</span>
 </pre></div>
@@ -536,7 +538,7 @@ It's very quick and awesome, and I highly suggest using it over bresenham.</p>
 
     <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
 <span class="k">end</span>
-<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span> 
+<span class="k">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">()</span>
     <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
     <span class="c1">-- Wipe the screen with one of the colors</span>
     <span class="n">f</span><span class="p">:</span><span class="n">clear</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
