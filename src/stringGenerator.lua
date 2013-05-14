@@ -14,6 +14,7 @@ local StringGenerator = class {
 	_data,
     _rng
 }
+StringGenerator.__name='StringGenerator'
 
 --- Constructor.
 -- Called with ROT.StringGenerator:new()
@@ -22,7 +23,6 @@ local StringGenerator = class {
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
 function StringGenerator:__init(options)
-	self.__name   ='StringGenerator'
 	self._options = {words=false,
 					 order=3,
 					 prior=0.001

@@ -5,7 +5,7 @@ local Corridor_PATH =({...})[1]:gsub("[%.\\/]corridor$", "") .. '/'
 local class  =require (Corridor_PATH .. 'vendor/30log')
 
 local Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng }
-
+Corridor.__name='Corridor'
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
 -- @tparam int startX x-position of first floospace in corridor
@@ -13,13 +13,11 @@ local Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng 
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
 function Corridor:__init(startX, startY, endX, endY)
-	assert(ROT, 'require rot')
 	self._startX       =startX
 	self._startY       =startY
 	self._endX         =endX
 	self._endY         =endY
 	self._endsWithAWall=true
-	self.__name        ='Corridor'
 	self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end

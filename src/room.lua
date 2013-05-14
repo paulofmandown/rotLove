@@ -5,7 +5,7 @@ local Room_PATH =({...})[1]:gsub("[%.\\/]room$", "") .. '/'
 local class  =require (Room_PATH .. 'vendor/30log')
 
 local Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
-
+Room.__name='Room'
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -23,7 +23,6 @@ function Room:__init(x1, y1, x2, y2, doorX, doorY)
 	if doorX then
 		self._doors[doorX..','..doorY] = 1
 	end
-	self.__name='Room'
 	self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end

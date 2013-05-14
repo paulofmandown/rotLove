@@ -6,7 +6,7 @@ local Bresenham_PATH =({...})[1]:gsub("[%.\\/]bresenham$", "") .. '/'
 local class  =require (Bresenham_PATH .. 'vendor/30log')
 
 local Bresenham=ROT.FOV:extends { __name, _lightPasses, _options }
-
+Bresenham.__name='Bresenham'
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
@@ -15,7 +15,6 @@ local Bresenham=ROT.FOV:extends { __name, _lightPasses, _options }
   -- @tparam boolean options.useDiamond If true, the FOV will be a diamond shape as opposed to a circle shape.
 function Bresenham:__init(lightPassesCallback, options)
     Bresenham.super.__init(self, lightPassesCallback, options)
-    self.__name='Bresenham'
 end
 
 --- Compute.

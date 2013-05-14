@@ -6,9 +6,7 @@ local RNG_PATH =({...})[1]:gsub("[%.\\/]rng$", "") .. '/'
 local class  =require (RNG_PATH .. 'vendor/30log')
 
 local RNG=class {  }
-function RNG:__init()
-    self.__name='RNG'
-end
+RNG.__name='RNG'
 
 function RNG:normalize(n) --keep numbers at (positive) 32 bits
     return n % 0x80000000

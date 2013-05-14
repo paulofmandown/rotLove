@@ -4,8 +4,8 @@
 local Simple_Path =({...})[1]:gsub("[%.\\/]simple$", "") .. '/'
 local class  =require (Simple_Path .. 'vendor/30log')
 
-local Simple= ROT.Scheduler:extends { __name='Simple' }
-
+local Simple= ROT.Scheduler:extends {  }
+Simple.__name='Simple'
 --- Add.
 -- Add an item to the schedule
 -- @tparam any item

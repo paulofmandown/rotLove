@@ -4,13 +4,11 @@ local MWC_PATH =({...})[1]:gsub("[%.\\/]mwc$", "") .. '/'
 local class  =require (MWC_PATH .. 'vendor/30log')
 
 local MWC=ROT.RNG:extends { __name, mt, index, a, c, ic, m, x, _seed }
-
+MWC.__name='MWC'
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
 function MWC:__init(r)
-	self.__name='MWC'
-
     self.a= 1103515245
     self.c= 12345
     self.ic=self.c

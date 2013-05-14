@@ -9,14 +9,11 @@ local Simplex_PATH =({...})[1]:gsub("[%.\\/]simplex$", "") .. '/'
 local class  =require (Simplex_PATH .. 'vendor/30log')
 
 local Simplex=ROT.Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
-
+Simplex.__name='Simplex'
 --- Constructor.
 -- 2D simplex noise generator.
 -- @tparam int gradients The random values for the noise.
 function Simplex:__init(gradients)
-    self.__name='Simplex'
-    Simplex.super.__init(self)
-
     self._F2=.5*(math.sqrt(3)-1)
     self._G2=(3-math.sqrt(3))/6
 

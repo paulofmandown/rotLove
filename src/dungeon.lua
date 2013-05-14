@@ -6,7 +6,7 @@ local Dungeon_PATH =({...})[1]:gsub("[%.\\/]dungeon$", "") .. '/'
 local class  =require (Dungeon_PATH .. 'vendor/30log')
 
 local Dungeon = ROT.Map:extends { _rooms, _corridors }
-
+Dungeon.__name='Dungeon'
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map

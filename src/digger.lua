@@ -5,7 +5,7 @@ local Digger_PATH =({...})[1]:gsub("[%.\\/]digger$", "") .. '/'
 local class  =require (Digger_PATH .. 'vendor/30log')
 
 local Digger=ROT.Map.Dungeon:extends { _options, _rng }
-
+Digger.__name='Digger'
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
 -- @tparam int width Width in cells of the map
@@ -19,7 +19,6 @@ local Digger=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
 function Digger:__init(width, height, options)
 	Digger.super.__init(self, width, height)
-	assert(ROT, 'require rot')
 
 	self._options={
 					roomWidth={3,8},

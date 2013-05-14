@@ -5,10 +5,9 @@ local Action_Path =({...})[1]:gsub("[%.\\/]action$", "") .. '/'
 local class  =require (Action_Path .. 'vendor/30log')
 
 local Action= ROT.Scheduler:extends { _defaultDuration, _duration }
-
+Action.__name='Action'
 function Action:__init()
 	Action.super.__init(self)
-	self.__name='Action'
 	self._defaultDuration=1
 	self._duration=self._defaultDuration
 end

@@ -5,6 +5,7 @@ local Uniform_PATH =({...})[1]:gsub("[%.\\/]uniform$", "") .. '/'
 local class  =require (Uniform_PATH .. 'vendor/30log')
 
 local Uniform=ROT.Map.Dungeon:extends { _options, _rng }
+Uniform.__name='Uniform'
 
 --- Constructor.
 -- Called with ROT.Map.Uniform:new()
@@ -17,8 +18,6 @@ local Uniform=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
 function Uniform:__init(width, height, options)
     Uniform.super.__init(self, width, height)
-    assert(ROT, 'require rot')
-    self.__name='Uniform'
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},

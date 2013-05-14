@@ -8,7 +8,7 @@ local Color_PATH=({...})[1]:gsub("[%.\\/]color$", "") .. '/'
 local class  =require (Color_PATH .. 'vendor/30log')
 
 local Color=class { _cache, _rng }
-
+Color.__name='Color'
 function Color:__init()
     self._rng = ROT.RNG.Twister:new()
     self._rng:randomseed()

@@ -5,13 +5,12 @@ local LCG_PATH =({...})[1]:gsub("[%.\\/]lcg$", "") .. '/'
 local class  =require (LCG_PATH .. 'vendor/30log')
 
 local LCG=ROT.RNG:extends { __name, mt, index, a, c, m, x, _seed }
-
+LCG.__name='LCG'
 
 --- Constructor.
 -- Called with ROT.RNG.LCG:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
 function LCG:__init(r)
-	self.__name='LCG'
     self.a= 1103515245   -- Ansi C
     self.c= 12345
     self.m= 0x10000

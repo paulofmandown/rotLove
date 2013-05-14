@@ -4,7 +4,7 @@
 local TextDisplay_Path = ({...})[1]:gsub("[%.\\/]textDisplay$", "") .. '/'
 local class=require (TextDisplay_Path .. 'vendor/30log')
 local TextDisplay=class {  }
-
+TextDisplay.__name='TextDisplay'
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.

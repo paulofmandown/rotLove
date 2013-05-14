@@ -6,16 +6,14 @@ local IceyMaze_PATH =({...})[1]:gsub("[%.\\/]iceyMaze$", "") .. '/'
 local class  =require (IceyMaze_PATH .. 'vendor/30log')
 
 local IceyMaze = ROT.Map:extends { _regularity, _rng }
-
+IceyMaze.__name     ='IceyMaze'
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 -- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
 function IceyMaze:__init(width, height, regularity)
-	assert(ROT or twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')
 	IceyMaze.super.__init(self, width, height)
-	self.__name     ='IceyMaze'
 	self._regularity= regularity and regularity or 0
 	self._rng       =ROT.RNG.Twister:new()
     self._rng:randomseed()

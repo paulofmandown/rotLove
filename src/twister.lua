@@ -5,9 +5,8 @@ local Twister_PATH =({...})[1]:gsub("[%.\\/]twister$", "") .. '/'
 local class  =require (Twister_PATH .. 'vendor/30log')
 
 local Twister=ROT.RNG:extends { __name, mt, index, _seed }
-
+Twister.__name='Twister'
 function Twister:__init()
-	self.__name='Twister'
     self.mt={}
     self.index=0
 end

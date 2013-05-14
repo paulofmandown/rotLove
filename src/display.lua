@@ -27,6 +27,7 @@ local Display = class {
 	oldForegroundColors,
 	canvas
 }
+Display.__name='Display'
 
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
@@ -40,7 +41,6 @@ local Display = class {
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
 function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
-	self.__name='Display'
 	self.widthInChars = w and w or 80
 	self.heightInChars= h and h or 24
 	self.full         = full and full or false

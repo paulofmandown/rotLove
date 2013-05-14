@@ -5,7 +5,7 @@ local Lighting_PATH=({...})[1]:gsub("[%.\\/]lighting$", "") .. '/'
 local class  =require (Lighting_PATH .. 'vendor/30log')
 
 local Lighting=class {  }
-
+Lighting.__name='Lighting'
 --- Constructor.
 -- Called with ROT.Color:new()
 -- @tparam function reflectivityCallback Callback to retrieve cell reflectivity must return float(0..1)

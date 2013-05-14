@@ -5,14 +5,13 @@ local DividedMaze_PATH =({...})[1]:gsub("[%.\\/]dividedMaze$", "") .. '/'
 local class  =require (DividedMaze_PATH .. 'vendor/30log')
 
 local DividedMaze = ROT.Map:extends { }
-
+DividedMaze.__name='DividedMaze'
 --- Constructor.
 -- Called with ROT.Map.DividedMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 function DividedMaze:__init(width, height)
 	DividedMaze.super.__init(self, width, height)
-	self.__name = 'DividedMaze'
 end
 
 --- Create.

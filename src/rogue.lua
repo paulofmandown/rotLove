@@ -6,7 +6,7 @@ local Rogue_PATH =({...})[1]:gsub("[%.\\/]rogue$", "") .. '/'
 local class  =require (Rogue_PATH .. 'vendor/30log')
 
 local Rogue=ROT.Map:extends { _options, _rng }
-
+Rogue.__name='Rogue'
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -17,7 +17,6 @@ local Rogue=ROT.Map:extends { _options, _rng }
   -- @tparam int options.roomHeight Room min and max height
 function Rogue:__init(width, height, options)
     Rogue.super.__init(self, width, height)
-    self.__name='Rogue'
     self._options={cellWidth=3, cellHeight=3}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=ROT.RNG.Twister:new()

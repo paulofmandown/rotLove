@@ -23,7 +23,7 @@ ROT=class {
 		       }
 		  }
 }
-
+ROT.__name='ROT'
 require (ROTLOVE_PATH .. 'newFuncs')
 
 --[[--------------------------------]]--

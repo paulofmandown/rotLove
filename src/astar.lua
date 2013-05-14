@@ -5,7 +5,7 @@ local AStar_PATH=({...})[1]:gsub("[%.\\/]astar$", "") .. '/'
 local class  =require (AStar_PATH .. 'vendor/30log')
 
 local AStar=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _done, _todo, _passableCallback, _options }
-
+AStar.__name='AStar'
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell

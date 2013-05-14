@@ -6,7 +6,7 @@ local Precise_PATH =({...})[1]:gsub("[%.\\/]precise$", "") .. '/'
 local class  =require (Precise_PATH .. 'vendor/30log')
 
 local Precise=ROT.FOV:extends{ __name, _lightPasses, _options }
-
+Precise.__name='Precise'
 --- Constructor.
 -- Called with ROT.FOV.Precise:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through

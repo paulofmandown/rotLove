@@ -3,8 +3,8 @@
 local Speed_Path =({...})[1]:gsub("[%.\\/]speed$", "") .. '/'
 local class  =require (Speed_Path .. 'vendor/30log')
 
-local Speed= ROT.Scheduler:extends { __name='Speed' }
-
+local Speed= ROT.Scheduler:extends {  }
+Speed.__name='Speed'
 --- Add.
 -- Add an item to the schedule
 -- @tparam userdata item Any class/module/userdata with a :getSpeed() function. The value returned by getSpeed() should be a number.

@@ -6,7 +6,7 @@ local EllerMaze_PATH =({...})[1]:gsub("[%.\\/]ellerMaze$", "") .. '/'
 local class  =require (EllerMaze_PATH .. 'vendor/30log')
 
 local EllerMaze = ROT.Map:extends { _rng }
-
+EllerMaze.__name='EllerMaze'
 
 --- Constructor.
 -- Called with ROT.Map.EllerMaze:new(width, height)
@@ -14,7 +14,6 @@ local EllerMaze = ROT.Map:extends { _rng }
 -- @tparam int height Height in cells of the map
 function EllerMaze:__init(width, height)
 	EllerMaze.super.__init(self, width, height)
-	self.__name='EllerMaze'
 	self._rng  =ROT.RNG.Twister:new()
     self._rng:randomseed()
 end

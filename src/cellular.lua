@@ -5,7 +5,7 @@ local Cellular_PATH =({...})[1]:gsub("[%.\\/]cellular$", "") .. '/'
 local class  =require (Cellular_PATH .. 'vendor/30log')
 
 local Cellular = ROT.Map:extends { _rng, _options, _map }
-
+Cellular.__name='Cellular'
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map
@@ -17,7 +17,6 @@ local Cellular = ROT.Map:extends { _rng, _options, _map }
 function Cellular:__init(width, height, options)
 	assert(ROT, 'must require rot')
 	Cellular.super.__init(self, width, height)
-	self.__name='Cellular'
 	self._options={
 					born    ={5,6,7,8},
 					survive ={4,5,6,7,8},

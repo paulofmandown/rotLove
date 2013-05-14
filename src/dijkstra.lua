@@ -5,7 +5,7 @@ local Dijkstra_PATH=({...})[1]:gsub("[%.\\/]dijkstra$", "") .. '/'
 local class  =require (Dijkstra_PATH .. 'vendor/30log')
 
 local Dijkstra=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _computed, _todo, _passableCallback, _options, _dirs}
-
+Dijkstra.__name='Dijkstra'
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell

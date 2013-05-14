@@ -10,8 +10,8 @@ local Scheduler = class {
 	_repeat,
 	_current
 }
+Scheduler.__name  ='Scheduler'
 function Scheduler:__init()
-	self.__name  ='Scheduler'
 	self._queue=ROT.EventQueue:new()
 	self._repeat ={}
 	self._current=nil

@@ -5,14 +5,13 @@ local Arena_PATH =({...})[1]:gsub("[%.\\/]arena$", "") .. '/'
 local class  =require (Arena_PATH .. 'vendor/30log')
 
 local Arena = ROT.Map:extends { }
-
+Arena.__name='Arena'
 --- Constructor.
 -- Called with ROT.Map.Arena:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 function Arena:__init(width, height)
 	Arena.super.__init(self, width, height)
-	self.__name = 'Arena'
 end
 
 --- Create.
