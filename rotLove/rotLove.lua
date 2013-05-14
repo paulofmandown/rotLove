@@ -757,7 +757,7 @@ end
 --- Visual Display.
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
-local ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
+ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -967,7 +967,7 @@ function ROT.TextDisplay:_writeValidatedString(s, x, y, fg, bg)
     for i=1,#s do
         self._backgroundColors[x+i-1][y] = bg
         self._foregroundColors[x+i-1][y] = fg
-        self._chars[x+i-1][y]            = s
+        self._chars[x+i-1][y]            = s:sub(i, i)
     end
 end
 
@@ -2654,7 +2654,6 @@ function ROT.Map.Uniform:_generateCorridors()
         self._connected  ={}
         table.insert(self._connected, table.remove(self._unconnected))
         while true do
-    write(#self._connected..','..type(self._connected[1]))
             local connected=table.random(self._connected)
             local room1    =self:_closestRoom(self._unconnected, connected)
             local room2    =self:_closestRoom(self._connected, room1)
