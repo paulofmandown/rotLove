@@ -111,8 +111,10 @@ function TextDisplay:getDefaultForegroundColor() return self._defaultForegroundC
 -- @tparam int x The x-position of the character
 -- @tparam int y The y-position of the character
 -- @treturn string The character
-function TextDisplay:getCharacter(x, y) return self._chars[x][y] end
-
+function TextDisplay:getCharacter(x, y)
+    local c=self.chars[x][y]
+    return c and string.char(c) or nil
+end
 --- Get a background color.
 -- returns the current background color of the character written to position x, y
 -- @tparam int x The x-position of the character

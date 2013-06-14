@@ -619,7 +619,10 @@ function ROT.Display:getDefaultForegroundColor() return self.defaultForegroundCo
 -- @tparam int x The x-position of the character
 -- @tparam int y The y-position of the character
 -- @treturn string The character
-function ROT.Display:getCharacter(x, y) return string.char(self.chars[x][y]) end
+function ROT.Display:getCharacter(x, y)
+    local c=self.chars[x][y]
+    return c and string.char(c) or nil
+end
 
 --- Get a background color.
 -- returns the current background color of the character written to position x, y
@@ -858,8 +861,7 @@ function ROT.TextDisplay:draw()
     end end
     love.graphics.setCanvas()
     love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(self._canvas)
-end
+    love.graphics.draw(self._canvas)end
 
 function ROT.TextDisplay:getCharHeight() return self._charHeight end
 function ROT.TextDisplay:getCharWidth() return self._charWidth end
@@ -875,8 +877,10 @@ function ROT.TextDisplay:getDefaultForegroundColor() return self._defaultForegro
 -- @tparam int x The x-position of the character
 -- @tparam int y The y-position of the character
 -- @treturn string The character
-function ROT.TextDisplay:getCharacter(x, y) return self._chars[x][y] end
-
+function ROT.TextDisplay:getCharacter(x, y)
+    local c=self.chars[x][y]
+    return c and string.char(c) or nil
+end
 --- Get a background color.
 -- returns the current background color of the character written to position x, y
 -- @tparam int x The x-position of the character
@@ -3595,7 +3599,7 @@ end
   -- @tparam int callback.y y-position of cell that is in view
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
-function ROT.FOV.Bresenham:compute(cx, cy, r, callback)
+function ROT.FOV.Bresenham:computeEffic(cx, cy, r, callback)
     local notvisited={}
     for x=-r,r do
         for y=-r,r do
@@ -3684,7 +3688,7 @@ end
   -- @tparam int callback.y y-position of cell that is in view
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
-function ROT.FOV.Bresenham:computeQuick(cx, cy, r, callback)
+function ROT.FOV.Bresenham:compute(cx, cy, r, callback)
     visited={}
     callback(cx,cy,1, 1)
     visited[ROT.Point(cx, cy):hashCode()]=0
