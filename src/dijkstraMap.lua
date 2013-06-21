@@ -12,7 +12,7 @@ local DijkstraMap=class {  }
 -- @tparam int mapWidth width of the map
 -- @tparam int mapHeight height of the map
 -- @tparam function passableCallback a function with two parameters (x, y) that returns true if a map cell is passable
-function DijkstraMap(goalX, goalY, mapWidth, mapHeight, passableCallback)
+function DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._map={}
     self._goal={}
     self._goal.x=x
@@ -74,40 +74,40 @@ end
 
 --- Get Width of map.
 -- @treturn int w width of map
-function dijkstraMap:getWidth() return self._dimensions.w end
+function DijkstraMap:getWidth() return self._dimensions.w end
 
 --- Get Height of map.
 -- @treturn int h height of map
-function dijkstraMap:getHeight() return self._dimensions.h end
+function DijkstraMap:getHeight() return self._dimensions.h end
 
 --- Get Dimensions as table.
 -- @treturn table dimensions A table of width and height values
   -- @treturn int dimensions.w width of map
   -- @treturn int dimensions.h height of map
-function dijkstraMap:getDimensions() return self._dimensions end
+function DijkstraMap:getDimensions() return self._dimensions end
 
 --- Get the map table.
 -- @treturn table map A 2d array of map values, access like map[x][y]
-function dijkstraMap:getMap() return self._map end
+function DijkstraMap:getMap() return self._map end
 
 --- Get the x-value of the goal cell.
 -- @treturn int x x-value of goal cell
-function dijkstraMap:getGoalX() return self._goal.x end
+function DijkstraMap:getGoalX() return self._goal.x end
 
 --- Get the y-value of the goal cell.
 -- @treturn int y y-value of goal cell
-function dijkstraMap:getGoalY() return self._goal.y end
+function DijkstraMap:getGoalY() return self._goal.y end
 
 --- Get the goal cell as a table.
 -- @treturn table goal table containing goal position
   -- @treturn int goal.x x-value of goal cell
-function dijkstraMap:getGoal() return self._goal end
+function DijkstraMap:getGoal() return self._goal end
 
 --- Set the goal position.
 -- Use compute after to calculate a new map without creating a whole new object
 -- @tparam int x the new x-value of the goal cell
 -- @tparam int y the new y-value of the goal cell
-function dijkstraMap:setGoal(x, y)
+function DijkstraMap:setGoal(x, y)
     self._goal.x=x
     self._goal.y=y
 end
@@ -117,7 +117,7 @@ end
 -- @tparam int y y-value of current position
 -- @treturn int xDir X-Direction towards goal. Either -1, 0, or 1
 -- @treturn int yDir Y-Direction towards goal. Either -1, 0, or 1
-function dijkstraMap:dirTowardsGoal(x, y)
+function DijkstraMap:dirTowardsGoal(x, y)
     local low=math.huge
     local key=nil
     local dir=nil
@@ -138,7 +138,7 @@ end
 
 --- Run a callback function on every cell in the map
 -- @tparam function callback A function with x and y parameters that will be run on every cell in the map
-function dijkstraMap:iterateThroughMap(callback)
+function DijkstraMap:iterateThroughMap(callback)
     for y=1,self._dimensions.h do
         for x=1,self._dimensions.w do
             callback(x,y)
