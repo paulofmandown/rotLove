@@ -3,19 +3,22 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <head>
-    <title>'rotLove</title>
+    <title>rotLove Reference</title>
     <link rel="stylesheet" href="ldoc.css" type="text/css" />
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-    try {
-    var pageTracker = _gat._getTracker("UA-40653955-1");
-    pageTracker._trackPageview();
-    } catch(err) {}
-    </script>
 </head>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 <body>
 
 <div id="container">
@@ -34,7 +37,7 @@
 
 <div id="navigation">
 <br/>
-<h1>'rotLove'</h1>
+<h1>rotLove</h1>
 
 
 
@@ -42,6 +45,7 @@
 <h2>Modules</h2>
 <ul>
   <li><a href="modules/ROT.Color.html">ROT.Color</a></li>
+  <li><a href="modules/ROT.DijkstraMap.html">ROT.DijkstraMap</a></li>
   <li><a href="modules/ROT.Display.html">ROT.Display</a></li>
   <li><a href="modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
   <li><a href="modules/ROT.FOV.Bresenham.html">ROT.FOV.Bresenham</a></li>
@@ -59,6 +63,7 @@
   <li><a href="modules/ROT.Map.Room.html">ROT.Map.Room</a></li>
   <li><a href="modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
   <li><a href="modules/ROT.Noise.Simplex.html">ROT.Noise.Simplex</a></li>
+  <li><a href="modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
   <li><a href="modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
   <li><a href="modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="modules/ROT.RNG.html">ROT.RNG</a></li>
@@ -85,6 +90,10 @@
 	<tr>
 		<td class="name"  nowrap><a href="modules/ROT.Color.html">ROT.Color</a></td>
 		<td class="summary">The Color Toolkit.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.DijkstraMap.html">ROT.DijkstraMap</a></td>
+		<td class="summary">DijkstraMap Pathfinding.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ROT.Display.html">ROT.Display</a></td>
@@ -157,6 +166,10 @@
 	<tr>
 		<td class="name"  nowrap><a href="modules/ROT.Path.AStar.html">ROT.Path.AStar</a></td>
 		<td class="summary">A* Pathfinding.</td>
+	</tr>
+	<tr>
+		<td class="name"  nowrap><a href="modules/ROT.Path.AStar.html">ROT.Path.AStar</a></td>
+		<td class="summary">Jump Point Search Pathfinding.</td>
 	</tr>
 	<tr>
 		<td class="name"  nowrap><a href="modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></td>

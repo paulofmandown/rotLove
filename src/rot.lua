@@ -1,7 +1,7 @@
 local ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
 local class  =require (ROTLOVE_PATH .. 'vendor/30log')
 
-ROT=class {
+local ROT=class {
 	DEFAULT_WIDTH =80,
 	DEFAULT_HEIGHT=24,
 
@@ -23,7 +23,7 @@ ROT=class {
 		       }
 		  }
 }
-
+ROT.__name='ROT'
 require (ROTLOVE_PATH .. 'newFuncs')
 
 --[[--------------------------------]]--
@@ -41,6 +41,7 @@ ROT.RNG.MWC          = require (ROTLOVE_PATH .. 'mwc')
 --[[--------------------------------]]--
 
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
+ROT.TextDisplay      = require (ROTLOVE_PATH .. 'textDisplay')
 ROT.StringGenerator  = require (ROTLOVE_PATH .. 'stringGenerator')
 ROT.EventQueue       = require (ROTLOVE_PATH .. 'eventQueue')
 ROT.Scheduler        = require (ROTLOVE_PATH .. 'scheduler')
@@ -72,6 +73,7 @@ ROT.Color            = require (ROTLOVE_PATH .. 'color')
 ROT.Lighting         = require (ROTLOVE_PATH .. 'lighting')
 ROT.Path             = require (ROTLOVE_PATH .. 'path')
 ROT.Path.Dijkstra    = require (ROTLOVE_PATH .. 'dijkstra')
+ROT.DijkstraMap      = require (ROTLOVE_PATH .. 'dijkstraMap')
 ROT.Path.AStar       = require (ROTLOVE_PATH .. 'astar')
 
 return ROT
