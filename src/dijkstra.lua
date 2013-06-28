@@ -19,7 +19,8 @@ function Dijkstra:__init(toX, toY, passableCallback, options)
     self._todo    ={}
 
     local obj = {x=toX, y=toY, prev=nil}
-    self._computed[toX..','..toY] = obj
+    self._computed[toX]={}
+    self._computed[toX][toY] = obj
     table.insert(self._todo, obj)
 end
 
@@ -28,12 +29,14 @@ end
 -- @tparam int fromY y-position of starting point
 -- @tparam function callback Will be called for every path item with arguments "x" and "y"
 function Dijkstra:compute(fromX, fromY, callback)
-    local key=fromX..','..fromY
+    self._fromX=tonumber(fromX)
+    self._fromY=tonumber(fromY)
 
-    if not self._computed[key] then self:_compute(fromX, fromY) end
-    if not self._computed[key] then return end
+    if not self._computed[self._fromX] then self._computed[self._fromX]={} end
+    if not self._computed[self._fromX][self._fromY] then self:_compute(self._fromX, self._fromY) end
+    if not self._computed[self._fromX][self._fromY] then return end
 
-    local item=self._computed[key]
+    local item=self._computed[self._fromX][self._fromY]
     while item do
         callback(tonumber(item.x), tonumber(item.y))
         item=item.prev
@@ -48,11 +51,10 @@ function Dijkstra:_compute(fromX, fromY)
         local neighbors=self:_getNeighbors(item.x, item.y)
 
         for i=1,#neighbors do
-            local neighbor=neighbors[i]
-            local x=neighbor[1]
-            local y=neighbor[2]
-            local id=x..','..y
-            if not self._computed[id] then
+            local x=neighbors[i][1]
+            local y=neighbors[i][2]
+            if not self._computed[x] then self._computed[x]={} end
+            if not self._computed[x][y] then
                 self:_add(x, y, item)
             end
         end
@@ -65,7 +67,7 @@ function Dijkstra:_add(x, y, prev)
     obj.y   =y
     obj.prev=prev
 
-    self._computed[x..','..y]=obj
+    self._computed[x][y]=obj
     table.insert(self._todo, obj)
 end
 

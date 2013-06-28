@@ -4352,21 +4352,22 @@ end
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
 ROT.Path.Dijkstra=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _computed, _todo, _passableCallback, _options, _dirs}
-
+ROT.Path.Dijkstra.__name='Dijkstra'
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function ROT.Path.Dijkstra:__init(toX, toY, passableCallback, options)
+function ROT.Path.Dijkstra:__init(toX, toY, passableCallback, options)ROT.Path.
     ROT.Path.Dijkstra.super.__init(self, toX, toY, passableCallback, options)
 
     self._computed={}
     self._todo    ={}
 
     local obj = {x=toX, y=toY, prev=nil}
-    self._computed[toX..','..toY] = obj
+    self._computed[toX]={}
+    self._computed[toX][toY] = obj
     table.insert(self._todo, obj)
 end
 
@@ -4375,12 +4376,14 @@ end
 -- @tparam int fromY y-position of starting point
 -- @tparam function callback Will be called for every path item with arguments "x" and "y"
 function ROT.Path.Dijkstra:compute(fromX, fromY, callback)
-    local key=fromX..','..fromY
+    self._fromX=tonumber(fromX)
+    self._fromY=tonumber(fromY)
 
-    if not self._computed[key] then self:_compute(fromX, fromY) end
-    if not self._computed[key] then return end
+    if not self._computed[self._fromX] then self._computed[self._fromX]={} end
+    if not self._computed[self._fromX][self._fromY] then self:_compute(self._fromX, self._fromY) end
+    if not self._computed[self._fromX][self._fromY] then return end
 
-    local item=self._computed[key]
+    local item=self._computed[self._fromX][self._fromY]
     while item do
         callback(tonumber(item.x), tonumber(item.y))
         item=item.prev
@@ -4395,11 +4398,10 @@ function ROT.Path.Dijkstra:_compute(fromX, fromY)
         local neighbors=self:_getNeighbors(item.x, item.y)
 
         for i=1,#neighbors do
-            local neighbor=neighbors[i]
-            local x=neighbor[1]
-            local y=neighbor[2]
-            local id=x..','..y
-            if not self._computed[id] then
+            local x=neighbors[i][1]
+            local y=neighbors[i][2]
+            if not self._computed[x] then self._computed[x]={} end
+            if not self._computed[x][y] then
                 self:_add(x, y, item)
             end
         end
@@ -4412,7 +4414,7 @@ function ROT.Path.Dijkstra:_add(x, y, prev)
     obj.y   =y
     obj.prev=prev
 
-    self._computed[x..','..y]=obj
+    self._computed[x][y]=obj
     table.insert(self._todo, obj)
 end
 
@@ -4565,7 +4567,7 @@ end
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
 ROT.Path.AStar=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _done, _todo, _passableCallback, _options }
-
+ROT.Path.AStar.__name='AStar'
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
@@ -4587,8 +4589,9 @@ end
 function ROT.Path.AStar:compute(fromX, fromY, callback)
     self._todo={}
     self._done={}
-    self._fromX=fromX
-    self._fromY=fromY
+    self._fromX=tonumber(fromX)
+    self._fromY=tonumber(fromY)
+    self._done[self._toX]={}
     self:_add(self._toX, self._toY, nil)
 
     while #self._todo>0 do
@@ -4597,17 +4600,16 @@ function ROT.Path.AStar:compute(fromX, fromY, callback)
         local neighbors=self:_getNeighbors(item.x, item.y)
 
         for i=1,#neighbors do
-            local neighbor=neighbors[i]
-            local x = neighbor[1]
-            local y = neighbor[2]
-            local id=x..','..y
-            if not self._done[id] then
+            local x = neighbors[i][1]
+            local y = neighbors[i][2]
+            if not self._done[x] then self._done[x]={} end
+            if not self._done[x][y] then
                 self:_add(x, y, item)
             end
         end
     end
 
-    local item=self._done[fromX..','..fromY]
+    local item=self._done[self._fromX] and self._done[self._fromX][self._fromY] or nil
     if not item then return end
 
     while item do
@@ -4623,7 +4625,7 @@ function ROT.Path.AStar:_add(x, y, prev)
     obj.prev=prev
     obj.g   =prev and prev.g+1 or 0
     obj.h   =self:_distance(x, y)
-    self._done[x..','..y]=obj
+    self._done[x][y]=obj
 
     local f=obj.g+obj.h
 

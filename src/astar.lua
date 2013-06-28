@@ -27,8 +27,9 @@ end
 function AStar:compute(fromX, fromY, callback)
     self._todo={}
     self._done={}
-    self._fromX=fromX
-    self._fromY=fromY
+    self._fromX=tonumber(fromX)
+    self._fromY=tonumber(fromY)
+    self._done[self._toX]={}
     self:_add(self._toX, self._toY, nil)
 
     while #self._todo>0 do
@@ -37,17 +38,16 @@ function AStar:compute(fromX, fromY, callback)
         local neighbors=self:_getNeighbors(item.x, item.y)
 
         for i=1,#neighbors do
-            local neighbor=neighbors[i]
-            local x = neighbor[1]
-            local y = neighbor[2]
-            local id=x..','..y
-            if not self._done[id] then
+            local x = neighbors[i][1]
+            local y = neighbors[i][2]
+            if not self._done[x] then self._done[x]={} end
+            if not self._done[x][y] then
                 self:_add(x, y, item)
             end
         end
     end
 
-    local item=self._done[fromX..','..fromY]
+    local item=self._done[self._fromX] and self._done[self._fromX][self._fromY] or nil
     if not item then return end
 
     while item do
@@ -63,7 +63,7 @@ function AStar:_add(x, y, prev)
     obj.prev=prev
     obj.g   =prev and prev.g+1 or 0
     obj.h   =self:_distance(x, y)
-    self._done[x..','..y]=obj
+    self._done[x][y]=obj
 
     local f=obj.g+obj.h
 
