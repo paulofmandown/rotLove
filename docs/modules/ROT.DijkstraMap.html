@@ -71,7 +71,6 @@
   <li><a href="../modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
   <li><a href="../modules/ROT.Noise.Simplex.html">ROT.Noise.Simplex</a></li>
   <li><a href="../modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
-  <li><a href="../modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
   <li><a href="../modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="../modules/ROT.RNG.html">ROT.RNG</a></li>
   <li><a href="../modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></li>
@@ -99,7 +98,7 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#DijkstraMap">DijkstraMap&nbsp;(goalX, goalY, mapWidth, mapHeight, passableCallback)</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:__init">DijkstraMap:__init&nbsp;(goalX, goalY, mapWidth, mapHeight, passableCallback)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
@@ -107,43 +106,43 @@
 	<td class="summary">Establish values for all cells in map.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getWidth">dijkstraMap:getWidth&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getWidth">DijkstraMap:getWidth&nbsp;()</a></td>
 	<td class="summary">Get Width of map.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getHeight">dijkstraMap:getHeight&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getHeight">DijkstraMap:getHeight&nbsp;()</a></td>
 	<td class="summary">Get Height of map.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getDimensions">dijkstraMap:getDimensions&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getDimensions">DijkstraMap:getDimensions&nbsp;()</a></td>
 	<td class="summary">Get Dimensions as table.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getMap">dijkstraMap:getMap&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getMap">DijkstraMap:getMap&nbsp;()</a></td>
 	<td class="summary">Get the map table.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getGoalX">dijkstraMap:getGoalX&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getGoalX">DijkstraMap:getGoalX&nbsp;()</a></td>
 	<td class="summary">Get the x-value of the goal cell.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getGoalY">dijkstraMap:getGoalY&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getGoalY">DijkstraMap:getGoalY&nbsp;()</a></td>
 	<td class="summary">Get the y-value of the goal cell.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:getGoal">dijkstraMap:getGoal&nbsp;()</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:getGoal">DijkstraMap:getGoal&nbsp;()</a></td>
 	<td class="summary">Get the goal cell as a table.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:setGoal">dijkstraMap:setGoal&nbsp;(x, y)</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:setGoal">DijkstraMap:setGoal&nbsp;(x, y)</a></td>
 	<td class="summary">Set the goal position.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:dirTowardsGoal">dijkstraMap:dirTowardsGoal&nbsp;(x, y)</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:dirTowardsGoal">DijkstraMap:dirTowardsGoal&nbsp;(x, y)</a></td>
 	<td class="summary">Get the direction of the goal from a given position</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#dijkstraMap:iterateThroughMap">dijkstraMap:iterateThroughMap&nbsp;(callback)</a></td>
+	<td class="name" nowrap><a href="#DijkstraMap:iterateThroughMap">DijkstraMap:iterateThroughMap&nbsp;(callback)</a></td>
 	<td class="summary">Run a callback function on every cell in the map</td>
 	</tr>
 </table>
@@ -155,8 +154,8 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "DijkstraMap"></a>
-    <strong>DijkstraMap&nbsp;(goalX, goalY, mapWidth, mapHeight, passableCallback)</strong>
+    <a name = "DijkstraMap:__init"></a>
+    <strong>DijkstraMap:__init&nbsp;(goalX, goalY, mapWidth, mapHeight, passableCallback)</strong>
     </dt>
     <dd>
     Constructor.
@@ -200,8 +199,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getWidth"></a>
-    <strong>dijkstraMap:getWidth&nbsp;()</strong>
+    <a name = "DijkstraMap:getWidth"></a>
+    <strong>DijkstraMap:getWidth&nbsp;()</strong>
     </dt>
     <dd>
     Get Width of map.
@@ -219,8 +218,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getHeight"></a>
-    <strong>dijkstraMap:getHeight&nbsp;()</strong>
+    <a name = "DijkstraMap:getHeight"></a>
+    <strong>DijkstraMap:getHeight&nbsp;()</strong>
     </dt>
     <dd>
     Get Height of map.
@@ -238,8 +237,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getDimensions"></a>
-    <strong>dijkstraMap:getDimensions&nbsp;()</strong>
+    <a name = "DijkstraMap:getDimensions"></a>
+    <strong>DijkstraMap:getDimensions&nbsp;()</strong>
     </dt>
     <dd>
     Get Dimensions as table.
@@ -263,8 +262,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getMap"></a>
-    <strong>dijkstraMap:getMap&nbsp;()</strong>
+    <a name = "DijkstraMap:getMap"></a>
+    <strong>DijkstraMap:getMap&nbsp;()</strong>
     </dt>
     <dd>
     Get the map table.
@@ -282,8 +281,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getGoalX"></a>
-    <strong>dijkstraMap:getGoalX&nbsp;()</strong>
+    <a name = "DijkstraMap:getGoalX"></a>
+    <strong>DijkstraMap:getGoalX&nbsp;()</strong>
     </dt>
     <dd>
     Get the x-value of the goal cell.
@@ -301,8 +300,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getGoalY"></a>
-    <strong>dijkstraMap:getGoalY&nbsp;()</strong>
+    <a name = "DijkstraMap:getGoalY"></a>
+    <strong>DijkstraMap:getGoalY&nbsp;()</strong>
     </dt>
     <dd>
     Get the y-value of the goal cell.
@@ -320,8 +319,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:getGoal"></a>
-    <strong>dijkstraMap:getGoal&nbsp;()</strong>
+    <a name = "DijkstraMap:getGoal"></a>
+    <strong>DijkstraMap:getGoal&nbsp;()</strong>
     </dt>
     <dd>
     Get the goal cell as a table.
@@ -342,8 +341,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:setGoal"></a>
-    <strong>dijkstraMap:setGoal&nbsp;(x, y)</strong>
+    <a name = "DijkstraMap:setGoal"></a>
+    <strong>DijkstraMap:setGoal&nbsp;(x, y)</strong>
     </dt>
     <dd>
     Set the goal position.
@@ -365,8 +364,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:dirTowardsGoal"></a>
-    <strong>dijkstraMap:dirTowardsGoal&nbsp;(x, y)</strong>
+    <a name = "DijkstraMap:dirTowardsGoal"></a>
+    <strong>DijkstraMap:dirTowardsGoal&nbsp;(x, y)</strong>
     </dt>
     <dd>
     Get the direction of the goal from a given position
@@ -396,8 +395,8 @@
 
 </dd>
     <dt>
-    <a name = "dijkstraMap:iterateThroughMap"></a>
-    <strong>dijkstraMap:iterateThroughMap&nbsp;(callback)</strong>
+    <a name = "DijkstraMap:iterateThroughMap"></a>
+    <strong>DijkstraMap:iterateThroughMap&nbsp;(callback)</strong>
     </dt>
     <dd>
     Run a callback function on every cell in the map

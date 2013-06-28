@@ -71,7 +71,6 @@
   <li><a href="../modules/ROT.Map.Uniform.html">ROT.Map.Uniform</a></li>
   <li><a href="../modules/ROT.Noise.Simplex.html">ROT.Noise.Simplex</a></li>
   <li><strong>ROT.Path.AStar</strong></li>
-  <li><strong>ROT.Path.AStar</strong></li>
   <li><a href="../modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="../modules/ROT.RNG.html">ROT.RNG</a></li>
   <li><a href="../modules/ROT.RNG.LCG.html">ROT.RNG.LCG</a></li>
@@ -91,19 +90,19 @@
 
 <h1>Module <code>ROT.Path.AStar</code></h1>
 
-<p>Jump Point Search Pathfinding.</p>
+<p>A* Pathfinding.</p>
 <p>
- Based on https://github.com/qiao/PathFinding.js/blob/master/src/finders/JumpPointFinder.js</p>
+ Simplified A* algorithm: all edges have a value of 1</p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#JumpPoint:__init">JumpPoint:__init&nbsp;(toX, toY, passableCallback, options)</a></td>
+	<td class="name" nowrap><a href="#AStar:__init">AStar:__init&nbsp;(toX, toY, passableCallback, options)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#JumpPoint:compute">JumpPoint:compute&nbsp;(fromX, fromY, callback)</a></td>
+	<td class="name" nowrap><a href="#AStar:compute">AStar:compute&nbsp;(fromX, fromY, callback)</a></td>
 	<td class="summary">Compute the path from a starting point</td>
 	</tr>
 </table>
@@ -115,8 +114,8 @@
     <h2><a name="Functions"></a>Functions</h2>
     <dl class="function">
     <dt>
-    <a name = "JumpPoint:__init"></a>
-    <strong>JumpPoint:__init&nbsp;(toX, toY, passableCallback, options)</strong>
+    <a name = "AStar:__init"></a>
+    <strong>AStar:__init&nbsp;(toX, toY, passableCallback, options)</strong>
     </dt>
     <dd>
     Constructor.
@@ -132,9 +131,12 @@
         <li><span class="parameter">passableCallback</span>
             <span class="types"><span class="type">function</span></span>
          Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed</li>
-        <li><span class="parameter">options</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         Options not used, topology is always assumed as 8</li>
+        <li><span class="parameter">options</span> Options
+        <ul>
+        <li><span class="parameter">topology</span>
+            <span class="types"><span class="type">int</span></span>
+         Directions for movement Accepted values (4 or 8)</li>
+        </li></ul>
     </ul>
 
 
@@ -143,8 +145,8 @@
 
 </dd>
     <dt>
-    <a name = "JumpPoint:compute"></a>
-    <strong>JumpPoint:compute&nbsp;(fromX, fromY, callback)</strong>
+    <a name = "AStar:compute"></a>
+    <strong>AStar:compute&nbsp;(fromX, fromY, callback)</strong>
     </dt>
     <dd>
     Compute the path from a starting point

@@ -4228,7 +4228,6 @@ function ROT.Lighting:compute(lightingCallback)
     end
 
     return self
-
 end
 
 function ROT.Lighting:_emitLight(emittingCells, litCells, doneCells)
