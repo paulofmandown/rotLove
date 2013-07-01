@@ -108,8 +108,8 @@ function DijkstraMap:getGoal() return self._goal end
 -- @tparam int x the new x-value of the goal cell
 -- @tparam int y the new y-value of the goal cell
 function DijkstraMap:setGoal(x, y)
-    self._goal.x=x
-    self._goal.y=y
+    self._goal.x=x and x or self._goal.x
+    self._goal.y=y and y or self._goal.y
 end
 
 --- Get the direction of the goal from a given position

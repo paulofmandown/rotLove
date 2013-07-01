@@ -757,7 +757,7 @@ end
 --- Visual Display.
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
-local ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
+ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -4524,8 +4524,8 @@ function ROT.DijkstraMap:getGoal() return self._goal end
 -- @tparam int x the new x-value of the goal cell
 -- @tparam int y the new y-value of the goal cell
 function ROT.DijkstraMap:setGoal(x, y)
-    self._goal.x=x
-    self._goal.y=y
+    self._goal.x=x and x or self._goal.x
+    self._goal.y=y and y or self._goal.y
 end
 
 --- Get the direction of the goal from a given position
