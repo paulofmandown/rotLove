@@ -104,6 +104,22 @@ function table.indexOf(values,value)
         for i=1,#values do
             if values[i] == value then return i end
         end
+        if type(value)=='table' then return table.indexOfTable(values, value) end
+    end
+    return 0
+end
+
+-- extended for use with tables of tables
+function table.indexOfTable(values, value)
+    if type(value)~='table' then return 0 end
+    for k,v in ipairs(values) do
+        if #v==#value then
+            local match=true
+            for i=1,#v do
+                if v[i]~=value[i] then match=false end
+            end
+            if match then return k end
+        end
     end
     return 0
 end
@@ -4431,8 +4447,8 @@ ROT.DijkstraMap=class {  }
 function ROT.DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._map={}
     self._goal={}
-    self._goal.x=x
-    self._goal.y=y
+    self._goal.x=goalX
+    self._goal.y=goalY
 
     self._dimensions={}
     self._dimensions.w=mapWidth
@@ -4446,7 +4462,7 @@ end
 function ROT.DijkstraMap:compute()
     local stillUpdating={}
     for i=1,self._dimensions.w do
-        if not self._map[i] then self._map[i]={} end
+        self._map[i]={}
         stillUpdating[i]={}
         for j=1,self._dimensions.h do
             stillUpdating[i][j]=true
@@ -4538,8 +4554,8 @@ function ROT.DijkstraMap:dirTowardsGoal(x, y)
     local key=nil
     local dir=nil
     for k,v in pairs(ROT.DIRS.EIGHT) do
-        local tx=(i+v[1])
-        local ty=(j+v[2])
+        local tx=(x+v[1])
+        local ty=(y+v[2])
         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
             local val=self._map[tx][ty]
             if val<low then
