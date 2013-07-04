@@ -1,6 +1,6 @@
 RogueLike Toolkit in Love
 =========
-Bringing [rot.js](http://ondras.github.io/rot.js/hp/) functionality to Love2D
+Bringing [rot.js](http://ondras.github.io/rot.js/hp/) functionality to Love2D. The only modules that require Love2D are the display modules.
 
 See [this page](http://paulofmandown.github.io/rotLove/) for a quick and dirty run down of all the functionality provided.
 
