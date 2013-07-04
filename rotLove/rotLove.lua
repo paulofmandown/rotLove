@@ -155,9 +155,8 @@ end
 function string:rpad(c, n)
     c=c and c or '0'
     n=n and n or 2
-    local s=''
-    while #s < n-#self do s=s..c end
-    return self..s
+    while #self < n do self=self..c end
+    return self
 end
 -- add js split function
 function string:split(delim, maxNb)
@@ -4550,7 +4549,8 @@ end
 -- @treturn int xDir X-Direction towards goal. Either -1, 0, or 1
 -- @treturn int yDir Y-Direction towards goal. Either -1, 0, or 1
 function ROT.DijkstraMap:dirTowardsGoal(x, y)
-    local low=math.huge
+    local low=self._map[x][y]
+    if low==0 then return nil end
     local key=nil
     local dir=nil
     for k,v in pairs(ROT.DIRS.EIGHT) do
@@ -4564,8 +4564,8 @@ function ROT.DijkstraMap:dirTowardsGoal(x, y)
             end
         end
     end
-    if val==0 then return nil end
-    return dir[1],dir[2]
+    if dir then return dir[1],dir[2] end
+    return nil
 end
 
 --- Run a callback function on every cell in the map

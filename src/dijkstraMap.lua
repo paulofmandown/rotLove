@@ -118,7 +118,8 @@ end
 -- @treturn int xDir X-Direction towards goal. Either -1, 0, or 1
 -- @treturn int yDir Y-Direction towards goal. Either -1, 0, or 1
 function DijkstraMap:dirTowardsGoal(x, y)
-    local low=math.huge
+    local low=self._map[x][y]
+    if low==0 then return nil end
     local key=nil
     local dir=nil
     for k,v in pairs(ROT.DIRS.EIGHT) do
@@ -132,8 +133,9 @@ function DijkstraMap:dirTowardsGoal(x, y)
             end
         end
     end
-    if val==0 then return nil end
-    return dir[1],dir[2]
+
+    if dir then return dir[1],dir[2] end
+    return nil
 end
 
 --- Run a callback function on every cell in the map
