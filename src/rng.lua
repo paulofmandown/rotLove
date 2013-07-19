@@ -48,6 +48,24 @@ function RNG:bit_xor(a, b)
     return self:normalize(r)
 end
 
+function RNG:random(a,b)
+    return math.random(a,b)
+end
+
+function RNG:getWeightedValue(tbl)
+    local total=0
+    for _,v in pairs(tbl) do
+        total=total+v
+    end
+    local rand=self:random()*total
+    local part=0
+    for k,v in pairs(tbl) do
+        part=part+v
+        if rand<part then return k end
+    end
+    return nil
+end
+
 --- Seed.
 -- get the host system's time in milliseconds as a positive 32 bit number
 -- @return number

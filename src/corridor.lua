@@ -35,7 +35,7 @@ function Corridor:createRandomAt(x, y, dx, dy, options, rng)
 	local min   =options.corridorLength[1]
 	local max   =options.corridorLength[2]
 	local length=math.floor(rng:random(min, max))
-	return self:new(x, y, x+dx*length, y+dy*length)
+	return Corridor:new(x, y, x+dx*length, y+dy*length)
 end
 
 --- Write various information about this corridor to the console.

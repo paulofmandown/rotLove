@@ -34,9 +34,9 @@ function Digger:__init(width, height, options)
 		end
 	end
 
-	self._features={rooms=4, corridors=4}
+	self._features={Room=4, Corridor=4}
     if self._options.nocorridorsmode then
-        self._features.corridors=nil
+        self._features.Corridor=nil
     end
 	self._featureAttempts=20
 	self._walls={}
@@ -58,7 +58,7 @@ function Digger:create(callback)
 	self._map      =self:_fillMap(1)
 	self._walls    ={}
 	self._dug      =0
-	local area     =(self._width-2)*self._height-2
+	local area     =(self._width-2)*(self._height-2)
 
 	self:_firstRoom()
 
@@ -80,9 +80,6 @@ function Digger:create(callback)
 			repeat
 				featureAttempts=featureAttempts+1
 				if self:_tryFeature(x, y, dir[1], dir[2]) then
-					if #self._rooms+#self._corridors==2 then
-						self._rooms[1]:addDoor(x, y)
-					end
 					self:_removeSurroundingWalls(x, y)
 					self:_removeSurroundingWalls(x-dir[1], y-dir[2])
 					break
@@ -96,6 +93,8 @@ function Digger:create(callback)
 			end
 		end
 	until self._dug/area > self._options.dugPercentage and priorityWalls<1
+
+    self:_addDoors()
 
 	if callback then
 		for i=1,self._width do
@@ -155,34 +154,23 @@ function Digger:_findWall()
 end
 
 function Digger:_tryFeature(x, y, dx, dy)
-	local feature=nil
-	local total  =0
-	for k,_ in pairs(self._features) do total=total+self._features[k] end
-	local rand=math.floor(self._rng:random()*total)
-	local sub=0
-	local ftype=''
-	for k,_ in pairs(self._features) do
-		sub=sub+self._features[k]
-		if rand<sub then
-			ftype=k
-			feature=k=='rooms' and ROT.Map.Room or ROT.Map.Corridor
-			break
-		end
-	end
+    local type=self._rng:getWeightedValue(self._features)
+    local feature=ROT.Map[type]:new():createRandomAt(x,y,dx,dy,self._options,self._rng)
 
-	feature=feature:createRandomAt(x, y, dx, dy, self._options, self._rng)
-	if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-		return false
-	end
-	feature:create(self, self._digCallback)
-	if ftype=='rooms' then
-		table.insert(self._rooms, feature)
-	elseif ftype=='corridors' then
-		feature:createPriorityWalls(self, self._priorityWallCallback)
-		table.insert(self._corridors, feature)
-		else assert(false, 'couldn\'t get ftype')
-	end
-	return true
+    if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+        return false
+    end
+
+    feature:create(self, self._digCallback)
+
+    if type=='Room' then
+        table.insert(self._rooms, feature)
+    elseif type=='Corridor' then
+        feature:createPriorityWalls(self, self._priorityWallCallback)
+        table.insert(self._corridors, feature)
+    end
+
+    return true
 end
 
 function Digger:_removeSurroundingWalls(cx, cy)
@@ -214,7 +202,19 @@ function Digger:_getDiggingDirection(cx, cy)
 	end
 	if not result or #result<1 then return nil end
 
-	return {result[1]==0 and result[1] or -result[1], result[2]==0 and result[2] or -result[2]}
+	return {-result[1], -result[2]}
+end
+
+function Digger:_addDoors()
+    local data=self._map
+    local function isWallCallback(x,y)
+        return data[x][y]==1
+    end
+    for i=1,#self._rooms do
+        local room=self._rooms[i]
+        room:clearDoors()
+        room:addDoors(self, self._isWallCallback)
+    end
 end
 
 return Digger

@@ -139,6 +139,25 @@ function Room:clearDoors()
 	return self
 end
 
+--- Add all doors based on available walls.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback
+-- @treturn ROT.Map.Room self
+function Room:addDoors(gen, isWallCallback)
+    local left  =self._x1-1
+    local right =self._x2+1
+    local top   =self._y1-1
+    local bottom=self._y2+1
+    for x=left,right do
+        for y=top,bottom do
+            if x~=left and x~=right and y~=top and y~=bottom then
+            elseif isWallCallback(gen, x,y) then
+            else self:addDoor(x,y) end
+        end
+    end
+    return self
+end
+
 --- Write various information about this room to the console.
 function Room:debug()
 	local command    = write and write or io.write

@@ -251,6 +251,25 @@ function ROT.RNG:bit_xor(a, b)
     return self:normalize(r)
 end
 
+function ROT.RNG:random(a,b)
+    return math.random(a,b)
+end
+
+function ROT.RNG:getWeightedValue(tbl)
+    local total=0
+    for _,v in pairs(tbl) do
+        total=total+v
+    end
+    local rand=self:random()*total
+    local part=0
+    for k,v in pairs(tbl) do
+        part=part+v
+        if rand<part then return k end
+    end
+    return nil
+end
+
+
 --- Seed.
 -- get the host system's time in milliseconds as a positive 32 bit number
 -- @return number
@@ -2130,6 +2149,25 @@ function ROT.Map.Room:clearDoors()
     return self
 end
 
+--- Add all doors based on available walls.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback
+-- @treturn ROT.Map.Room self
+function ROT.Map.Room:addDoors(gen, isWallCallback)
+    local left  =self._x1-1
+    local right =self._x2+1
+    local top   =self._y1-1
+    local bottom=self._y2+1
+    for x=left,right do
+        for y=top,bottom do
+            if x~=left and x~=right and y~=top and y~=bottom then
+            elseif gen:isWallCallback(x,y) then
+            else self:addDoor(x,y) end
+        end
+    end
+    return self
+end
+
 --- Write various information about this room to the console.
 function ROT.Map.Room:debug()
     local command    = write and write or io.write
@@ -2364,7 +2402,6 @@ ROT.Map.Digger=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
 function ROT.Map.Digger:__init(width, height, options)
     ROT.Map.Digger.super.__init(self, width, height)
-    assert(ROT, 'require rot')
 
     self._options={
                     roomWidth={3,8},
@@ -2404,7 +2441,7 @@ function ROT.Map.Digger:create(callback)
     self._map      =self:_fillMap(1)
     self._walls    ={}
     self._dug      =0
-    local area     =(self._width-2)*self._height-2
+    local area     =(self._width-2)*(self._height-2)
 
     self:_firstRoom()
 
@@ -2426,9 +2463,6 @@ function ROT.Map.Digger:create(callback)
             repeat
                 featureAttempts=featureAttempts+1
                 if self:_tryFeature(x, y, dir[1], dir[2]) then
-                    if #self._rooms+#self._corridors==2 then
-                        self._rooms[1]:addDoor(x, y)
-                    end
                     self:_removeSurroundingWalls(x, y)
                     self:_removeSurroundingWalls(x-dir[1], y-dir[2])
                     break
@@ -2442,6 +2476,8 @@ function ROT.Map.Digger:create(callback)
             end
         end
     until self._dug/area > self._options.dugPercentage and priorityWalls<1
+
+    self:_addDoors()
 
     if callback then
         for i=1,self._width do
@@ -2501,33 +2537,22 @@ function ROT.Map.Digger:_findWall()
 end
 
 function ROT.Map.Digger:_tryFeature(x, y, dx, dy)
-    local feature=nil
-    local total  =0
-    for k,_ in pairs(self._features) do total=total+self._features[k] end
-    local rand=math.floor(self._rng:random()*total)
-    local sub=0
-    local ftype=''
-    for k,_ in pairs(self._features) do
-        sub=sub+self._features[k]
-        if rand<sub then
-            ftype=k
-            feature=k=='rooms' and ROT.Map.Room or ROT.Map.Corridor
-            break
-        end
-    end
+    local feature=self._rng:getWeightedValue(self._features)
+    feature=ROT.Map.Feature[feature]:new():createRandomAt(x,y,dx,dy,self._options)
 
-    feature=feature:createRandomAt(x, y, dx, dy, self._options, self._rng)
-    if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+    if not feature:isValid(self._isWallCallback, self._canBeDugCallback) then
         return false
     end
-    feature:create(self, self._digCallback)
-    if ftype=='rooms' then
+
+    feature:create(self._digCallback)
+
+    if feature.__name=='Room' then
         table.insert(self._rooms, feature)
-    elseif ftype=='corridors' then
-        feature:createPriorityWalls(self, self._priorityWallCallback)
+    elseif feature.__name=='Corridor' then
+        feature:createPriorityWalls(self._priorityWallCallback)
         table.insert(self._corridors, feature)
-        else assert(false, 'couldn\'t get ftype')
     end
+
     return true
 end
 
@@ -2560,7 +2585,15 @@ function ROT.Map.Digger:_getDiggingDirection(cx, cy)
     end
     if not result or #result<1 then return nil end
 
-    return {result[1]==0 and result[1] or -result[1], result[2]==0 and result[2] or -result[2]}
+    return {-result[1], -result[2]}
+end
+
+function ROT.Map.Digger:_addDoors()
+    for i=1,#self._rooms do
+        local room=self._rooms[i]
+        room:clearDoors()
+        room:addDoors(self, self._isWallCallback)
+    end
 end
 
 --- The Uniform Map Generator.
