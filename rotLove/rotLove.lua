@@ -2702,7 +2702,6 @@ function ROT.Map.Uniform:_generateCorridors()
         self._connected  ={}
         table.insert(self._connected, table.remove(self._unconnected))
         while true do
-    write(#self._connected..','..type(self._connected[1]))
             local connected=table.random(self._connected)
             local room1    =self:_closestRoom(self._unconnected, connected)
             local room2    =self:_closestRoom(self._connected, room1)
@@ -2759,7 +2758,7 @@ function ROT.Map.Uniform:_connectRooms(room1, room2)
         index    =2
     end
 
-    local index2=3-index
+    local index2=(index%2)+1
 
     local start=self:_placeInWall(room1, dirIndex1)
     if not start or #start<1 then return false end
@@ -2767,11 +2766,12 @@ function ROT.Map.Uniform:_connectRooms(room1, room2)
 
     if start[index] >= min and start[index] <= max then
         endTbl=table.slice(start)
-        local value =nil
-        if dirIndex2==1 then value=room2:getTop()-1
-        elseif dirIndex2==2 then value=room2:getRight()+1
+        local value=nil
+        if     dirIndex2==1 then value=room2:getTop()   -1
+        elseif dirIndex2==2 then value=room2:getRight() +1
         elseif dirIndex2==3 then value=room2:getBottom()+1
-        elseif dirIndex2==4 then value=room2:getLeft()-1 end
+        elseif dirIndex2==4 then value=room2:getLeft()  -1
+        end
         endTbl[index2]=value
         self:_digLine({start, endTbl})
     elseif start[index] < min-1 or start[index] > max+1 then
@@ -2807,14 +2807,8 @@ function ROT.Map.Uniform:_connectRooms(room1, room2)
     room2:addDoor(endTbl[1], endTbl[2])
 
     local index=table.indexOf(self._unconnected, room1)
-    if index~=0 then
-        table.remove(self._unconnected, index)
-        table.insert(self._connected, room1)
-    end
-    local index=table.indexOf(self._unconnected, room2)
-    if index~=0 then
-        table.remove(self._unconnected, index)
-        table.insert(self._connected, room2)
+    if index>0 then
+        table.insert(self._connected, table.remove(self._unconnected, index))
     end
 
     return true

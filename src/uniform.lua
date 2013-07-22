@@ -163,7 +163,7 @@ function Uniform:_connectRooms(room1, room2)
         index    =2
     end
 
-    local index2=3-index
+    local index2=(index%2)+1
 
     local start=self:_placeInWall(room1, dirIndex1)
     if not start or #start<1 then return false end
@@ -171,16 +171,17 @@ function Uniform:_connectRooms(room1, room2)
 
     if start[index] >= min and start[index] <= max then
         endTbl=table.slice(start)
-        local value =nil
-        if dirIndex2==1 then value=room2:getTop()-1
-        elseif dirIndex2==2 then value=room2:getRight()+1
+        local value=nil
+        if     dirIndex2==1 then value=room2:getTop()   -1
+        elseif dirIndex2==2 then value=room2:getRight() +1
         elseif dirIndex2==3 then value=room2:getBottom()+1
-        elseif dirIndex2==4 then value=room2:getLeft()-1 end
+        elseif dirIndex2==4 then value=room2:getLeft()  -1
+        end
         endTbl[index2]=value
         self:_digLine({start, endTbl})
     elseif start[index] < min-1 or start[index] > max+1 then
         local diff=start[index]-center2[index]
-        local rotation=0
+        rotation=0
         if dirIndex2==1 or dirIndex2==2 then rotation=diff<0 and 2 or 4
         elseif dirIndex2==3 or dirIndex2==4 then rotation=diff<0 and 4 or 2 end
         if rotation==0 then assert(false, 'failed to rotate') end
@@ -211,14 +212,8 @@ function Uniform:_connectRooms(room1, room2)
     room2:addDoor(endTbl[1], endTbl[2])
 
     local index=table.indexOf(self._unconnected, room1)
-    if index~=0 then
-        table.remove(self._unconnected, index)
-        table.insert(self._connected, room1)
-    end
-    local index=table.indexOf(self._unconnected, room2)
-    if index~=0 then
-        table.remove(self._unconnected, index)
-        table.insert(self._connected, room2)
+    if index>0 then
+        table.insert(self._connected, table.remove(self._unconnected, index))
     end
 
     return true
