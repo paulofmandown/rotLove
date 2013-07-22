@@ -22,6 +22,20 @@ end
 -- @treturn table A table containing objects of the type ROT.Map.Room
 function Dungeon:getRooms() return self._rooms end
 
+--- Get doors
+-- Get a table of doors on the map
+-- @treturn table A table {{x=int, y=int},...} for doors.
+function Dungeon:getDoors()
+    local result={}
+    for k,v in pairs(self._rooms) do
+        for l,w in pairs(v._doors) do
+            local s=l:split(',')
+            table.insert(result, {x=tonumber(s[1]), y=tonumber(s[2])})
+        end
+    end
+    return result
+end
+
 --- Get corridors
 -- Get a table of corridors on the map
 -- @treturn table A table containing objects of the type ROT.Map.Corridor

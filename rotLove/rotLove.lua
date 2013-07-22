@@ -1999,6 +1999,20 @@ end
 -- @treturn table A table containing objects of the type ROT.Map.Room
 function ROT.Map.Dungeon:getRooms() return self._rooms end
 
+--- Get doors
+-- Get a table of doors on the map
+-- @treturn table A table {{x=int, y=int},...} for doors.
+function ROT.Map.Dungeon:getDoors()
+    local result={}
+    for k,v in pairs(self._rooms) do
+        for l,w in pairs(v._doors) do
+            local s=l:split(',')
+            table.insert(result, {x=tonumber(s[1]), y=tonumber(s[2])})
+        end
+    end
+    return result
+end
+
 --- Get corridors
 -- Get a table of corridors on the map
 -- @treturn table A table containing objects of the type ROT.Map.Corridor
@@ -2417,7 +2431,7 @@ function ROT.Map.Digger:__init(width, height, options)
         end
     end
 
-    self._features={rooms=4, corridors=4}
+    self._features={Room=4, Corridor=4}
     if self._options.nocorridorsmode then
         self._features.corridors=nil
     end
@@ -2892,7 +2906,7 @@ end
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-ROT.Map.Rogue=ROT.Map:extends { _options, _rng }
+ROT.Map.Rogue=ROT.Map.Dungeon:extends { _options, _rng }
 
 --- Constructor.
 -- @tparam int width Width in cells of the map
@@ -2905,6 +2919,7 @@ ROT.Map.Rogue=ROT.Map:extends { _options, _rng }
 function ROT.Map.Rogue:__init(width, height, options)
     ROT.Map.Rogue.super.__init(self, width, height)
     self.__name='Rogue'
+    self._doors={}
     self._options={cellWidth=3, cellHeight=3}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=ROT.RNG.Twister:new()
@@ -2935,7 +2950,7 @@ end
 -- @treturn ROT.Map.Cellular|nil self or nil if time limit is reached
 function ROT.Map.Rogue:create(callback)
     self.map=self:_fillMap(1)
-    self.rooms={}
+    self._rooms={}
     self.connectedCells={}
 
     self:_initRooms()
@@ -2954,6 +2969,8 @@ function ROT.Map.Rogue:create(callback)
     return self
 end
 
+function ROT.Map.Rogue:getDoors() return self._doors end
+
 function ROT.Map.Rogue:_getRandomInt(min, max)
     min=min and min or 0
     max=max and max or 1
@@ -2962,9 +2979,9 @@ end
 
 function ROT.Map.Rogue:_initRooms()
     for i=1,self._options.cellWidth do
-        self.rooms[i]={}
+        self._rooms[i]={}
         for j=1,self._options.cellHeight do
-            self.rooms[i][j]={x=0, y=0, width=0, height=0, connections={}, cellx=i, celly=j}
+            self._rooms[i][j]={x=0, y=0, width=0, height=0, connections={}, cellx=i, celly=j}
         end
     end
 end
@@ -2987,7 +3004,7 @@ function ROT.Map.Rogue:_connectRooms()
 
             if (ncgx>0 and ncgx<=self._options.cellWidth) and
                (ncgy>0 and ncgy<=self._options.cellHeight) then
-                room=self.rooms[cgx][cgy]
+                room=self._rooms[cgx][cgy]
 
                 if #room.connections>0 then
                     if room.connections[1][1] == ncgx and
@@ -2996,7 +3013,7 @@ function ROT.Map.Rogue:_connectRooms()
                     end
                 end
 
-                otherRoom=self.rooms[ncgx][ncgy]
+                otherRoom=self._rooms[ncgx][ncgy]
 
                 if #otherRoom.connections==0 then
                     table.insert(otherRoom.connections, {cgx,cgy})
@@ -3020,7 +3037,7 @@ function ROT.Map.Rogue:_connectUnconnectedRooms()
 
     for i=1,cw do
         for j=1,ch do
-            room=self.rooms[i][j]
+            room=self._rooms[i][j]
 
             if #room.connections==0 then
                 local dirs={1,3,5,7}
@@ -3034,7 +3051,7 @@ function ROT.Map.Rogue:_connectUnconnectedRooms()
                     if newI>0 and newI<=cw and
                        newJ>0 and newJ<=ch then
 
-                        otherRoom=self.rooms[newI][newJ]
+                        otherRoom=self._rooms[newI][newJ]
                         validRoom=true
 
                         if #otherRoom.connections==0 then
@@ -3089,14 +3106,14 @@ function ROT.Map.Rogue:_createRooms()
             roomh=self:_getRandomInt(roomHeight[1], roomHeight[2])
 
             if j>1 then
-                otherRoom=self.rooms[i][j-1]
+                otherRoom=self._rooms[i][j-1]
                 while sy-(otherRoom.y+otherRoom.height)<3 do
                     sy=sy+1
                 end
             end
 
             if i>1 then
-                otherRoom=self.rooms[i-1][j]
+                otherRoom=self._rooms[i-1][j]
                 while sx-(otherRoom.x+otherRoom.width)<3 do
                     sx=sx+1
                 end
@@ -3123,10 +3140,10 @@ function ROT.Map.Rogue:_createRooms()
             sx=sx+sxOffset
             sy=sy+syOffset
 
-            self.rooms[i][j].x     =sx
-            self.rooms[i][j].y     =sy
-            self.rooms[i][j].width =roomw
-            self.rooms[i][j].height=roomh
+            self._rooms[i][j].x     =sx
+            self._rooms[i][j].y     =sy
+            self._rooms[i][j].width =roomw
+            self._rooms[i][j].height=roomh
 
             for ii=sx,sx+roomw-1 do
                 for jj=sy,sy+roomh-1 do
@@ -3149,6 +3166,7 @@ function ROT.Map.Rogue:_getWallPosition(aRoom, aDirection)
             door=ry-1
         end
         self.map[rx][door]=0
+        table.insert(self._doors,{x=rx, y=door})
     elseif aDirection==2 or aDirection==4 then
         ry=self:_getRandomInt(aRoom.y, aRoom.y+aRoom.height-1)
         if aDirection==2 then
@@ -3159,11 +3177,12 @@ function ROT.Map.Rogue:_getWallPosition(aRoom, aDirection)
             door=rx+1
         end
         self.map[door][ry]=0
+        table.insert(self._doors,{x=door, y=ry})
     end
     return {rx, ry}
 end
 
-function ROT.Map.Rogue:_drawCorridore(startPosition, endPosition)
+function ROT.Map.Rogue:_drawCorridor(startPosition, endPosition)
     local xOffset=endPosition[1]-startPosition[1]
     local yOffset=endPosition[2]-startPosition[2]
     local xpos   =startPosition[1]
@@ -3211,10 +3230,10 @@ function ROT.Map.Rogue:_createCorridors()
 
     for i=1,cw do
         for j=1,ch do
-            room=self.rooms[i][j]
+            room=self._rooms[i][j]
             for k=1,#room.connections do
                 connection=room.connections[k]
-                otherRoom =self.rooms[connection[1]][connection[2]]
+                otherRoom =self._rooms[connection[1]][connection[2]]
 
                 if otherRoom.cellx>room.cellx then
                     wall     =2
@@ -3229,7 +3248,7 @@ function ROT.Map.Rogue:_createCorridors()
                     wall     =1
                     otherWall=3
                 end
-                self:_drawCorridore(self:_getWallPosition(room, wall), self:_getWallPosition(otherRoom, otherWall))
+                self:_drawCorridor(self:_getWallPosition(room, wall), self:_getWallPosition(otherRoom, otherWall))
             end
         end
     end
