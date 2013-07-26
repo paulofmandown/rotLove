@@ -2920,7 +2920,7 @@ function ROT.Map.Rogue:__init(width, height, options)
     ROT.Map.Rogue.super.__init(self, width, height)
     self.__name='Rogue'
     self._doors={}
-    self._options={cellWidth=3, cellHeight=3}
+    self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=ROT.RNG.Twister:new()
     self._rng:randomseed()

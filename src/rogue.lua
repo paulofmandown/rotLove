@@ -17,7 +17,7 @@ Rogue.__name='Rogue'
   -- @tparam int options.roomHeight Room min and max height
 function Rogue:__init(width, height, options)
     Rogue.super.__init(self, width, height)
-    self._options={cellWidth=3, cellHeight=3}
+    self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=ROT.RNG.Twister:new()
     self._rng:randomseed()
