@@ -106,6 +106,18 @@
 	<td class="summary">Establish values for all cells in map.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#DijkstraMap:addGoal">DijkstraMap:addGoal&nbsp;(x, y)</a></td>
+	<td class="summary">Add new goal position.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DijkstraMap:removeGoals">DijkstraMap:removeGoals&nbsp;( [gx=nil [, gy=nil]])</a></td>
+	<td class="summary">Remove all goals.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#DijkstraMap:writeMapToConsole">DijkstraMap:writeMapToConsole&nbsp;(returnString)</a></td>
+	<td class="summary">Output map values to console.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#DijkstraMap:getWidth">DijkstraMap:getWidth&nbsp;()</a></td>
 	<td class="summary">Get Width of map.</td>
 	</tr>
@@ -132,10 +144,6 @@
 	<tr>
 	<td class="name" nowrap><a href="#DijkstraMap:getGoal">DijkstraMap:getGoal&nbsp;()</a></td>
 	<td class="summary">Get the goal cell as a table.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#DijkstraMap:setGoal">DijkstraMap:setGoal&nbsp;(x, y)</a></td>
-	<td class="summary">Set the goal position.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#DijkstraMap:dirTowardsGoal">DijkstraMap:dirTowardsGoal&nbsp;(x, y)</a></td>
@@ -190,8 +198,76 @@
     </dt>
     <dd>
     Establish values for all cells in map.
- call after DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
+ call after ROT.DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
 
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DijkstraMap:addGoal"></a>
+    <strong>DijkstraMap:addGoal&nbsp;(x, y)</strong>
+    </dt>
+    <dd>
+    Add new goal position.
+ Inserts a new cell to be used as a goal.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         the new x-value of the goal cell</li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         the new y-value of the goal cell</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DijkstraMap:removeGoals"></a>
+    <strong>DijkstraMap:removeGoals&nbsp;( [gx=nil [, gy=nil]])</strong>
+    </dt>
+    <dd>
+    Remove all goals.
+ Will delete all goal cells. You must insert another goal before computing.
+ You can specify one goal to be inserted after the goal remove takes place.
+ The method only checks that the coordinates are provided before setting the new goal cell.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">gx</span>
+            <span class="types"><span class="type">int</span></span>
+         Will use this value as the x-coordinate of a new goal cell to be inserted</li>
+        <li><span class="parameter">gy</span>
+            <span class="types"><span class="type">int</span></span>
+         Will use this value as the y-coordinate of a new goal cell to be inserted</li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "DijkstraMap:writeMapToConsole"></a>
+    <strong>DijkstraMap:writeMapToConsole&nbsp;(returnString)</strong>
+    </dt>
+    <dd>
+    Output map values to console.
+ For debugging, will send a comma separated output of cell values to the console.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">returnString</span>
+            <span class="types"><span class="type">boolean[opt=false]</span></span>
+         Will return the output in addition to sending it to console if true.</li>
+    </ul>
 
 
 
@@ -335,29 +411,6 @@
           <span class="types"><span class="type">int</span></span>
         goal.x x-value of goal cell</li>
     </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "DijkstraMap:setGoal"></a>
-    <strong>DijkstraMap:setGoal&nbsp;(x, y)</strong>
-    </dt>
-    <dd>
-    Set the goal position.
- Use compute after to calculate a new map without creating a whole new object
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">x</span>
-            <span class="types"><span class="type">int</span></span>
-         the new x-value of the goal cell</li>
-        <li><span class="parameter">y</span>
-            <span class="types"><span class="type">int</span></span>
-         the new y-value of the goal cell</li>
-    </ul>
-
 
 
 

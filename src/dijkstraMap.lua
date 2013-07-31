@@ -14,9 +14,8 @@ local DijkstraMap=class {  }
 -- @tparam function passableCallback a function with two parameters (x, y) that returns true if a map cell is passable
 function DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._map={}
-    self._goal={}
-    self._goal.x=goalX
-    self._goal.y=goalY
+    self._goals={}
+    table.insert(self._goals, {x=goalX, y=goalY})
 
     self._dimensions={}
     self._dimensions.w=mapWidth
@@ -26,15 +25,70 @@ function DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
 end
 
 --- Establish values for all cells in map.
--- call after DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
+-- call after ROT.DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
 function DijkstraMap:compute()
+    if #self._goals<1 then return
+    elseif #self._goals==1 then return self:_singleGoalCompute()
+    else return self:_manyGoalCompute() end
+end
+
+function DijkstraMap:_manyGoalCompute()
+    local stillUpdating={}
+    for i=1,self._dimensions.w do
+        self._map[i]={}
+        stillUpdating[i]={}
+        for j=1,self._dimensions.h do
+            stillUpdating[i][j]=true
+            self._map[i][j]=math.huge
+        end
+    end
+
+    for _,v in pairs(self._goals) do
+        self._map[v.x][v.y]=0
+    end
+
+    local passes=0
+    while true do
+        local nochange=true
+        for i,_ in pairs(stillUpdating) do
+            for j,_ in pairs(stillUpdating[i]) do
+                if self._passableCallback(i, j) then
+                    local cellChanged=false
+                    local low=math.huge
+                    for k,v in pairs(ROT.DIRS.EIGHT) do
+                        local tx=(i+v[1])
+                        local ty=(j+v[2])
+                        if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
+                            local val=self._map[tx][ty]
+                            if val and val<low then
+                                low=val
+                            end
+                        end
+                    end
+
+                    if self._map[i][j]>low+2 then
+                        self._map[i][j]=low+1
+                        cellChanged=true
+                        nochange=false
+                    end
+                    if not cellChanged and self._map[i][j]<1000 then stillUpdating[i][j]=nil end
+                else stillUpdating[i][j]=nil end
+            end
+        end
+        passes=passes+1
+        if nochange then break end
+    end
+end
+
+function DijkstraMap:_singleGoalCompute(gx, gy)
     for i=1,self._dimensions.w do
         self._map[i]={}
         for j=1,self._dimensions.h do
             self._map[i][j]=math.huge
         end
     end
-    self._map[self._goal.x][self._goal.y]=0
+
+    self._map[gx][gy]=0
 
     local val=1
     local wq={}
@@ -59,6 +113,41 @@ function DijkstraMap:compute()
         val=val+1
         while #pq>0 do table.insert(wq, table.remove(pq)) end
     end
+end
+
+--- Add new goal position.
+-- Inserts a new cell to be used as a goal.
+-- @tparam int x the new x-value of the goal cell
+-- @tparam int y the new y-value of the goal cell
+function DijkstraMap:addGoal(gx, gy)
+    table.insert(self._goals, {x=gx, y=gy})
+end
+
+--- Remove all goals.
+-- Will delete all goal cells. You must insert another goal before computing.
+-- You can specify one goal to be inserted after the goal remove takes place.
+-- The method only checks that the coordinates are provided before setting the new goal cell.
+-- @tparam[opt=nil] int gx Will use this value as the x-coordinate of a new goal cell to be inserted
+-- @tparam[opt=nil] int gy Will use this value as the y-coordinate of a new goal cell to be inserted
+function DijkstraMap:removeGoals(gx, gy)
+    while tabel.remove(self._goals) do end
+    if gx and gy then table.insert(self._goals, {x=gx, y=gy}) end
+end
+
+--- Output map values to console.
+-- For debugging, will send a comma separated output of cell values to the console.
+-- @tparam boolean[opt=false] returnString Will return the output in addition to sending it to console if true.
+function DijkstraMap:writeMapToConsole(returnString)
+    if returnString then ls='' end
+    for y=1,self._dimensions.h do
+        s=''
+        for x=1,self._dimensions.w do
+            s=s..self._map[x][y]..','
+        end
+        write(s)
+        if returnString then ls=ls..s..'\n'
+    end
+    if returnString then return ls end
 end
 
 --- Get Width of map.
@@ -91,15 +180,6 @@ function DijkstraMap:getGoalY() return self._goal.y end
 -- @treturn table goal table containing goal position
   -- @treturn int goal.x x-value of goal cell
 function DijkstraMap:getGoal() return self._goal end
-
---- Set the goal position.
--- Use compute after to calculate a new map without creating a whole new object
--- @tparam int x the new x-value of the goal cell
--- @tparam int y the new y-value of the goal cell
-function DijkstraMap:setGoal(x, y)
-    self._goal.x=x and x or self._goal.x
-    self._goal.y=y and y or self._goal.y
-end
 
 --- Get the direction of the goal from a given position
 -- @tparam int x x-value of current position
