@@ -52,6 +52,7 @@
 <h2>Modules</h2>
 <ul>
   <li><a href="../modules/ROT.Color.html">ROT.Color</a></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">ROT.DijkstraMap</a></li>
   <li><a href="../modules/ROT.Display.html">ROT.Display</a></li>
   <li><a href="../modules/ROT.EventQueue.html">ROT.EventQueue</a></li>
   <li><a href="../modules/ROT.FOV.Bresenham.html">ROT.FOV.Bresenham</a></li>
@@ -123,6 +124,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#Room:clearDoors">Room:clearDoors&nbsp;()</a></td>
 	<td class="summary">Reset the room's _doors table.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Room:addDoors">Room:addDoors&nbsp;(gen, isWallCallback)</a></td>
+	<td class="summary">Add all doors based on available walls.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#Room:debug">Room:debug&nbsp;()</a></td>
@@ -357,6 +362,34 @@
     <dd>
     Reset the room's _doors table.
 
+
+    <h3>Returns:</h3>
+    <ol>
+
+          <span class="types"><a class="type" href="../modules/ROT.Map.Room.html#">ROT.Map.Room</a></span>
+        self
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Room:addDoors"></a>
+    <strong>Room:addDoors&nbsp;(gen, isWallCallback)</strong>
+    </dt>
+    <dd>
+    Add all doors based on available walls.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">gen</span>
+            <span class="types"><span class="type">userdata</span></span>
+         The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.</li>
+        <li><span class="parameter">isWallCallback</span>
+            <span class="types"><span class="type">function</span></span>
+        </li>
+    </ul>
 
     <h3>Returns:</h3>
     <ol>
