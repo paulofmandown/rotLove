@@ -28,47 +28,36 @@ end
 --- Establish values for all cells in map.
 -- call after DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
 function DijkstraMap:compute()
-    local stillUpdating={}
     for i=1,self._dimensions.w do
-        if not self._map[i] then self._map[i]={} end
-        stillUpdating[i]={}
+        self._map[i]={}
         for j=1,self._dimensions.h do
-            stillUpdating[i][j]=true
-            self._map[i][j]=1000
+            self._map[i][j]=math.huge
         end
     end
     self._map[self._goal.x][self._goal.y]=0
 
-    local passes=0
-    while true do
-        local nochange=true
-        for i,_ in pairs(stillUpdating) do
-            for j,_ in pairs(stillUpdating[i]) do
-                if self._passableCallback(i, j) then
-                    local cellChanged=false
-                    local low=math.huge
-                    for k,v in pairs(ROT.DIRS.EIGHT) do
-                        local tx=(i+v[1])
-                        local ty=(j+v[2])
-                        if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
-                            local val=self._map[tx][ty]
-                            if val and val<low then
-                                low=val
-                            end
-                        end
-                    end
+    local val=1
+    local wq={}
+    local pq={}
+    local ds=ROT.DIRS.EIGHT
 
-                    if self._map[i][j]>low+2 then
-                        self._map[i][j]=low+1
-                        cellChanged=true
-                        nochange=false
-                    end
-                    if not cellChanged and self._map[i][j]<1000 then stillUpdating[i][j]=nil end
-                else stillUpdating[i][j]=nil end
+    table.insert(wq, {self._goal.x, self._goal.y})
+
+    while true do
+        while #wq>0 do
+            local t=table.remove(wq,1)
+            for _,d in pairs(ds) do
+                local x=t[1]+d[1]
+                local y=t[2]+d[2]
+                if self._passableCallback(x,y) and self._map[x][y]>val then
+                    self._map[x][y]=val
+                    table.insert(pq,{x,y})
+                end
             end
         end
-        passes=passes+1
-        if nochange then break end
+        if #pq<1 then break end
+        val=val+1
+        while #pq>0 do table.insert(wq, table.remove(pq)) end
     end
 end
 
