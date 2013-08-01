@@ -95,7 +95,7 @@ function DijkstraMap:_singleGoalCompute(gx, gy)
     local pq={}
     local ds=ROT.DIRS.EIGHT
 
-    table.insert(wq, {self._goal.x, self._goal.y})
+    table.insert(wq, {g.x, g.y})
 
     while true do
         while #wq>0 do

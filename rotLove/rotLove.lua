@@ -2175,7 +2175,7 @@ function ROT.Map.Room:addDoors(gen, isWallCallback)
     for x=left,right do
         for y=top,bottom do
             if x~=left and x~=right and y~=top and y~=bottom then
-            elseif gen:isWallCallback(x,y) then
+            elseif isWallCallback(gen,x,y) then
             else self:addDoor(x,y) end
         end
     end
@@ -2551,19 +2551,18 @@ function ROT.Map.Digger:_findWall()
 end
 
 function ROT.Map.Digger:_tryFeature(x, y, dx, dy)
-    local feature=self._rng:getWeightedValue(self._features)
-    feature=ROT.Map.Feature[feature]:new():createRandomAt(x,y,dx,dy,self._options)
-
-    if not feature:isValid(self._isWallCallback, self._canBeDugCallback) then
+    local type=self._rng:getWeightedValue(self._features)
+    local feature=ROT.Map[type]:createRandomAt(x,y,dx,dy,self._options,self._rng)
+    if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
         return false
     end
 
-    feature:create(self._digCallback)
+    feature:create(self, self._digCallback)
 
-    if feature.__name=='Room' then
+    if type=='Room' then
         table.insert(self._rooms, feature)
-    elseif feature.__name=='Corridor' then
-        feature:createPriorityWalls(self._priorityWallCallback)
+    elseif type=='Corridor' then
+        feature:createPriorityWalls(self, self._priorityWallCallback)
         table.insert(self._corridors, feature)
     end
 
@@ -4557,7 +4556,8 @@ function ROT.DijkstraMap:_manyGoalCompute()
     end
 end
 
-function ROT.DijkstraMap:_singleGoalCompute(gx, gy)
+function ROT.DijkstraMap:_singleGoalCompute()
+    local g=self._goals[1]
     for i=1,self._dimensions.w do
         self._map[i]={}
         for j=1,self._dimensions.h do
@@ -4565,14 +4565,14 @@ function ROT.DijkstraMap:_singleGoalCompute(gx, gy)
         end
     end
 
-    self._map[gx][gy]=0
+    self._map[g.x][g.y]=0
 
     local val=1
     local wq={}
     local pq={}
     local ds=ROT.DIRS.EIGHT
 
-    table.insert(wq, {self._goal.x, self._goal.y})
+    table.insert(wq, {g.x, g.y})
 
     while true do
         while #wq>0 do
@@ -4627,27 +4627,10 @@ function ROT.DijkstraMap:getDimensions() return self._dimensions end
 -- @treturn table map A 2d array of map values, access like map[x][y]
 function ROT.DijkstraMap:getMap() return self._map end
 
---- Get the x-value of the goal cell.
--- @treturn int x x-value of goal cell
-function ROT.DijkstraMap:getGoalX() return self._goal.x end
-
---- Get the y-value of the goal cell.
--- @treturn int y y-value of goal cell
-function ROT.DijkstraMap:getGoalY() return self._goal.y end
-
 --- Get the goal cell as a table.
 -- @treturn table goal table containing goal position
   -- @treturn int goal.x x-value of goal cell
-function ROT.DijkstraMap:getGoal() return self._goal end
-
---- Set the goal position.
--- Use compute after to calculate a new map without creating a whole new object
--- @tparam int x the new x-value of the goal cell
--- @tparam int y the new y-value of the goal cell
-function ROT.DijkstraMap:setGoal(x, y)
-    self._goal.x=x and x or self._goal.x
-    self._goal.y=y and y or self._goal.y
-end
+function ROT.DijkstraMap:getGoals() return self._goals end
 
 --- Get the direction of the goal from a given position
 -- @tparam int x x-value of current position

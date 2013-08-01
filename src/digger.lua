@@ -155,7 +155,7 @@ end
 
 function Digger:_tryFeature(x, y, dx, dy)
     local type=self._rng:getWeightedValue(self._features)
-    local feature=ROT.Map[type]:new():createRandomAt(x,y,dx,dy,self._options,self._rng)
+    local feature=ROT.Map[type]:createRandomAt(x,y,dx,dy,self._options,self._rng)
 
     if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
         return false
@@ -206,10 +206,6 @@ function Digger:_getDiggingDirection(cx, cy)
 end
 
 function Digger:_addDoors()
-    local data=self._map
-    local function isWallCallback(x,y)
-        return data[x][y]==1
-    end
     for i=1,#self._rooms do
         local room=self._rooms[i]
         room:clearDoors()
