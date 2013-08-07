@@ -16,7 +16,7 @@ EllerMaze.__name='EllerMaze'
 function EllerMaze:__init(width, height, rng)
 	EllerMaze.super.__init(self, width, height)
     self._rng = rng and rng or ROT.RNG.Twister:new()
-    if rng then self._rng:randomseed() end
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.

@@ -35,7 +35,7 @@ function Uniform:__init(width, height, options, rng)
     self._connected={}
     self._unconnected={}
     self._rng=rng and rng or ROT.RNG.Twister:new()
-    if rng then self._rng:randomseed() end
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.

@@ -20,7 +20,7 @@ function Corridor:__init(startX, startY, endX, endY, rng)
 	self._endY         =endY
 	self._endsWithAWall=true
     self._rng = rng and rng or ROT.RNG.Twister:new()
-    if rng then self._rng:randomseed() end
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create random with position.

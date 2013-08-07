@@ -33,7 +33,7 @@ function Cellular:__init(width, height, options, rng)
 	self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
 
 	self._rng = rng and rng or ROT.RNG.Twister:new()
-    if rng then self._rng:randomseed() end
+    if not rng then self._rng:randomseed() end
 end
 
 --- Randomize cells.
