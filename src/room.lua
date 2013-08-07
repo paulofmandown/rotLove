@@ -14,7 +14,8 @@ Room.__name='Room'
 -- @tparam int y2 Bottom wall
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
-function Room:__init(x1, y1, x2, y2, doorX, doorY)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function Room:__init(x1, y1, x2, y2, doorX, doorY, rng)
 	self._x1   =x1
 	self._x2   =x2
 	self._y1   =y1
@@ -23,8 +24,8 @@ function Room:__init(x1, y1, x2, y2, doorX, doorY)
 	if doorX then
 		self._doors[doorX..','..doorY] = 1
 	end
-	self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create Random with position.
@@ -35,7 +36,7 @@ end
 -- @tparam table options Options
   -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
   -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
--- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+-- @tparam[opt] userData rng A user defined object with a .random(self, min, max) method
 function Room:createRandomAt(x, y, dx, dy, options, rng)
 	rng=rng and rng or math.random
 	local min  =options.roomWidth[1]

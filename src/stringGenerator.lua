@@ -22,7 +22,8 @@ StringGenerator.__name='StringGenerator'
     -- @tparam[opt=false] boolean options.words Use word mode
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
-function StringGenerator:__init(options)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function StringGenerator:__init(options, rng)
 	self._options = {words=false,
 					 order=3,
 					 prior=0.001
@@ -42,8 +43,8 @@ function StringGenerator:__init(options)
 	end
 	self._priorValues[self._boundary]=self._options.prior
 
-    self._rng=ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Remove all learned data

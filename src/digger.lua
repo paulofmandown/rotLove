@@ -17,7 +17,8 @@ Digger.__name='Digger'
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
-function Digger:__init(width, height, options)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function Digger:__init(width, height, options, rng)
 	Digger.super.__init(self, width, height)
 
 	self._options={
@@ -41,8 +42,8 @@ function Digger:__init(width, height, options)
 	self._featureAttempts=20
 	self._walls={}
 
-	self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng = rng and rng or ROT.RNG.Twister:new()
+    if rng then self._rng:randomseed() end
 end
 
 --- Create.

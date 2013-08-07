@@ -16,7 +16,8 @@ Uniform.__name='Uniform'
   -- @tparam[opt={4,6}] table options.roomHeight room minimum and maximum height
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
-function Uniform:__init(width, height, options)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function Uniform:__init(width, height, options, rng)
     Uniform.super.__init(self, width, height)
     self._options={
                     roomWidth={4,9},
@@ -33,8 +34,8 @@ function Uniform:__init(width, height, options)
     self._corridorAttempts=20
     self._connected={}
     self._unconnected={}
-    self._rng=ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if rng then self._rng:randomseed() end
 end
 
 --- Create.

@@ -14,7 +14,8 @@ Cellular.__name='Cellular'
   -- @tparam table options.born List of neighbor counts for a new cell to be born in empty space
   -- @tparam table options.survive List of neighbor counts for an existing  cell to survive
   -- @tparam int options.topology Topology. Accepted values: 4, 8
-function Cellular:__init(width, height, options)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function Cellular:__init(width, height, options, rng)
 	assert(ROT, 'must require rot')
 	Cellular.super.__init(self, width, height)
 	self._options={
@@ -31,8 +32,8 @@ function Cellular:__init(width, height, options)
 	assert(t==8 or t==4, 'topology must be 8 or 4')
 	self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
 
-	self._rng = ROT.RNG.Twister:new()
-    self._rng:randomseed()
+	self._rng = rng and rng or ROT.RNG.Twister:new()
+    if rng then self._rng:randomseed() end
 end
 
 --- Randomize cells.

@@ -1054,7 +1054,7 @@ ROT.StringGenerator = class { __name, _options, _boundary, _suffix, _prefix, _pr
     -- @tparam[opt=false] boolean options.words Use word mode
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
-function ROT.StringGenerator:__init(options)
+function ROT.StringGenerator:__init(options, rng)
     self.__name   ='StringGenerator'
     self._options = {words=false,
                      order=3,
@@ -1075,8 +1075,8 @@ function ROT.StringGenerator:__init(options)
     end
     self._priorValues[self._boundary]=self._options.prior
 
-    self._rng=ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Remove all learned data
@@ -1686,13 +1686,13 @@ ROT.Map.IceyMaze = ROT.Map:extends { _regularity, _rng }
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 -- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
-function ROT.Map.IceyMaze:__init(width, height, regularity)
+function ROT.Map.IceyMaze:__init(width, height, rng, regularity)
     assert(ROT or twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')
     IceyMaze.super.__init(self, width, height)
     self.__name     ='IceyMaze'
     self._regularity= regularity and regularity or 0
-    self._rng       =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng       =rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.
@@ -1798,11 +1798,11 @@ ROT.Map.EllerMaze = ROT.Map:extends { _rng }
 -- Called with ROT.Map.EllerMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function ROT.Map.EllerMaze:__init(width, height)
+function ROT.Map.EllerMaze:__init(width, height, rng)
     ROT.Map.EllerMaze.super.__init(self, width, height)
     self.__name='EllerMaze'
-    self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng  =rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.
@@ -1891,7 +1891,7 @@ ROT.Map.Cellular = ROT.Map:extends { _rng, _options, _map }
   -- @tparam table options.born List of neighbor counts for a new cell to be born in empty space
   -- @tparam table options.survive List of neighbor counts for an existing  cell to survive
   -- @tparam int options.topology Topology. Accepted values: 4, 8
-function ROT.Map.Cellular:__init(width, height, options)
+function ROT.Map.Cellular:__init(width, height, options, rng)
     assert(ROT, 'must require rot')
     ROT.Map.Cellular.super.__init(self, width, height)
     self.__name='Cellular'
@@ -1909,8 +1909,8 @@ function ROT.Map.Cellular:__init(width, height, options)
     assert(t==8 or t==4, 'topology must be 8 or 4')
     self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
 
-    self._rng = ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng = rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Randomize cells.
@@ -2037,7 +2037,7 @@ ROT.Map.Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rn
 -- @tparam int y2 Bottom wall
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
-function ROT.Map.Room:__init(x1, y1, x2, y2, doorX, doorY)
+function ROT.Map.Room:__init(x1, y1, x2, y2, doorX, doorY, rng)
     self._x1   =x1
     self._x2   =x2
     self._y1   =y1
@@ -2047,8 +2047,8 @@ function ROT.Map.Room:__init(x1, y1, x2, y2, doorX, doorY)
         self._doors[doorX..','..doorY] = 1
     end
     self.__name='Room'
-    self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng  =rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create Random with position.
@@ -2272,7 +2272,7 @@ ROT.Map.Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rn
 -- @tparam int startY y-position of first floospace in corridor
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
-function ROT.Map.Corridor:__init(startX, startY, endX, endY)
+function ROT.Map.Corridor:__init(startX, startY, endX, endY, rng)
     assert(ROT, 'require rot')
     self._startX       =startX
     self._startY       =startY
@@ -2280,8 +2280,8 @@ function ROT.Map.Corridor:__init(startX, startY, endX, endY)
     self._endY         =endY
     self._endsWithAWall=true
     self.__name        ='Corridor'
-    self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng  =rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create random with position.
@@ -2414,7 +2414,7 @@ ROT.Map.Digger=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
-function ROT.Map.Digger:__init(width, height, options)
+function ROT.Map.Digger:__init(width, height, options, rng)
     ROT.Map.Digger.super.__init(self, width, height)
 
     self._options={
@@ -2438,8 +2438,8 @@ function ROT.Map.Digger:__init(width, height, options)
     self._featureAttempts=20
     self._walls={}
 
-    self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng  =rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.
@@ -2622,7 +2622,7 @@ ROT.Map.Uniform=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam[opt={4,6}] table options.roomHeight room minimum and maximum height
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
-function ROT.Map.Uniform:__init(width, height, options)
+function ROT.Map.Uniform:__init(width, height, options, rng)
     ROT.Map.Uniform.super.__init(self, width, height)
     assert(ROT, 'require rot')
     self.__name='Uniform'
@@ -2641,8 +2641,8 @@ function ROT.Map.Uniform:__init(width, height, options)
     self._corridorAttempts=20
     self._connected={}
     self._unconnected={}
-    self._rng=ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
 end
 
 --- Create.
@@ -2915,14 +2915,14 @@ ROT.Map.Rogue=ROT.Map.Dungeon:extends { _options, _rng }
   -- @tparam int options.cellHeight Number of cells to create on the vertical (number of rooms vertically)
   -- @tparam int options.roomWidth Room min and max width
   -- @tparam int options.roomHeight Room min and max height
-function ROT.Map.Rogue:__init(width, height, options)
+function ROT.Map.Rogue:__init(width, height, options, rng)
     ROT.Map.Rogue.super.__init(self, width, height)
     self.__name='Rogue'
     self._doors={}
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
-    self._rng=ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
     function calculateRoomSize(size, cell)
         local max=math.floor((size/cell)*0.8)
         local min=math.floor((size/cell)*0.25)
@@ -3785,9 +3785,9 @@ end
 -- @module ROT.Color
 ROT.Color=class { _cache, _rng }
 
-function ROT.Color:__init()
-    self._rng = ROT.RNG.Twister:new()
-    self._rng:randomseed()
+function ROT.Color:__init(rng)
+    self._rng = rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
     self._cached={
             black= {r=0,g=0,b=0,a=255},
             navy= {r=0,g=0,b=128,a=255},
@@ -4604,7 +4604,7 @@ function ROT.DijkstraMap:writeMapToConsole(returnString)
             s=s..self._map[x][y]..','
         end
         write(s)
-        if returnString then ls=ls..s..'\n'
+        if returnString then ls=ls..s..'\n' end
     end
     if returnString then return ls end
 end
@@ -4655,16 +4655,6 @@ function ROT.DijkstraMap:dirTowardsGoal(x, y)
     end
     if dir then return dir[1],dir[2] end
     return nil
-end
-
---- Run a callback function on every cell in the map
--- @tparam function callback A function with x and y parameters that will be run on every cell in the map
-function ROT.DijkstraMap:iterateThroughMap(callback)
-    for y=1,self._dimensions.h do
-        for x=1,self._dimensions.w do
-            callback(x,y)
-        end
-    end
 end
 
 --- A* Pathfinding.

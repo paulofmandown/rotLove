@@ -12,14 +12,15 @@ Corridor.__name='Corridor'
 -- @tparam int startY y-position of first floospace in corridor
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
-function Corridor:__init(startX, startY, endX, endY)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function Corridor:__init(startX, startY, endX, endY, rng)
 	self._startX       =startX
 	self._startY       =startY
 	self._endX         =endX
 	self._endY         =endY
 	self._endsWithAWall=true
-	self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng = rng and rng or ROT.RNG.Twister:new()
+    if rng then self._rng:randomseed() end
 end
 
 --- Create random with position.

@@ -12,10 +12,11 @@ EllerMaze.__name='EllerMaze'
 -- Called with ROT.Map.EllerMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function EllerMaze:__init(width, height)
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function EllerMaze:__init(width, height, rng)
 	EllerMaze.super.__init(self, width, height)
-	self._rng  =ROT.RNG.Twister:new()
-    self._rng:randomseed()
+    self._rng = rng and rng or ROT.RNG.Twister:new()
+    if rng then self._rng:randomseed() end
 end
 
 --- Create.
