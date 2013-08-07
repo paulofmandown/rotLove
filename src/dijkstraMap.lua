@@ -117,8 +117,8 @@ end
 
 --- Add new goal position.
 -- Inserts a new cell to be used as a goal.
--- @tparam int x the new x-value of the goal cell
--- @tparam int y the new y-value of the goal cell
+-- @tparam int gx the new x-value of the goal cell
+-- @tparam int gy the new y-value of the goal cell
 function DijkstraMap:addGoal(gx, gy)
     table.insert(self._goals, {x=gx, y=gy})
 end

@@ -99,7 +99,7 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Rogue:__init">Rogue:__init&nbsp;(width, height [, options])</a></td>
+	<td class="name" nowrap><a href="#Rogue:__init">Rogue:__init&nbsp;(width, height [, options], rng)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
@@ -116,7 +116,7 @@
     <dl class="function">
     <dt>
     <a name = "Rogue:__init"></a>
-    <strong>Rogue:__init&nbsp;(width, height [, options])</strong>
+    <strong>Rogue:__init&nbsp;(width, height [, options], rng)</strong>
     </dt>
     <dd>
     Constructor.
@@ -144,6 +144,9 @@
             <span class="types"><span class="type">int</span></span>
          Room min and max height</li>
         </li></ul>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Userdata with a .random(self, min, max) function</li>
     </ul>
 
 
