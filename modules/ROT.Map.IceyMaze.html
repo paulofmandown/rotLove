@@ -98,7 +98,7 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#IceyMaze:__init">IceyMaze:__init&nbsp;(width, height, regularity)</a></td>
+	<td class="name" nowrap><a href="#IceyMaze:__init">IceyMaze:__init&nbsp;(width, height, rng, regularity)</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
@@ -115,7 +115,7 @@
     <dl class="function">
     <dt>
     <a name = "IceyMaze:__init"></a>
-    <strong>IceyMaze:__init&nbsp;(width, height, regularity)</strong>
+    <strong>IceyMaze:__init&nbsp;(width, height, rng, regularity)</strong>
     </dt>
     <dd>
     Constructor.
@@ -129,6 +129,9 @@
         <li><span class="parameter">height</span>
             <span class="types"><span class="type">int</span></span>
          Height in cells of the map</li>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Userdata with a .random(self, min, max) function</li>
         <li><span class="parameter">regularity</span>
             <span class="types"><span class="type">int[opt=0]</span></span>
          A value used to determine the 'randomness' of the map, 0= more random</li>

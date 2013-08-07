@@ -98,7 +98,7 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#Uniform:__init">Uniform:__init&nbsp;(width, height [, options])</a></td>
+	<td class="name" nowrap><a href="#Uniform:__init">Uniform:__init&nbsp;(width, height [, options [, rng={4]])</a></td>
 	<td class="summary">Constructor.</td>
 	</tr>
 	<tr>
@@ -115,7 +115,7 @@
     <dl class="function">
     <dt>
     <a name = "Uniform:__init"></a>
-    <strong>Uniform:__init&nbsp;(width, height [, options])</strong>
+    <strong>Uniform:__init&nbsp;(width, height [, options [, rng={4]])</strong>
     </dt>
     <dd>
     Constructor.
@@ -144,6 +144,9 @@
             <span class="types"><span class="type">int</span></span>
          stop after this much time has passed (msec)</li>
         </li></ul>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Userdata with a .random(self, min, max) function</li>
     </ul>
 
 
