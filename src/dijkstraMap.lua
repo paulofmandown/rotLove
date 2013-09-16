@@ -21,6 +21,17 @@ function DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._dimensions.w=mapWidth
     self._dimensions.h=mapHeight
 
+    self._dirs={}
+    local d=ROT.DIRS.EIGHT
+    self._dirs ={d[1],
+                 d[3],
+                 d[5],
+                 d[7],
+                 d[2],
+                 d[4],
+                 d[6],
+                 d[8] }
+
     self._passableCallback=passableCallback
 end
 
@@ -55,7 +66,7 @@ function DijkstraMap:_manyGoalCompute()
                 if self._passableCallback(i, j) then
                     local cellChanged=false
                     local low=math.huge
-                    for k,v in pairs(ROT.DIRS.EIGHT) do
+                    for k,v in pairs(self._dirs) do
                         local tx=(i+v[1])
                         local ty=(j+v[2])
                         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
@@ -93,7 +104,7 @@ function DijkstraMap:_singleGoalCompute(gx, gy)
     local val=1
     local wq={}
     local pq={}
-    local ds=ROT.DIRS.EIGHT
+    local ds=self._dirs
 
     table.insert(wq, {g.x, g.y})
 
@@ -191,7 +202,7 @@ function DijkstraMap:dirTowardsGoal(x, y)
     if low==0 then return nil end
     local key=nil
     local dir=nil
-    for k,v in pairs(ROT.DIRS.EIGHT) do
+    for k,v in pairs(self._dirs) do
         local tx=(i+v[1])
         local ty=(j+v[2])
         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
