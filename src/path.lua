@@ -1,5 +1,3 @@
---    +-- lolwut
---    V
 local Path_PATH=({...})[1]:gsub("[%.\\/]path$", "") .. '/'
 local class  =require (Path_PATH .. 'vendor/30log')
 
@@ -16,6 +14,16 @@ function Path:__init(toX, toY, passableCallback, options)
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
 
     self._dirs= self._options.topology==8 and ROT.DIRS.EIGHT or ROT.DIRS.FOUR
+    if self._options.topology==8 then
+        self._dirs ={self._dirs[1],
+                     self._dirs[3],
+                     self._dirs[5],
+                     self._dirs[7],
+                     self._dirs[2],
+                     self._dirs[4],
+                     self._dirs[6],
+                     self._dirs[8] }
+    end
 end
 
 function Path:compute(fromX, fromY, callback) end
