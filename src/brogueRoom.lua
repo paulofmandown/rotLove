@@ -13,10 +13,11 @@ BrogueRoom.__name='BrogueRoom'
 -- @tparam[opt] int doorY y-position of door
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 function BrogueRoom:__init(dims, doorX, doorY, rng)
-    self._dims=dims
-    self._doors= {}
+    self._dims =dims
+    self._doors={}
+    self._walls={}
     if doorX then
-        self._doors[doorX..','..doorY] = 1
+        self._doors[1] = {doorX, doorY}
     end
     self._rng=rng and rng or ROT.RNG.Twister:new()
     if not rng then self._rng:randomseed() end
@@ -87,12 +88,12 @@ function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
         -- wider rect gets x-widersWidth
         -- wider gets y-math.floor(rng:random()*widersHeight)
         if dims.w1>dims.w2 then
-            dims.x1=x-dims.w1
+            dims.x1=x-dims.w1-1
             dims.y1=y-math.floor(rng:random()*dims.h1)
             dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
             dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
         else
-            dims.x2=x-dims.w2
+            dims.x2=x-dims.w2-1
             dims.y2=y-math.floor(rng:random()*dims.h2)
             dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
             dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
@@ -102,12 +103,12 @@ function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
         -- taller gets x-math.floor(rng:random()*width)
         if dims.h1>dims.h2 then
             dims.y1=y+1
-            dims.x1=math.floor(rng:random()*dims.w1)
+            dims.x1=x-math.floor(rng:random()*dims.w1)
             dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
             dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
         else
             dims.y2=y+1
-            dims.x2=math.floor(rng:random()*dims.w2)
+            dims.x2=x-math.floor(rng:random()*dims.w2)
             dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
             dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
         end
@@ -115,19 +116,63 @@ function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
         -- taller gets y-tallersHeight
         -- taller gets x-math.floor(rng:random()*width)
         if dims.h1>dims.h2 then
-            dims.y1=y-dims.h1
-            dims.x1=math.floor(rng:random()*dims.w1)
+            dims.y1=y-dims.h1-1
+            dims.x1=x-math.floor(rng:random()*dims.w1)
             dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
             dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
         else
-            dims.y2=y-dims.h2
-            dims.x2=math.floor(rng:random()*dims.w2)
+            dims.y2=y-dims.h2-1
+            dims.x2=x-math.floor(rng:random()*dims.w2)
             dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
             dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
         end
     else
         assert(false, 'dx or dy must be 1 or -1')
     end
+    --if dims.x2~=dims.x2 then dims.x2=dims.x1 end
+    --if dims.y2~=dims.y2 then dims.y2=dims.y1 end
+    --if dims.x1~=dims.x1 then dims.x1=dims.x2 end
+    --if dims.y1~=dims.y1 then dims.y1=dims.y2 end
+    return BrogueRoom:new(dims, x, y)
+end
+
+--- Create Random with center position.
+-- @tparam int cx x-position of room's center
+-- @tparam int cy y-position of room's center
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+  -- @tparam table options.crossWidth minimum/maximum width for rectangleTwo {min,max}
+  -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+function BrogueRoom:createRandomCenter(cx, cy, options, rng)
+    rng=rng and rng or math.random
+    local dims={}
+    --- Generate Rectangle One dimensions
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w1=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h1=math.floor(rng:random(min,max))
+
+    dims.x1=cx-math.floor(rng:random()*dims.w1)
+    dims.y1=cy-math.floor(rng:random()*dims.h1)
+
+    --- Generate Rectangle Two dimensions
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w2=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h2=math.floor(rng:random(min,max))
+
+    dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+    dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+    if dims.x2~=dims.x2 then dims.x2=dims.x1 end
+    if dims.y2~=dims.y2 then dims.y2=dims.y1 end
 
     return BrogueRoom:new(dims)
 end
@@ -182,34 +227,25 @@ end
 -- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if room is valid.
 function BrogueRoom:isValid(gen, isWallCallback, canBeDugCallback)
-    -- check rectangle one
-    local left  =self._dims.x1-1
-    local right =self._dims.x1+self._dims.w1+1
-    local top   =self._dims.y1-1
-    local bottom=self._dims.y1+self._dims.h1+1
+    local dims=self._dims
+    if dims.x2~=dims.x2 or dims.y2~=dims.y2 or dims.x1~=dims.x1 or dims.y1~=dims.y1  then
+        return false
+    end
+
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
-            if x==left or x==right or y==top or y==bottom then
-                if not isWallCallback(gen, x, y) then return false end
-            else
-                if not canBeDugCallback(gen, x, y) then return false end
-            end
+            if self:_coordIsFloor(x, y) then
+                if not isWallCallback(gen, x, y) or not canBeDugCallback(gen, x, y) then
+                    return false
+                end
+            elseif self:_coordIsWall(x, y) then table.insert(self._walls, {x,y}) end
         end
     end
-    -- check rectangle two
-    local left  =self._dims.x2-1
-    local right =self._dims.x2+self._dims.w2+1
-    local top   =self._dims.y2-1
-    local bottom=self._dims.y2+self._dims.h2+1
-    for x=left,right do
-        for y=top,bottom do
-            if x==left or x==right or y==top or y==bottom then
-                if not isWallCallback(gen, x, y) then return false end
-            else
-                if not canBeDugCallback(gen, x, y) then return false end
-            end
-        end
-    end
+
     return true
 end
 
@@ -219,10 +255,10 @@ end
 -- @tparam function digCallback The function responsible for digging the room into a map.
 function BrogueRoom:create(gen, digCallback)
     local value=0
-    local left  =self:getLeft()
-    local right =self:getRight()
-    local top   =self:getTop()
-    local bottom=self:getBottom()
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
             if self._doors[x..','..y] then
@@ -247,6 +283,15 @@ function BrogueRoom:_coordIsFloor(x, y)
     return false
 end
 
+function BrogueRoom:_coordIsWall(x, y)
+    local dirs=ROT.DIRS.EIGHT
+    for i=1,#dirs do
+        local dir=dirs[i]
+        if self:_coordIsFloor(x+dir[1], y+dir[2]) then return true end
+    end
+    return false
+end
+
 function BrogueRoom:clearDoors()
     self._doors={}
 end
@@ -261,10 +306,12 @@ function BrogueRoom:getCenter()
 
     return {math.round((l+r)/2), math.round((t+b)/2)}
 end
+
 function BrogueRoom:getLeft()   return math.min(self._dims.x1, self._dims.x2) end
 function BrogueRoom:getRight()  return math.max(self._dims.x1+self._dims.w1, self._dims.x2+self._dims.w2) end
 function BrogueRoom:getTop()    return math.min(self._dims.y1, self._dims.y2) end
 function BrogueRoom:getBottom() return math.max(self._dims.y1+self._dims.h1, self._dims.y2+self._dims.h2) end
+
 function BrogueRoom:debug()
     cmd=write and write or io.write
     local str=''
@@ -273,9 +320,28 @@ function BrogueRoom:debug()
     end
     cmd(str)
 end
+
 function BrogueRoom:addDoor(x, y)
     self._doors[x..','..y]=1
 end
 
+--- Add all doors based on available walls.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback
+-- @treturn ROT.Map.Room self
+function BrogueRoom:addDoors(gen, isWallCallback)
+    local left  =self:getLeft()
+    local right =self:getRight()
+    local top   =self:getTop()
+    local bottom=self:getBottom()
+    for x=left,right do
+        for y=top,bottom do
+            if x~=left and x~=right and y~=top and y~=bottom then
+            elseif isWallCallback(gen, x,y) then
+            else self:addDoor(x,y) end
+        end
+    end
+    return self
+end
 
 return BrogueRoom

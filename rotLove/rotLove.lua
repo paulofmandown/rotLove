@@ -2261,6 +2261,355 @@ function ROT.Map.Room:getTop()    return self._y1 end
 -- @treturn int bottom-most floor
 function ROT.Map.Room:getBottom() return self._y2 end
 
+--- BrogueRoom object.
+-- Used by ROT.Map.Brogue to create maps with 'cross rooms'
+-- @module ROT.Map.BrogueRoom
+ROT.Map.BrogueRoom = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
+ROT.Map.BrogueRoom.__name='BrogueRoom'
+--- Constructor.
+-- creates a new BrogueRoom object with the assigned values
+-- @tparam table dims Represents dimensions and positions of the rooms two rectangles
+-- @tparam[opt] int doorX x-position of door
+-- @tparam[opt] int doorY y-position of door
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function ROT.Map.BrogueRoom:__init(dims, doorX, doorY, rng)
+    self._dims =dims
+    self._doors={}
+    self._walls={}
+    if doorX then
+        self._doors[1] = {doorX, doorY}
+    end
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
+end
+
+--- Create room at bottom center with dims 9x10 and 20x4
+-- @tparam int availWidth Typically the width of the map.
+-- @tparam int availHeight Typically the height of the map
+function ROT.Map.BrogueRoom:createEntranceRoom(availWidth, availHeight)
+    local dims={}
+    dims.w1=9
+    dims.h1=10
+    dims.w2=20
+    dims.h2=4
+
+    dims.x1=math.floor(availWidth/2-dims.w1/2)
+    dims.y1=math.floor(availHeight-dims.h1-1)
+    dims.x2=math.floor(availWidth/2-dims.w2/2)
+    dims.y2=math.floor(availHeight-dims.h2-1)
+
+    return ROT.Map.BrogueRoom:new(dims)
+end
+
+--- Create Random with position.
+-- @tparam int x x-position of room
+-- @tparam int y y-position of room
+-- @tparam int dx x-direction in which to build room 1==right -1==left
+-- @tparam int dy y-direction in which to build room 1==down  -1==up
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+  -- @tparam table options.crossWidth minimum/maximum width for rectangleTwo {min,max}
+  -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(self, min, max) method
+function ROT.Map.BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
+    rng=rng and rng or math.random
+    local dims={}
+
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w1=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h1=math.floor(rng:random(min,max))
+
+    local min=options.crossWidth[1]
+    local max=options.crossWidth[2]
+    dims.w2=math.floor(rng:random(min,max))
+
+    local min=options.crossHeight[1]
+    local max=options.crossHeight[2]
+    dims.h2=math.floor(rng:random(min,max))
+
+    if dx==1 then
+        -- wider rect gets x+1
+        -- wider gets y-math.floor(rng:random()*widersHeight)
+        if dims.w1>dims.w2 then
+            dims.x1=x+1
+            dims.y1=y-math.floor(rng:random()*dims.h1)
+            dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+            dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+        else
+            dims.x2=x+1
+            dims.y2=y-math.floor(rng:random()*dims.h2)
+            dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
+            dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
+        end
+    elseif dx==-1 then
+        -- wider rect gets x-widersWidth
+        -- wider gets y-math.floor(rng:random()*widersHeight)
+        if dims.w1>dims.w2 then
+            dims.x1=x-dims.w1-1
+            dims.y1=y-math.floor(rng:random()*dims.h1)
+            dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+            dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+        else
+            dims.x2=x-dims.w2-1
+            dims.y2=y-math.floor(rng:random()*dims.h2)
+            dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
+            dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
+        end
+    elseif dy==1 then
+        -- taller gets y+1
+        -- taller gets x-math.floor(rng:random()*width)
+        if dims.h1>dims.h2 then
+            dims.y1=y+1
+            dims.x1=x-math.floor(rng:random()*dims.w1)
+            dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+            dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+        else
+            dims.y2=y+1
+            dims.x2=x-math.floor(rng:random()*dims.w2)
+            dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
+            dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
+        end
+    elseif dy==-1 then
+        -- taller gets y-tallersHeight
+        -- taller gets x-math.floor(rng:random()*width)
+        if dims.h1>dims.h2 then
+            dims.y1=y-dims.h1-1
+            dims.x1=x-math.floor(rng:random()*dims.w1)
+            dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+            dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+        else
+            dims.y2=y-dims.h2-1
+            dims.x2=x-math.floor(rng:random()*dims.w2)
+            dims.x1=math.floor(rng:random(dims.x2, (dims.x2+dims.w2)-dims.w1))
+            dims.y1=math.floor(rng:random(dims.y2, (dims.y2+dims.h2)-dims.h1))
+        end
+    else
+        assert(false, 'dx or dy must be 1 or -1')
+    end
+    --if dims.x2~=dims.x2 then dims.x2=dims.x1 end
+    --if dims.y2~=dims.y2 then dims.y2=dims.y1 end
+    --if dims.x1~=dims.x1 then dims.x1=dims.x2 end
+    --if dims.y1~=dims.y1 then dims.y1=dims.y2 end
+    return ROT.Map.BrogueRoom:new(dims, x, y)
+end
+
+--- Create Random with center position.
+-- @tparam int cx x-position of room's center
+-- @tparam int cy y-position of room's center
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
+  -- @tparam table options.crossWidth minimum/maximum width for rectangleTwo {min,max}
+  -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+function ROT.Map.BrogueRoom:createRandomCenter(cx, cy, options, rng)
+    rng=rng and rng or math.random
+    local dims={}
+    --- Generate Rectangle One dimensions
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w1=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h1=math.floor(rng:random(min,max))
+
+    dims.x1=cx-math.floor(rng:random()*dims.w1)
+    dims.y1=cy-math.floor(rng:random()*dims.h1)
+
+    --- Generate Rectangle Two dimensions
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w2=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h2=math.floor(rng:random(min,max))
+
+    dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+    dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+    if dims.x2~=dims.x2 then dims.x2=dims.x1 end
+    if dims.y2~=dims.y2 then dims.y2=dims.y1 end
+
+    return ROT.Map.BrogueRoom:new(dims)
+end
+
+--- Create random with no position.
+-- @tparam int availWidth Typically the width of the map.
+-- @tparam int availHeight Typically the height of the map
+-- @tparam table options Options
+  -- @tparam table options.roomWidth minimum/maximum width for rectangleOne {min,max}
+  -- @tparam table options.roomHeight minimum/maximum height for rectangleOne {min,max}
+  -- @tparam table options.crossWidth minimum/maximum width for rectangleTwo {min,max}
+  -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+function ROT.Map.BrogueRoom:createRandom(availWidth, availHeight, options, rng)
+    rng=rng and rng or math.random
+    local dims={}
+    --- Generate Rectangle One dimensions
+    local min=options.roomWidth[1]
+    local max=options.roomWidth[2]
+    dims.w1=math.floor(rng:random(min,max))
+
+    local min=options.roomHeight[1]
+    local max=options.roomHeight[2]
+    dims.h1=math.floor(rng:random(min,max))
+
+    -- Consider moving these to aw-(w1+w2) and ah-(h1+h2)
+    local left=availWidth-dims.w1
+    local top=availHeight-dims.h1
+
+    dims.x1=math.floor(rng:random()*left)
+    dims.y1=math.floor(rng:random()*top)
+
+    --- Generate Rectangle Two dimensions
+    local min=options.crossWidth[1]
+    local max=options.crossWidth[2]
+    dims.w2=math.floor(rng:random(min,max))
+
+    local min=options.crossHeight[1]
+    local max=options.crossHeight[2]
+    dims.h2=math.floor(rng:random(min,max))
+
+    dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
+    dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
+    if dims.x2~=dims.x2 then dims.x2=dims.x1 end
+    if dims.y2~=dims.y2 then dims.y2=dims.y1 end
+    return ROT.Map.BrogueRoom:new(dims)
+end
+
+--- Use two callbacks to confirm room validity.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @treturn boolean true if room is valid.
+function ROT.Map.BrogueRoom:isValid(gen, isWallCallback, canBeDugCallback)
+    local dims=self._dims
+    if dims.x2~=dims.x2 or dims.y2~=dims.y2 or dims.x1~=dims.x1 or dims.y1~=dims.y1  then
+        return false
+    end
+
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
+    for x=left,right do
+        for y=top,bottom do
+            if self:_coordIsFloor(x, y) then
+                if not isWallCallback(gen, x, y) or not canBeDugCallback(gen, x, y) then
+                    return false
+                end
+            elseif self:_coordIsWall(x, y) then table.insert(self._walls, {x,y}) end
+        end
+    end
+
+    return true
+end
+
+--- Create.
+-- Function runs a callback to dig the room into a map
+-- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
+-- @tparam function digCallback The function responsible for digging the room into a map.
+function ROT.Map.BrogueRoom:create(gen, digCallback)
+    local value=0
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
+    for x=left,right do
+        for y=top,bottom do
+            if self._doors[x..','..y] then
+                value=2
+            elseif self:_coordIsFloor(x, y) then
+                value=0
+            else
+                value=1
+            end
+            digCallback(gen, x, y, value)
+        end
+    end
+end
+
+function ROT.Map.BrogueRoom:_coordIsFloor(x, y)
+    local d=self._dims
+    if x>=d.x1 and x<=d.x1+d.w1 and y>=d.y1 and y<=d.y1+d.h1 then
+        return true
+    elseif x>=d.x2 and x<=d.x2+d.w2 and y>=d.y2 and y<=d.y2+d.h2 then
+        return true
+    end
+    return false
+end
+
+function ROT.Map.BrogueRoom:_coordIsWall(x, y)
+    local dirs=ROT.DIRS.EIGHT
+    for i=1,#dirs do
+        local dir=dirs[i]
+        if self:_coordIsFloor(x+dir[1], y+dir[2]) then return true end
+    end
+    return false
+end
+
+function ROT.Map.BrogueRoom:clearDoors()
+    self._doors={}
+end
+
+function ROT.Map.BrogueRoom:getCenter()
+    local d=self._dims
+    local l=math.min(d.x1, d.x2)
+    local r=math.max(d.x1+d.w1, d.x2+d.w2)
+
+    local t=math.min(d.y1, d.y2)
+    local b=math.max(d.y1+d.h1, d.y2+d.h2)
+
+    return {math.round((l+r)/2), math.round((t+b)/2)}
+end
+function ROT.Map.BrogueRoom:getLeft()
+    return math.min(self._dims.x1, self._dims.x2)
+end
+function ROT.Map.BrogueRoom:getRight()
+    return math.max(self._dims.x1+self._dims.w1, self._dims.x2+self._dims.w2)
+end
+function ROT.Map.BrogueRoom:getTop()
+    return math.min(self._dims.y1, self._dims.y2)
+end
+function ROT.Map.BrogueRoom:getBottom()
+    return math.max(self._dims.y1+self._dims.h1, self._dims.y2+self._dims.h2)
+end
+function ROT.Map.BrogueRoom:debug()
+    cmd=write and write or io.write
+    local str=''
+    for k,v in pairs(self._dims) do
+        str=str..k..'='..v..','
+    end
+    cmd(str)
+end
+function ROT.Map.BrogueRoom:addDoor(x, y)
+    self._doors[x..','..y]=1
+end
+--- Add all doors based on available walls.
+-- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+-- @tparam function isWallCallback
+-- @treturn ROT.Map.Room self
+function ROT.Map.BrogueRoom:addDoors(gen, isWallCallback)
+    local left  =self:getLeft()
+    local right =self:getRight()
+    local top   =self:getTop()
+    local bottom=self:getBottom()
+    for x=left,right do
+        for y=top,bottom do
+            if x~=left and x~=right and y~=top and y~=bottom then
+            elseif isWallCallback(gen, x,y) then
+            else self:addDoor(x,y) end
+        end
+    end
+    return self
+end
+
 --- Corridor object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
@@ -2344,6 +2693,7 @@ function ROT.Map.Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 
     if length==0 then return false end
     if length==1 and isWallCallback(gen, self._endX+dx, self._endY+dy) then return false end
+
 
     local firstCornerBad=not isWallCallback(gen, self._endX+dx+nx, self._endY+dy+ny)
     local secondCornrBad=not isWallCallback(gen, self._endX+dx-nx, self._endY+dy-ny)
@@ -2433,7 +2783,7 @@ function ROT.Map.Digger:__init(width, height, options, rng)
 
     self._features={Room=4, Corridor=4}
     if self._options.nocorridorsmode then
-        self._features.corridors=nil
+        self._features.Corridor=nil
     end
     self._featureAttempts=20
     self._walls={}
@@ -3251,6 +3601,307 @@ function ROT.Map.Rogue:_createCorridors()
             end
         end
     end
+end
+
+--- The Brogue Map Generator.
+-- Based on the description of Brogues level generation at http://brogue.wikia.com/wiki/Level_Generation
+-- @module ROT.Map.Brogue
+ROT.Map.Brogue=ROT.Map.Dungeon:extends { _options, _rng }
+ROT.Map.Brogue.__name='Brogue'
+
+--- Constructor.
+-- Called with ROT.Map.Brogue:new(). A note: Brogue's map is 79x29. Consider using those dimensions for Display if you're looking to build a brogue-like.
+-- @tparam int width Width in cells of the map
+-- @tparam int height Height in cells of the map
+-- @tparam[opt] table options Options
+  -- @tparam[opt={4,20}] table options.roomWidth Room width for rectangle one of cross rooms
+  -- @tparam[opt={3,7}] table options.roomHeight Room height for rectangle one of cross rooms
+  -- @tparam[opt={3,12}] table options.crossWidth Room width for rectangle two of cross rooms
+  -- @tparam[opt={2,5}] table options.crossHeight Room height for rectangle two of cross rooms
+  -- @tparam[opt={3,12}] table options.corridorWidth Length of east-west corridors
+  -- @tparam[opt={2,5}] table options.corridorHeight Length of north-south corridors
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
+function ROT.Map.Brogue:__init(width, height, options, rng)
+    ROT.Map.Brogue.super.__init(self, width, height)
+    self._options={
+                    roomWidth={4,20},
+                    roomHeight={3,7},
+                    crossWidth={3,12},
+                    crossHeight={2,5},
+                    corridorWidth={2,12},
+                    corridorHeight={2,5},
+                    caveChance=.33,
+                    corridorChance=.8
+                  }
+
+    if options then
+        for k,v in pairs(options) do self._options[k]=v end
+    end
+
+    self._walls={}
+    self._rooms={}
+    self._doors={}
+    self._loops=30
+    self._loopAttempts=300
+    self._maxrooms=99
+    self._roomAttempts=600
+    self._dirs=ROT.DIRS.FOUR
+    self._rng=rng and rng or ROT.RNG.Twister:new()
+    if not rng then self._rng:randomseed() end
+end
+
+--- Create.
+-- Creates a map.
+-- @tparam function callback This function will be called for every cell. It must accept the following parameters:
+  -- @tparam int callback.x The x-position of a cell in the map
+  -- @tparam int callback.y The y-position of a cell in the map
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+-- @tparam boolean firstFloorBehavior If true will put an upside T (9x10v and 20x4h) at the bottom center of the map.
+-- @treturn ROT.Map.Brogue self
+function ROT.Map.Brogue:create(callback, firstFloorBehavior)
+    self._map=self:_fillMap(1)
+    self._rooms={}
+    self._doors={}
+    self._walls={}
+
+    self:_buildFirstRoom(firstFloorBehavior)
+    self:_generateRooms()
+    self:_generateLoops()
+    self:_closeDiagonalOpenings()
+    if callback then
+        for x=1,self._width do
+            for y=1,self._height do
+                callback(x,y,self._map[x][y])
+            end
+        end
+    end
+    local d=self._doors
+    for i=1,#d do
+        callback(d[i][1], d[i][2], 2)
+    end
+    return self
+end
+
+function ROT.Map.Brogue:_buildFirstRoom(firstFloorBehavior)
+    while true do
+        if firstFloorBehavior then
+            local room=ROT.Map.BrogueRoom:createEntranceRoom(self._width, self._height)
+            if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                table.insert(self._rooms, room)
+                room:create(self, self._digCallback)
+                self:_insertWalls(room._walls)
+                return room
+            end
+        elseif self._rng:random()<self._options.caveChance then
+            return self:_buildCave()
+        else
+            local room=ROT.Map.BrogueRoom:createRandom(self._width, self._height, self._options, self._rng)
+            if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                table.insert(self._rooms, room)
+                room:create(self, self._digCallback)
+                self:_insertWalls(room._walls)
+                return room
+            end
+        end
+    end
+end
+
+function ROT.Map.Brogue:_buildCave()
+    local cl=ROT.Map.Cellular:new(self._width, self._height, nil, self._rng)
+    cl:randomize(.55)
+    for i=1,5 do cl:create() end
+    local map=cl._map
+    local id=2
+    local largest=2
+    local bestBlob={0,{}}
+
+    for x=1,self._width do
+        for y=1,self._height do
+            if map[x][y]==1 then
+                local blobData=self:_fillBlob(x,y,map, id)
+                if blobData[1]>bestBlob[1] then
+                    largest=id
+                    bestBlob=blobData
+                end
+                id=id+1
+            end
+        end
+    end
+
+    for i=1,#bestBlob[2] do table.insert(self._walls, bestBlob[2][i]) end
+
+    for x=2,self._width-1 do
+        for y=2,self._height-1 do
+            if map[x][y]==largest then
+                self._map[x][y]=0
+            else
+                self._map[x][y]=1
+            end
+        end
+    end
+end
+
+function ROT.Map.Brogue:_fillBlob(x,y,map, id)
+    map[x][y]=id
+    local todo={{x,y}}
+    local dirs=ROT.DIRS.EIGHT
+    local size=1
+    local walls={}
+    repeat
+        local pos=table.remove(todo, 1)
+        for i=1,#dirs do
+            local rx=pos[1]+dirs[i][1]
+            local ry=pos[2]+dirs[i][2]
+            if rx<1 or rx>self._width or ry<1 or ry>self._height then
+
+            elseif map[rx][ry]==1 then
+                map[rx][ry]=id
+                table.insert(todo,{ rx, ry })
+                size=size+1
+            elseif map[rx][ry]==0 then
+                table.insert(walls, {rx,ry})
+            end
+        end
+    until #todo==0
+    return {size, walls}
+end
+
+function ROT.Map.Brogue:_generateRooms()
+    local rooms=0
+    for i=1,600 do
+        if rooms>self._maxrooms then break end
+        if self:_buildRoom(i>375) then
+            rooms=rooms+1
+        end
+    end
+end
+
+function ROT.Map.Brogue:_buildRoom(forceNoCorridor)
+    local p=table.remove(self._walls,self._rng:random(1,#self._walls))
+    --local p=self._walls[self._rng:random(1,#self._walls)]
+    if not p then return false end
+    local d=self:_getDiggingDirection(p[1], p[2])
+    if d then
+        for j=1,15 do
+            if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
+                if d[1]~=0 then cd=self._options.corridorWidth
+                else cd=self._options.corridorHeight
+                end
+                local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
+                if corridor:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                    local dx=corridor._endX
+                    local dy=corridor._endY
+
+                    local room=ROT.Map.BrogueRoom:createRandomAt(dx, dy ,d[1],d[2], self._options, self._rng)
+
+                    if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                        corridor:create(self, self._digCallback)
+                        room:create(self, self._digCallback)
+                        self:_insertWalls(room._walls)
+                        self._map[p[1]][p[2]]=0
+                        self._map[dx][dy]=0
+                        return true
+                    end
+                end
+            else
+                local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
+                if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                    room:create(self, self._digCallback)
+                    self:_insertWalls(room._walls)
+                    table.insert(self._doors, room._doors[1])
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+function ROT.Map.Brogue:_getDiggingDirection(cx, cy)
+    local deltas=ROT.DIRS.FOUR
+    local result=nil
+
+    for i=1,#deltas do
+        local delta=deltas[i]
+        local x    =cx+delta[1]
+        local y    =cy+delta[2]
+        if x<1 or y<1 or x>self._width or y>self._height then return nil end
+        if self._map[x][y]==0 then
+            if result and #result>0 then return nil end
+            result=delta
+        end
+    end
+    if not result or #result<1 then return nil end
+
+    return {-result[1], -result[2]}
+end
+
+function ROT.Map.Brogue:_insertWalls(wt)
+    for _,v in pairs(wt) do
+        table.insert(self._walls, v)
+    end
+end
+
+function ROT.Map.Brogue:_generateLoops()
+    local loops=0
+    local dirs=ROT.DIRS.FOUR
+    local count=0
+    local wd=self._width
+    local hi=self._height
+    local m=self._map
+    local function cb()
+        count=count+1
+    end
+    local function pass(x,y)
+        return m[x][y]~=1
+    end
+    for i=1,300 do
+        if #self._walls<1 then return end
+        local w=table.remove(self._walls, self._rng:random(1,#self._walls))
+        for j=1,2 do
+            local x=w[1] +dirs[j][1]
+            local y=w[2] +dirs[j][2]
+            local x2=w[1]+dirs[j+2][1]
+            local y2=w[2]+dirs[j+2][2]
+            if x>1 and x2>1 and y>1 and y2>1 and
+                x<wd and x2<wd and y<hi and y2<hi and
+                m[x][y]==0 and m[x2][y2]==0
+            then
+                local path=ROT.Path.AStar(x,y,pass)
+                path:compute(x2, y2, cb)
+                if count>20 then
+                    m[w[1]][w[2]]=3
+                end
+                count=0
+            end
+        end
+    end
+end
+
+function ROT.Map.Brogue:_closeDiagonalOpenings()
+end
+
+function ROT.Map.Brogue:_getDoors() return self._doors end
+function ROT.Map.Brogue:getDoors() return self._doors end
+
+function ROT.Map.Brogue:_digCallback(x, y, value)
+    self._map[x][y]=value
+end
+
+function ROT.Map.Brogue:_isWallCallback(x, y)
+    if x<1 or y<1 or x>self._width or y>self._height then return false end
+    return self._map[x][y]==1
+end
+
+function ROT.Map.Brogue:_canBeDugCallback(x, y)
+    if x<2 or y<2 or x>=self._width or y>=self._height then
+        return false
+    end
+    local drs=ROT.DIRS.FOUR
+    for i=1,#drs do
+        if self._map[x+drs[i][1]][y+drs[i][2]]==0 then return false end
+    end
+    return true
 end
 
 ROT.Noise=class{ __name }
