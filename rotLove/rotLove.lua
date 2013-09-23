@@ -3768,7 +3768,7 @@ end
 
 function ROT.Map.Brogue:_generateRooms()
     local rooms=0
-    for i=1,600 do
+    for i=1,1000 do
         if rooms>self._maxrooms then break end
         if self:_buildRoom(i>375) then
             rooms=rooms+1
@@ -3777,40 +3777,39 @@ function ROT.Map.Brogue:_generateRooms()
 end
 
 function ROT.Map.Brogue:_buildRoom(forceNoCorridor)
-    local p=table.remove(self._walls,self._rng:random(1,#self._walls))
-    --local p=self._walls[self._rng:random(1,#self._walls)]
+    --local p=table.remove(self._walls,self._rng:random(1,#self._walls))
+    local p=self._walls[self._rng:random(1,#self._walls)]
     if not p then return false end
     local d=self:_getDiggingDirection(p[1], p[2])
     if d then
-        for j=1,15 do
-            if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
-                if d[1]~=0 then cd=self._options.corridorWidth
-                else cd=self._options.corridorHeight
-                end
-                local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
-                if corridor:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-                    local dx=corridor._endX
-                    local dy=corridor._endY
+        if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
+            if d[1]~=0 then cd=self._options.corridorWidth
+            else cd=self._options.corridorHeight
+            end
+            local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
+            if corridor:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                local dx=corridor._endX
+                local dy=corridor._endY
 
-                    local room=ROT.Map.BrogueRoom:createRandomAt(dx, dy ,d[1],d[2], self._options, self._rng)
+                local room=ROT.Map.BrogueRoom:createRandomAt(dx, dy ,d[1],d[2], self._options, self._rng)
 
-                    if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-                        corridor:create(self, self._digCallback)
-                        room:create(self, self._digCallback)
-                        self:_insertWalls(room._walls)
-                        self._map[p[1]][p[2]]=0
-                        self._map[dx][dy]=0
-                        return true
-                    end
-                end
-            else
-                local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
                 if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                    corridor:create(self, self._digCallback)
                     room:create(self, self._digCallback)
                     self:_insertWalls(room._walls)
-                    table.insert(self._doors, room._doors[1])
+                    self._map[p[1]][p[2]]=0
+                    self._map[dx][dy]=0
                     return true
                 end
+            end
+        else
+            local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
+            if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                room:create(self, self._digCallback)
+                self._map[p[1]][p[2]]=0
+                self:_insertWalls(room._walls)
+                table.insert(self._doors, room._doors[1])
+                return true
             end
         end
     end
@@ -3853,11 +3852,11 @@ function ROT.Map.Brogue:_generateLoops()
         count=count+1
     end
     local function pass(x,y)
-        return m[x][y]~=1
+        return m[x][y]==0
     end
     for i=1,300 do
         if #self._walls<1 then return end
-        local w=table.remove(self._walls, self._rng:random(1,#self._walls))
+        local w=table.remove(self._walls, 1)--self._rng:random(1,#self._walls))
         for j=1,2 do
             local x=w[1] +dirs[j][1]
             local y=w[2] +dirs[j][2]
@@ -3869,8 +3868,8 @@ function ROT.Map.Brogue:_generateLoops()
             then
                 local path=ROT.Path.AStar(x,y,pass)
                 path:compute(x2, y2, cb)
-                if count>20 then
-                    m[w[1]][w[2]]=3
+                if count>30 then
+                    m[w[1]][w[2]]=0
                 end
                 count=0
             end
@@ -3882,7 +3881,6 @@ function ROT.Map.Brogue:_closeDiagonalOpenings()
 end
 
 function ROT.Map.Brogue:_getDoors() return self._doors end
-function ROT.Map.Brogue:getDoors() return self._doors end
 
 function ROT.Map.Brogue:_digCallback(x, y, value)
     self._map[x][y]=value

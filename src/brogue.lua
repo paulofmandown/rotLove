@@ -166,7 +166,7 @@ end
 
 function Brogue:_generateRooms()
     local rooms=0
-    for i=1,600 do
+    for i=1,1000 do
         if rooms>self._maxrooms then break end
         if self:_buildRoom(i>375) then
             rooms=rooms+1
@@ -175,40 +175,38 @@ function Brogue:_generateRooms()
 end
 
 function Brogue:_buildRoom(forceNoCorridor)
-    local p=table.remove(self._walls,self._rng:random(1,#self._walls))
-    --local p=self._walls[self._rng:random(1,#self._walls)]
+    --local p=table.remove(self._walls,self._rng:random(1,#self._walls))
+    local p=self._walls[self._rng:random(1,#self._walls)]
     if not p then return false end
     local d=self:_getDiggingDirection(p[1], p[2])
     if d then
-        for j=1,15 do
-            if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
-                if d[1]~=0 then cd=self._options.corridorWidth
-                else cd=self._options.corridorHeight
-                end
-                local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
-                if corridor:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-                    local dx=corridor._endX
-                    local dy=corridor._endY
+        if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
+            if d[1]~=0 then cd=self._options.corridorWidth
+            else cd=self._options.corridorHeight
+            end
+            local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
+            if corridor:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                local dx=corridor._endX
+                local dy=corridor._endY
 
-                    local room=ROT.Map.BrogueRoom:createRandomAt(dx, dy ,d[1],d[2], self._options, self._rng)
+                local room=ROT.Map.BrogueRoom:createRandomAt(dx, dy ,d[1],d[2], self._options, self._rng)
 
-                    if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-                        corridor:create(self, self._digCallback)
-                        room:create(self, self._digCallback)
-                        self:_insertWalls(room._walls)
-                        self._map[p[1]][p[2]]=0
-                        self._map[dx][dy]=0
-                        return true
-                    end
-                end
-            else
-                local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
                 if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                    corridor:create(self, self._digCallback)
                     room:create(self, self._digCallback)
                     self:_insertWalls(room._walls)
-                    table.insert(self._doors, room._doors[1])
+                    self._map[p[1]][p[2]]=0
+                    self._map[dx][dy]=0
                     return true
                 end
+            end
+        else
+            local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
+            if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+                room:create(self, self._digCallback)
+                self:_insertWalls(room._walls)
+                table.insert(self._doors, room._doors[1])
+                return true
             end
         end
     end
