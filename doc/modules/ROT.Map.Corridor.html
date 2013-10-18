@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/ROT.Color.html">Color</a></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">DijkstraMap</a></li>
+  <li><a href="../modules/ROT.Display.html">Display</a></li>
+  <li><a href="../modules/ROT.EventQueue.html">EventQueue</a></li>
+  <li><a href="../modules/ROT.FOV.Bresenham.html">FOV.Bresenham</a></li>
+  <li><a href="../modules/ROT.FOV.Precise.html">FOV.Precise</a></li>
+  <li><a href="../modules/ROT.Lighting.html">Lighting</a></li>
+  <li><a href="../modules/ROT.Map.Arena.html">Map.Arena</a></li>
+  <li><a href="../modules/ROT.Map.Brogue.html">Map.Brogue</a></li>
+  <li><a href="../modules/ROT.Map.BrogueRoom.html">Map.BrogueRoom</a></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">Map.Cellular</a></li>
+  <li><strong>Map.Corridor</strong></li>
+  <li><a href="../modules/ROT.Map.Digger.html">Map.Digger</a></li>
+  <li><a href="../modules/ROT.Map.DividedMaze.html">Map.DividedMaze</a></li>
+  <li><a href="../modules/ROT.Map.Dungeon.html">Map.Dungeon</a></li>
+  <li><a href="../modules/ROT.Map.EllerMaze.html">Map.EllerMaze</a></li>
+  <li><a href="../modules/ROT.Map.IceyMaze.html">Map.IceyMaze</a></li>
+  <li><a href="../modules/ROT.Map.Rogue.html">Map.Rogue</a></li>
+  <li><a href="../modules/ROT.Map.Room.html">Map.Room</a></li>
+  <li><a href="../modules/ROT.Map.Uniform.html">Map.Uniform</a></li>
+  <li><a href="../modules/ROT.Noise.Simplex.html">Noise.Simplex</a></li>
+  <li><a href="../modules/ROT.Path.AStar.html">Path.AStar</a></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">Path.Dijkstra</a></li>
+  <li><a href="../modules/ROT.RNG.html">RNG</a></li>
+  <li><a href="../modules/ROT.RNG.LCG.html">RNG.LCG</a></li>
+  <li><a href="../modules/ROT.RNG.MWC.html">RNG.MWC</a></li>
+  <li><a href="../modules/ROT.RNG.Twister.html">RNG.Twister</a></li>
+  <li><a href="../modules/ROT.Scheduler.html">Scheduler</a></li>
+  <li><a href="../modules/ROT.Scheduler.Action.html">Scheduler.Action</a></li>
+  <li><a href="../modules/ROT.Scheduler.Simple.html">Scheduler.Simple</a></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">Scheduler.Speed</a></li>
+  <li><a href="../modules/ROT.StringGenerator.html">StringGenerator</a></li>
+  <li><a href="../modules/ROT.TextDisplay.html">TextDisplay</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ROT.Map.Corridor</code></h1>
+
+<p>Corridor object.</p>
+<p>
+ Used by ROT.Map.Uniform and ROT.Map.Digger to create maps</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:__init">Corridor:__init (startX, startY, endX, endY, rng)</a></td>
+	<td class="summary">Constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:createRandomAt">Corridor:createRandomAt (x, y, dx, dy, options, rng)</a></td>
+	<td class="summary">Create random with position.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:debug">Corridor:debug ()</a></td>
+	<td class="summary">Write various information about this corridor to the console.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:isValid">Corridor:isValid (gen, isWallCallback, canBeDugCallback)</a></td>
+	<td class="summary">Use two callbacks to confirm corridor validity.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:create">Corridor:create (gen, digCallback)</a></td>
+	<td class="summary">Create.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Corridor:createPriorityWalls">Corridor:createPriorityWalls (gen, priorityWallCallback)</a></td>
+	<td class="summary">Mark walls as priority for a future feature.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Corridor:__init"></a>
+    <strong>Corridor:__init (startX, startY, endX, endY, rng)</strong>
+    </dt>
+    <dd>
+    Constructor.
+ Called with ROT.Map.Corridor:new()
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">startX</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of first floospace in corridor
+        </li>
+        <li><span class="parameter">startY</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of first floospace in corridor
+        </li>
+        <li><span class="parameter">endX</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of last floospace in corridor
+        </li>
+        <li><span class="parameter">endY</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of last floospace in corridor
+        </li>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Userdata with a .random(self, min, max) function
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Corridor:createRandomAt"></a>
+    <strong>Corridor:createRandomAt (x, y, dx, dy, options, rng)</strong>
+    </dt>
+    <dd>
+    Create random with position.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of first floospace in corridor
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of first floospace in corridor
+        </li>
+        <li><span class="parameter">dx</span>
+            <span class="types"><span class="type">int</span></span>
+         x-direction of corridor (-1, 0, 1) for (left, none, right)
+        </li>
+        <li><span class="parameter">dy</span>
+            <span class="types"><span class="type">int</span></span>
+         y-direction of corridor (-1, 0, 1) for (up, none, down)
+        </li>
+        <li><span class="parameter">options</span> Options
+        <ul>
+        <li><span class="parameter">corridorLength</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         a table for the min and max corridor lengths {min, max}
+        </li>
+        </li></ul>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userData</span></span>
+         A user defined object with a .random(min, max) method
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Corridor:debug"></a>
+    <strong>Corridor:debug ()</strong>
+    </dt>
+    <dd>
+    Write various information about this corridor to the console.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Corridor:isValid"></a>
+    <strong>Corridor:isValid (gen, isWallCallback, canBeDugCallback)</strong>
+    </dt>
+    <dd>
+    Use two callbacks to confirm corridor validity.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">gen</span>
+            <span class="types"><span class="type">userdata</span></span>
+         The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
+        </li>
+        <li><span class="parameter">isWallCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
+        </li>
+        <li><span class="parameter">canBeDugCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        true if corridor is valid.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Corridor:create"></a>
+    <strong>Corridor:create (gen, digCallback)</strong>
+    </dt>
+    <dd>
+    Create.
+ Function runs a callback to dig the corridor into a map
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">gen</span>
+            <span class="types"><span class="type">userdata</span></span>
+         The map generator calling this function. Passed as self to the digCallback
+        </li>
+        <li><span class="parameter">digCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         The function responsible for digging the corridor into a map.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Corridor:createPriorityWalls"></a>
+    <strong>Corridor:createPriorityWalls (gen, priorityWallCallback)</strong>
+    </dt>
+    <dd>
+    Mark walls as priority for a future feature.
+ Use this for storing the three points at the end of the corridor that you probably want to make sure gets a room attached.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">gen</span>
+            <span class="types"><span class="type">userdata</span></span>
+         The map generator calling this function. Passed as self to the digCallback
+        </li>
+        <li><span class="parameter">priorityWallCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         The function responsible for receiving and processing the priority walls
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+</div> <!-- id="container" -->
+</body>
+</html>

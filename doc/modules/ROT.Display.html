@@ -1,0 +1,507 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/ROT.Color.html">Color</a></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">DijkstraMap</a></li>
+  <li><strong>Display</strong></li>
+  <li><a href="../modules/ROT.EventQueue.html">EventQueue</a></li>
+  <li><a href="../modules/ROT.FOV.Bresenham.html">FOV.Bresenham</a></li>
+  <li><a href="../modules/ROT.FOV.Precise.html">FOV.Precise</a></li>
+  <li><a href="../modules/ROT.Lighting.html">Lighting</a></li>
+  <li><a href="../modules/ROT.Map.Arena.html">Map.Arena</a></li>
+  <li><a href="../modules/ROT.Map.Brogue.html">Map.Brogue</a></li>
+  <li><a href="../modules/ROT.Map.BrogueRoom.html">Map.BrogueRoom</a></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">Map.Cellular</a></li>
+  <li><a href="../modules/ROT.Map.Corridor.html">Map.Corridor</a></li>
+  <li><a href="../modules/ROT.Map.Digger.html">Map.Digger</a></li>
+  <li><a href="../modules/ROT.Map.DividedMaze.html">Map.DividedMaze</a></li>
+  <li><a href="../modules/ROT.Map.Dungeon.html">Map.Dungeon</a></li>
+  <li><a href="../modules/ROT.Map.EllerMaze.html">Map.EllerMaze</a></li>
+  <li><a href="../modules/ROT.Map.IceyMaze.html">Map.IceyMaze</a></li>
+  <li><a href="../modules/ROT.Map.Rogue.html">Map.Rogue</a></li>
+  <li><a href="../modules/ROT.Map.Room.html">Map.Room</a></li>
+  <li><a href="../modules/ROT.Map.Uniform.html">Map.Uniform</a></li>
+  <li><a href="../modules/ROT.Noise.Simplex.html">Noise.Simplex</a></li>
+  <li><a href="../modules/ROT.Path.AStar.html">Path.AStar</a></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">Path.Dijkstra</a></li>
+  <li><a href="../modules/ROT.RNG.html">RNG</a></li>
+  <li><a href="../modules/ROT.RNG.LCG.html">RNG.LCG</a></li>
+  <li><a href="../modules/ROT.RNG.MWC.html">RNG.MWC</a></li>
+  <li><a href="../modules/ROT.RNG.Twister.html">RNG.Twister</a></li>
+  <li><a href="../modules/ROT.Scheduler.html">Scheduler</a></li>
+  <li><a href="../modules/ROT.Scheduler.Action.html">Scheduler.Action</a></li>
+  <li><a href="../modules/ROT.Scheduler.Simple.html">Scheduler.Simple</a></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">Scheduler.Speed</a></li>
+  <li><a href="../modules/ROT.StringGenerator.html">StringGenerator</a></li>
+  <li><a href="../modules/ROT.TextDisplay.html">TextDisplay</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ROT.Display</code></h1>
+
+<p>Visual Display.</p>
+<p>
+ A Code Page 437 terminal emulator based on AsciiPanel.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Display:__init">Display:__init ([w=80[, h=24[, scale=1[, dfg[, dbg[, full=false[, vsync=false[, fsaa=0]]]]]]]])</a></td>
+	<td class="summary">Constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:draw">Display:draw ()</a></td>
+	<td class="summary">Draw.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:getCharacter">Display:getCharacter (x, y)</a></td>
+	<td class="summary">Get a character.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:getBackgroundColor">Display:getBackgroundColor (x, y)</a></td>
+	<td class="summary">Get a background color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:getForegroundColor">Display:getForegroundColor (x, y)</a></td>
+	<td class="summary">Get a foreground color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:setDefaultBackgroundColor">Display:setDefaultBackgroundColor (c)</a></td>
+	<td class="summary">Set Default Background Color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:setDefaultForegroundColor">Display:setDefaultForegroundColor (c)</a></td>
+	<td class="summary">Set Defaul Foreground Color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:clear">Display:clear ([c=' '[, x=1[, y=1[, w[, h[, fg[, bg]]]]]]])</a></td>
+	<td class="summary">Clear the screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:clearCanvas">Display:clearCanvas ()</a></td>
+	<td class="summary">Clear canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:write">Display:write (s[, x=1[, y=1[, fg[, bg]]]])</a></td>
+	<td class="summary">Write.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Display:writeCenter">Display:writeCenter (s[, y=1[, fg[, bg]]])</a></td>
+	<td class="summary">Write Center.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Display:__init"></a>
+    <strong>Display:__init ([w=80[, h=24[, scale=1[, dfg[, dbg[, full=false[, vsync=false[, fsaa=0]]]]]]]])</strong>
+    </dt>
+    <dd>
+    Constructor.
+ The display constructor. Called when ROT.Display:new() is called.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">w</span>
+            <span class="types"><span class="type">int</span></span>
+         Width of display in number of characters
+         (<em>default</em> 80)
+        </li>
+        <li><span class="parameter">h</span>
+            <span class="types"><span class="type">int</span></span>
+         Height of display in number of characters
+         (<em>default</em> 24)
+        </li>
+        <li><span class="parameter">scale</span>
+            <span class="types"><span class="type">float</span></span>
+         Scale factor applied to characters
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">dfg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Default foreground color as a table defined as {r,g,b,a}
+        </li>
+        <li><span class="parameter">dbg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Default background color
+        </li>
+        <li><span class="parameter">full</span>
+            <span class="types"><span class="type">boolean</span></span>
+         Use fullscreen
+         (<em>default</em> false)
+        </li>
+        <li><span class="parameter">vsync</span>
+            <span class="types"><span class="type">boolean</span></span>
+         Use vsync
+         (<em>default</em> false)
+        </li>
+        <li><span class="parameter">fsaa</span>
+            <span class="types"><span class="type">int</span></span>
+         Number of fsaa passes
+         (<em>default</em> 0)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        nil
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:draw"></a>
+    <strong>Display:draw ()</strong>
+    </dt>
+    <dd>
+    Draw.
+ The main draw function. This should be called from love.draw() to display any written characters to screen
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:getCharacter"></a>
+    <strong>Display:getCharacter (x, y)</strong>
+    </dt>
+    <dd>
+    Get a character.
+ returns the character being displayed at position x, y
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         The x-position of the character
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position of the character
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The character
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:getBackgroundColor"></a>
+    <strong>Display:getBackgroundColor (x, y)</strong>
+    </dt>
+    <dd>
+    Get a background color.
+ returns the current background color of the character written to position x, y
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         The x-position of the character
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position of the character
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The background color as a table defined as {r,g,b,a}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:getForegroundColor"></a>
+    <strong>Display:getForegroundColor (x, y)</strong>
+    </dt>
+    <dd>
+    Get a foreground color.
+ returns the current foreground color of the character written to position x, y
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         The x-position of the character
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position of the character
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The foreground color as a table defined as {r,g,b,a}
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:setDefaultBackgroundColor"></a>
+    <strong>Display:setDefaultBackgroundColor (c)</strong>
+    </dt>
+    <dd>
+    Set Default Background Color.
+ Sets the background color to be used when it is not provided
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">c</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The background color as a table defined as {r,g,b,a}
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:setDefaultForegroundColor"></a>
+    <strong>Display:setDefaultForegroundColor (c)</strong>
+    </dt>
+    <dd>
+    Set Defaul Foreground Color.
+ Sets the foreground color to be used when it is not provided
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">c</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The foreground color as a table defined as {r,g,b,a}
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:clear"></a>
+    <strong>Display:clear ([c=' '[, x=1[, y=1[, w[, h[, fg[, bg]]]]]]])</strong>
+    </dt>
+    <dd>
+    Clear the screen.
+ By default wipes the screen to the default background color.
+ You can provide a character, x-position, y-position, width, height, fore-color and back-color
+ and write the same character to a portion of the screen
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">c</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         A character to write to the screen - may fail for strings with a length > 1
+         (<em>default</em> ' ')
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         The x-position from which to begin the wipe
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position from which to begin the wipe
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">w</span>
+            <span class="types"><span class="type">int</span></span>
+         The number of chars to wipe in the x direction
+        </li>
+        <li><span class="parameter">h</span>
+            <span class="types"><span class="type">int</span></span>
+         Then number of chars to wipe in the y direction
+        </li>
+        <li><span class="parameter">fg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The color used to write the provided character
+        </li>
+        <li><span class="parameter">bg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         the color used to fill in the background of the cleared space
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:clearCanvas"></a>
+    <strong>Display:clearCanvas ()</strong>
+    </dt>
+    <dd>
+    Clear canvas.
+ runs the clear method of the Love2D canvas object being used to write to the screen
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:write"></a>
+    <strong>Display:write (s[, x=1[, y=1[, fg[, bg]]]])</strong>
+    </dt>
+    <dd>
+    Write.
+ Writes a string to the screen
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string to be written
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         The x-position where the string will be written
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position where the string will be written
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">fg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The color used to write the provided string
+        </li>
+        <li><span class="parameter">bg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         the color used to fill in the string's background
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Display:writeCenter"></a>
+    <strong>Display:writeCenter (s[, y=1[, fg[, bg]]])</strong>
+    </dt>
+    <dd>
+    Write Center.
+ write a string centered on the middle of the screen
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string to be written
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         The y-position where the string will be written
+         (<em>default</em> 1)
+        </li>
+        <li><span class="parameter">fg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The color used to write the provided string
+        </li>
+        <li><span class="parameter">bg</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         the color used to fill in the string's background
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+</div> <!-- id="container" -->
+</body>
+</html>

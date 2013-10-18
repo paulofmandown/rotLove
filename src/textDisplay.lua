@@ -36,13 +36,13 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
 
     love.graphics.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._full, self._vsync, self._fsaa)
 
-    self._defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self._defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
+    self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
+    self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-    love.graphics.setBackgroundColor(self._defaultBackgroundColor.r,
-                                     self._defaultBackgroundColor.g,
-                                     self._defaultBackgroundColor.b,
-                                     self._defaultBackgroundColor.a)
+    love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+                                     self.defaultBackgroundColor.g,
+                                     self.defaultBackgroundColor.b,
+                                     self.defaultBackgroundColor.a)
 
     self._canvas=love.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
 
@@ -62,8 +62,8 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
         self._oldForegroundColors[i] = {}
         for j=1,self._heightInChars do
             self._chars[i][j]               = ' '
-            self._backgroundColors[i][j]    = self._defaultBackgroundColor
-            self._foregroundColors[i][j]    = self._defaultForegroundColor
+            self._backgroundColors[i][j]    = self.defaultBackgroundColor
+            self._foregroundColors[i][j]    = self.defaultForegroundColor
             self._oldChars[i][j]            = nil
             self._oldBackgroundColors[i][j] = nil
             self._oldForegroundColors[i][j] = nil
@@ -103,8 +103,8 @@ function TextDisplay:getWidth() return self:getWidthInChars() end
 function TextDisplay:getHeight() return self:getHeightInChars() end
 function TextDisplay:getHeightInChars() return self._heightInChars end
 function TextDisplay:getWidthInChars() return self._widthInChars end
-function TextDisplay:getDefaultBackgroundColor() return self._defaultBackgroundColor end
-function TextDisplay:getDefaultForegroundColor() return self._defaultForegroundColor end
+function TextDisplay:getDefaultBackgroundColor() return self.defaultBackgroundColor end
+function TextDisplay:getDefaultForegroundColor() return self.defaultForegroundColor end
 
 --- Get a character.
 -- returns the character being displayed at position x, y
@@ -133,14 +133,14 @@ function TextDisplay:getForegroundColor(x, y) return self._foregroundColors[x][y
 -- Sets the background color to be used when it is not provided
 -- @tparam table c The background color as a table defined as {r,g,b,a}
 function TextDisplay:setDefaultBackgroundColor(c)
-    self._defaultBackgroundColor=c and c or self._defaultBackgroundColor
+    self.defaultBackgroundColor=c and c or self.defaultBackgroundColor
 end
 
 --- Set Defaul Foreground Color.
 -- Sets the foreground color to be used when it is not provided
 -- @tparam table c The foreground color as a table defined as {r,g,b,a}
 function TextDisplay:setDefaultForegroundColor(c)
-    self._defaultForegroundColor=c and c or self._defaultForegroundColor
+    self.defaultForegroundColor=c and c or self.defaultForegroundColor
 end
 
 --- Clear the screen.
@@ -233,13 +233,13 @@ function TextDisplay:_validateY(y)
     return y
 end
 function TextDisplay:_validateForegroundColor(c)
-    c = c and c or self._defaultForegroundColor
+    c = c and c or self.defaultForegroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
     assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
     return c
 end
 function TextDisplay:_validateBackgroundColor(c)
-    c = c and c or self._defaultBackgroundColor
+    c = c and c or self.defaultBackgroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
     assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
     return c
@@ -251,7 +251,7 @@ function TextDisplay:_validateHeight(y, h)
     return h
 end
 function TextDisplay:_setColor(c)
-    c = c and c or self._defaultForegroundColor
+    c = c and c or self.defaultForegroundColor
     love.graphics.setColor(c.r, c.g, c.b, c.a)
 end
 function TextDisplay:_clamp(n)

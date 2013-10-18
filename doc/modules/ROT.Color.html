@@ -1,0 +1,840 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>Color</strong></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">DijkstraMap</a></li>
+  <li><a href="../modules/ROT.Display.html">Display</a></li>
+  <li><a href="../modules/ROT.EventQueue.html">EventQueue</a></li>
+  <li><a href="../modules/ROT.FOV.Bresenham.html">FOV.Bresenham</a></li>
+  <li><a href="../modules/ROT.FOV.Precise.html">FOV.Precise</a></li>
+  <li><a href="../modules/ROT.Lighting.html">Lighting</a></li>
+  <li><a href="../modules/ROT.Map.Arena.html">Map.Arena</a></li>
+  <li><a href="../modules/ROT.Map.Brogue.html">Map.Brogue</a></li>
+  <li><a href="../modules/ROT.Map.BrogueRoom.html">Map.BrogueRoom</a></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">Map.Cellular</a></li>
+  <li><a href="../modules/ROT.Map.Corridor.html">Map.Corridor</a></li>
+  <li><a href="../modules/ROT.Map.Digger.html">Map.Digger</a></li>
+  <li><a href="../modules/ROT.Map.DividedMaze.html">Map.DividedMaze</a></li>
+  <li><a href="../modules/ROT.Map.Dungeon.html">Map.Dungeon</a></li>
+  <li><a href="../modules/ROT.Map.EllerMaze.html">Map.EllerMaze</a></li>
+  <li><a href="../modules/ROT.Map.IceyMaze.html">Map.IceyMaze</a></li>
+  <li><a href="../modules/ROT.Map.Rogue.html">Map.Rogue</a></li>
+  <li><a href="../modules/ROT.Map.Room.html">Map.Room</a></li>
+  <li><a href="../modules/ROT.Map.Uniform.html">Map.Uniform</a></li>
+  <li><a href="../modules/ROT.Noise.Simplex.html">Noise.Simplex</a></li>
+  <li><a href="../modules/ROT.Path.AStar.html">Path.AStar</a></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">Path.Dijkstra</a></li>
+  <li><a href="../modules/ROT.RNG.html">RNG</a></li>
+  <li><a href="../modules/ROT.RNG.LCG.html">RNG.LCG</a></li>
+  <li><a href="../modules/ROT.RNG.MWC.html">RNG.MWC</a></li>
+  <li><a href="../modules/ROT.RNG.Twister.html">RNG.Twister</a></li>
+  <li><a href="../modules/ROT.Scheduler.html">Scheduler</a></li>
+  <li><a href="../modules/ROT.Scheduler.Action.html">Scheduler.Action</a></li>
+  <li><a href="../modules/ROT.Scheduler.Simple.html">Scheduler.Simple</a></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">Scheduler.Speed</a></li>
+  <li><a href="../modules/ROT.StringGenerator.html">StringGenerator</a></li>
+  <li><a href="../modules/ROT.TextDisplay.html">TextDisplay</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ROT.Color</code></h1>
+
+<p>The Color Toolkit.</p>
+<p>
+ Color is a color handler that treats any
+ objects intended to represent a color as a
+ table of the following schema:</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Color:fromString">Color:fromString (str)</a></td>
+	<td class="summary">Get color from string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:add">Color:add (color1, color2)</a></td>
+	<td class="summary">Add two or more colors.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:add_">Color:add_ (color1, color2)</a></td>
+	<td class="summary">Add two or more colors.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:interpolate">Color:interpolate (color1, color2, factor)</a></td>
+	<td class="summary">Interpolate (blend) two colors with a given factor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:interpolateHSL">Color:interpolateHSL (color1, color2, factor)</a></td>
+	<td class="summary">Interpolate (blend) two colors with a given factor in HSL mode.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:randomize">Color:randomize (color, diff)</a></td>
+	<td class="summary">Create a new random color based on this one</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:toRGB">Color:toRGB (color)</a></td>
+	<td class="summary">Convert color to RGB string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Color:toHex">Color:toHex (color)</a></td>
+	<td class="summary">Convert color to Hex string
+ Get a string that can be fed to Color:fromString()</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#_cache">_cache</a></td>
+	<td class="summary">Color cache
+ A table of predefined color tables
+ These keys can be passed to Color:fromString()</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Color:fromString"></a>
+    <strong>Color:fromString (str)</strong>
+    </dt>
+    <dd>
+    Get color from string.
+ Convert one of several formats of string to what
+ Color interperets as a color object
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Accepted formats 'rgb(0..255, 0..255, 0..255)', '#5fe', '#5FE', '#254eff', 'goldenrod'
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:add"></a>
+    <strong>Color:add (color1, color2)</strong>
+    </dt>
+    <dd>
+    Add two or more colors.
+ accepts either (color, color) or (color, tableOfColors)
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color1</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">color2</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table or a table of color tables.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        resulting color
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:add_"></a>
+    <strong>Color:add_ (color1, color2)</strong>
+    </dt>
+    <dd>
+    Add two or more colors.
+ accepts either (color, color) or (color, tableOfColors)
+ Modifies first arg
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color1</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">color2</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table or a table of color tables.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        resulting color
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:interpolate"></a>
+    <strong>Color:interpolate (color1, color2, factor)</strong>
+    </dt>
+    <dd>
+    Interpolate (blend) two colors with a given factor.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color1</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">color2</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">factor</span>
+            <span class="types"><span class="type">float</span></span>
+         A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        resulting color
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:interpolateHSL"></a>
+    <strong>Color:interpolateHSL (color1, color2, factor)</strong>
+    </dt>
+    <dd>
+    Interpolate (blend) two colors with a given factor in HSL mode.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color1</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">color2</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">factor</span>
+            <span class="types"><span class="type">float</span></span>
+         A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        resulting color
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:randomize"></a>
+    <strong>Color:randomize (color, diff)</strong>
+    </dt>
+    <dd>
+    Create a new random color based on this one
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+        <li><span class="parameter">diff</span>
+            <span class="types"><span class="type">int</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         One or more numbers to use for a standard deviation
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:toRGB"></a>
+    <strong>Color:toRGB (color)</strong>
+    </dt>
+    <dd>
+    Convert color to RGB string.
+ Get a string that can be fed to Color:fromString()
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Color:toHex"></a>
+    <strong>Color:toHex (color)</strong>
+    </dt>
+    <dd>
+    Convert color to Hex string
+ Get a string that can be fed to Color:fromString()
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">color</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         A color table
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2><a name="Tables"></a>Tables</h2>
+    <dl class="function">
+    <dt>
+    <a name = "_cache"></a>
+    <strong>_cache</strong>
+    </dt>
+    <dd>
+    Color cache
+ A table of predefined color tables
+ These keys can be passed to Color:fromString()
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">black</span>
+         {r=0,g=0,b=0,a=255}
+        </li>
+        <li><span class="parameter">navy</span>
+         {r=0,g=0,b=128,a=255}
+        </li>
+        <li><span class="parameter">darkblue</span>
+         {r=0,g=0,b=139,a=255}
+        </li>
+        <li><span class="parameter">mediumblue</span>
+         {r=0,g=0,b=205,a=255}
+        </li>
+        <li><span class="parameter">blue</span>
+         {r=0,g=0,b=255,a=255}
+        </li>
+        <li><span class="parameter">darkgreen</span>
+         {r=0,g=100,b=0,a=255}
+        </li>
+        <li><span class="parameter">green</span>
+         {r=0,g=128,b=0,a=255}
+        </li>
+        <li><span class="parameter">teal</span>
+         {r=0,g=128,b=128,a=255}
+        </li>
+        <li><span class="parameter">darkcyan</span>
+         {r=0,g=139,b=139,a=255}
+        </li>
+        <li><span class="parameter">deepskyblue</span>
+         {r=0,g=191,b=255,a=255}
+        </li>
+        <li><span class="parameter">darkturquoise</span>
+         {r=0,g=206,b=209,a=255}
+        </li>
+        <li><span class="parameter">mediumspringgreen</span>
+         {r=0,g=250,b=154,a=255}
+        </li>
+        <li><span class="parameter">lime</span>
+         {r=0,g=255,b=0,a=255}
+        </li>
+        <li><span class="parameter">springgreen</span>
+         {r=0,g=255,b=127,a=255}
+        </li>
+        <li><span class="parameter">aqua</span>
+         {r=0,g=255,b=255,a=255}
+        </li>
+        <li><span class="parameter">cyan</span>
+         {r=0,g=255,b=255,a=255}
+        </li>
+        <li><span class="parameter">midnightblue</span>
+         {r=25,g=25,b=112,a=255}
+        </li>
+        <li><span class="parameter">dodgerblue</span>
+         {r=30,g=144,b=255,a=255}
+        </li>
+        <li><span class="parameter">forestgreen</span>
+         {r=34,g=139,b=34,a=255}
+        </li>
+        <li><span class="parameter">seagreen</span>
+         {r=46,g=139,b=87,a=255}
+        </li>
+        <li><span class="parameter">darkslategray</span>
+         {r=47,g=79,b=79,a=255}
+        </li>
+        <li><span class="parameter">darkslategrey</span>
+         {r=47,g=79,b=79,a=255}
+        </li>
+        <li><span class="parameter">limegreen</span>
+         {r=50,g=205,b=50,a=255}
+        </li>
+        <li><span class="parameter">mediumseagreen</span>
+         {r=60,g=179,b=113,a=255}
+        </li>
+        <li><span class="parameter">turquoise</span>
+         {r=64,g=224,b=208,a=255}
+        </li>
+        <li><span class="parameter">royalblue</span>
+         {r=65,g=105,b=225,a=255}
+        </li>
+        <li><span class="parameter">steelblue</span>
+         {r=70,g=130,b=180,a=255}
+        </li>
+        <li><span class="parameter">darkslateblue</span>
+         {r=72,g=61,b=139,a=255}
+        </li>
+        <li><span class="parameter">mediumturquoise</span>
+         {r=72,g=209,b=204,a=255}
+        </li>
+        <li><span class="parameter">indigo</span>
+         {r=75,g=0,b=130,a=255}
+        </li>
+        <li><span class="parameter">darkolivegreen</span>
+         {r=85,g=107,b=47,a=255}
+        </li>
+        <li><span class="parameter">cadetblue</span>
+         {r=95,g=158,b=160,a=255}
+        </li>
+        <li><span class="parameter">cornflowerblue</span>
+         {r=100,g=149,b=237,a=255}
+        </li>
+        <li><span class="parameter">mediumaquamarine</span>
+         {r=102,g=205,b=170,a=255}
+        </li>
+        <li><span class="parameter">dimgray</span>
+         {r=105,g=105,b=105,a=255}
+        </li>
+        <li><span class="parameter">dimgrey</span>
+         {r=105,g=105,b=105,a=255}
+        </li>
+        <li><span class="parameter">slateblue</span>
+         {r=106,g=90,b=205,a=255}
+        </li>
+        <li><span class="parameter">olivedrab</span>
+         {r=107,g=142,b=35,a=255}
+        </li>
+        <li><span class="parameter">slategray</span>
+         {r=112,g=128,b=144,a=255}
+        </li>
+        <li><span class="parameter">slategrey</span>
+         {r=112,g=128,b=144,a=255}
+        </li>
+        <li><span class="parameter">lightslategray</span>
+         {r=119,g=136,b=153,a=255}
+        </li>
+        <li><span class="parameter">lightslategrey</span>
+         {r=119,g=136,b=153,a=255}
+        </li>
+        <li><span class="parameter">mediumslateblue</span>
+         {r=123,g=104,b=238,a=255}
+        </li>
+        <li><span class="parameter">lawngreen</span>
+         {r=124,g=252,b=0,a=255}
+        </li>
+        <li><span class="parameter">chartreuse</span>
+         {r=127,g=255,b=0,a=255}
+        </li>
+        <li><span class="parameter">aquamarine</span>
+         {r=127,g=255,b=212,a=255}
+        </li>
+        <li><span class="parameter">maroon</span>
+         {r=128,g=0,b=0,a=255}
+        </li>
+        <li><span class="parameter">purple</span>
+         {r=128,g=0,b=128,a=255}
+        </li>
+        <li><span class="parameter">olive</span>
+         {r=128,g=128,b=0,a=255}
+        </li>
+        <li><span class="parameter">gray</span>
+         {r=128,g=128,b=128,a=255}
+        </li>
+        <li><span class="parameter">grey</span>
+         {r=128,g=128,b=128,a=255}
+        </li>
+        <li><span class="parameter">skyblue</span>
+         {r=135,g=206,b=235,a=255}
+        </li>
+        <li><span class="parameter">lightskyblue</span>
+         {r=135,g=206,b=250,a=255}
+        </li>
+        <li><span class="parameter">blueviolet</span>
+         {r=138,g=43,b=226,a=255}
+        </li>
+        <li><span class="parameter">darkred</span>
+         {r=139,g=0,b=0,a=255}
+        </li>
+        <li><span class="parameter">darkmagenta</span>
+         {r=139,g=0,b=139,a=255}
+        </li>
+        <li><span class="parameter">saddlebrown</span>
+         {r=139,g=69,b=19,a=255}
+        </li>
+        <li><span class="parameter">darkseagreen</span>
+         {r=143,g=188,b=143,a=255}
+        </li>
+        <li><span class="parameter">lightgreen</span>
+         {r=144,g=238,b=144,a=255}
+        </li>
+        <li><span class="parameter">mediumpurple</span>
+         {r=147,g=112,b=216,a=255}
+        </li>
+        <li><span class="parameter">darkviolet</span>
+         {r=148,g=0,b=211,a=255}
+        </li>
+        <li><span class="parameter">palegreen</span>
+         {r=152,g=251,b=152,a=255}
+        </li>
+        <li><span class="parameter">darkorchid</span>
+         {r=153,g=50,b=204,a=255}
+        </li>
+        <li><span class="parameter">yellowgreen</span>
+         {r=154,g=205,b=50,a=255}
+        </li>
+        <li><span class="parameter">sienna</span>
+         {r=160,g=82,b=45,a=255}
+        </li>
+        <li><span class="parameter">brown</span>
+         {r=165,g=42,b=42,a=255}
+        </li>
+        <li><span class="parameter">darkgray</span>
+         {r=169,g=169,b=169,a=255}
+        </li>
+        <li><span class="parameter">darkgrey</span>
+         {r=169,g=169,b=169,a=255}
+        </li>
+        <li><span class="parameter">lightblue</span>
+         {r=173,g=216,b=230,a=255}
+        </li>
+        <li><span class="parameter">greenyellow</span>
+         {r=173,g=255,b=47,a=255}
+        </li>
+        <li><span class="parameter">paleturquoise</span>
+         {r=175,g=238,b=238,a=255}
+        </li>
+        <li><span class="parameter">lightsteelblue</span>
+         {r=176,g=196,b=222,a=255}
+        </li>
+        <li><span class="parameter">powderblue</span>
+         {r=176,g=224,b=230,a=255}
+        </li>
+        <li><span class="parameter">firebrick</span>
+         {r=178,g=34,b=34,a=255}
+        </li>
+        <li><span class="parameter">darkgoldenrod</span>
+         {r=184,g=134,b=11,a=255}
+        </li>
+        <li><span class="parameter">mediumorchid</span>
+         {r=186,g=85,b=211,a=255}
+        </li>
+        <li><span class="parameter">rosybrown</span>
+         {r=188,g=143,b=143,a=255}
+        </li>
+        <li><span class="parameter">darkkhaki</span>
+         {r=189,g=183,b=107,a=255}
+        </li>
+        <li><span class="parameter">silver</span>
+         {r=192,g=192,b=192,a=255}
+        </li>
+        <li><span class="parameter">mediumvioletred</span>
+         {r=199,g=21,b=133,a=255}
+        </li>
+        <li><span class="parameter">indianred</span>
+         {r=205,g=92,b=92,a=255}
+        </li>
+        <li><span class="parameter">peru</span>
+         {r=205,g=133,b=63,a=255}
+        </li>
+        <li><span class="parameter">chocolate</span>
+         {r=210,g=105,b=30,a=255}
+        </li>
+        <li><span class="parameter">tan</span>
+         {r=210,g=180,b=140,a=255}
+        </li>
+        <li><span class="parameter">lightgray</span>
+         {r=211,g=211,b=211,a=255}
+        </li>
+        <li><span class="parameter">lightgrey</span>
+         {r=211,g=211,b=211,a=255}
+        </li>
+        <li><span class="parameter">palevioletred</span>
+         {r=216,g=112,b=147,a=255}
+        </li>
+        <li><span class="parameter">thistle</span>
+         {r=216,g=191,b=216,a=255}
+        </li>
+        <li><span class="parameter">orchid</span>
+         {r=218,g=112,b=214,a=255}
+        </li>
+        <li><span class="parameter">goldenrod</span>
+         {r=218,g=165,b=32,a=255}
+        </li>
+        <li><span class="parameter">crimson</span>
+         {r=220,g=20,b=60,a=255}
+        </li>
+        <li><span class="parameter">gainsboro</span>
+         {r=220,g=220,b=220,a=255}
+        </li>
+        <li><span class="parameter">plum</span>
+         {r=221,g=160,b=221,a=255}
+        </li>
+        <li><span class="parameter">burlywood</span>
+         {r=222,g=184,b=135,a=255}
+        </li>
+        <li><span class="parameter">lightcyan</span>
+         {r=224,g=255,b=255,a=255}
+        </li>
+        <li><span class="parameter">lavender</span>
+         {r=230,g=230,b=250,a=255}
+        </li>
+        <li><span class="parameter">darksalmon</span>
+         {r=233,g=150,b=122,a=255}
+        </li>
+        <li><span class="parameter">violet</span>
+         {r=238,g=130,b=238,a=255}
+        </li>
+        <li><span class="parameter">palegoldenrod</span>
+         {r=238,g=232,b=170,a=255}
+        </li>
+        <li><span class="parameter">lightcoral</span>
+         {r=240,g=128,b=128,a=255}
+        </li>
+        <li><span class="parameter">khaki</span>
+         {r=240,g=230,b=140,a=255}
+        </li>
+        <li><span class="parameter">aliceblue</span>
+         {r=240,g=248,b=255,a=255}
+        </li>
+        <li><span class="parameter">honeydew</span>
+         {r=240,g=255,b=240,a=255}
+        </li>
+        <li><span class="parameter">azure</span>
+         {r=240,g=255,b=255,a=255}
+        </li>
+        <li><span class="parameter">sandybrown</span>
+         {r=244,g=164,b=96,a=255}
+        </li>
+        <li><span class="parameter">wheat</span>
+         {r=245,g=222,b=179,a=255}
+        </li>
+        <li><span class="parameter">beige</span>
+         {r=245,g=245,b=220,a=255}
+        </li>
+        <li><span class="parameter">whitesmoke</span>
+         {r=245,g=245,b=245,a=255}
+        </li>
+        <li><span class="parameter">mintcream</span>
+         {r=245,g=255,b=250,a=255}
+        </li>
+        <li><span class="parameter">ghostwhite</span>
+         {r=248,g=248,b=255,a=255}
+        </li>
+        <li><span class="parameter">salmon</span>
+         {r=250,g=128,b=114,a=255}
+        </li>
+        <li><span class="parameter">antiquewhite</span>
+         {r=250,g=235,b=215,a=255}
+        </li>
+        <li><span class="parameter">linen</span>
+         {r=250,g=240,b=230,a=255}
+        </li>
+        <li><span class="parameter">lightgoldenrodyellow</span>
+         {r=250,g=250,b=210,a=255}
+        </li>
+        <li><span class="parameter">oldlace</span>
+         {r=253,g=245,b=230,a=255}
+        </li>
+        <li><span class="parameter">red</span>
+         {r=255,g=0,b=0,a=255}
+        </li>
+        <li><span class="parameter">fuchsia</span>
+         {r=255,g=0,b=255,a=255}
+        </li>
+        <li><span class="parameter">magenta</span>
+         {r=255,g=0,b=255,a=255}
+        </li>
+        <li><span class="parameter">deeppink</span>
+         {r=255,g=20,b=147,a=255}
+        </li>
+        <li><span class="parameter">orangered</span>
+         {r=255,g=69,b=0,a=255}
+        </li>
+        <li><span class="parameter">tomato</span>
+         {r=255,g=99,b=71,a=255}
+        </li>
+        <li><span class="parameter">hotpink</span>
+         {r=255,g=105,b=180,a=255}
+        </li>
+        <li><span class="parameter">coral</span>
+         {r=255,g=127,b=80,a=255}
+        </li>
+        <li><span class="parameter">darkorange</span>
+         {r=255,g=140,b=0,a=255}
+        </li>
+        <li><span class="parameter">lightsalmon</span>
+         {r=255,g=160,b=122,a=255}
+        </li>
+        <li><span class="parameter">orange</span>
+         {r=255,g=165,b=0,a=255}
+        </li>
+        <li><span class="parameter">lightpink</span>
+         {r=255,g=182,b=193,a=255}
+        </li>
+        <li><span class="parameter">pink</span>
+         {r=255,g=192,b=203,a=255}
+        </li>
+        <li><span class="parameter">gold</span>
+         {r=255,g=215,b=0,a=255}
+        </li>
+        <li><span class="parameter">peachpuff</span>
+         {r=255,g=218,b=185,a=255}
+        </li>
+        <li><span class="parameter">navajowhite</span>
+         {r=255,g=222,b=173,a=255}
+        </li>
+        <li><span class="parameter">moccasin</span>
+         {r=255,g=228,b=181,a=255}
+        </li>
+        <li><span class="parameter">bisque</span>
+         {r=255,g=228,b=196,a=255}
+        </li>
+        <li><span class="parameter">mistyrose</span>
+         {r=255,g=228,b=225,a=255}
+        </li>
+        <li><span class="parameter">blanchedalmond</span>
+         {r=255,g=235,b=205,a=255}
+        </li>
+        <li><span class="parameter">papayawhip</span>
+         {r=255,g=239,b=213,a=255}
+        </li>
+        <li><span class="parameter">lavenderblush</span>
+         {r=255,g=240,b=245,a=255}
+        </li>
+        <li><span class="parameter">seashell</span>
+         {r=255,g=245,b=238,a=255}
+        </li>
+        <li><span class="parameter">cornsilk</span>
+         {r=255,g=248,b=220,a=255}
+        </li>
+        <li><span class="parameter">lemonchiffon</span>
+         {r=255,g=250,b=205,a=255}
+        </li>
+        <li><span class="parameter">floralwhite</span>
+         {r=255,g=250,b=240,a=255}
+        </li>
+        <li><span class="parameter">snow</span>
+         {r=255,g=250,b=250,a=255}
+        </li>
+        <li><span class="parameter">yellow</span>
+         {r=255,g=255,b=0,a=255}
+        </li>
+        <li><span class="parameter">lightyellow</span>
+         {r=255,g=255,b=224,a=255}
+        </li>
+        <li><span class="parameter">ivory</span>
+         {r=255,g=255,b=240,a=255}
+        </li>
+        <li><span class="parameter">white</span>
+         {r=255,g=255,b=255,a=255}
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+</div> <!-- id="container" -->
+</body>
+</html>

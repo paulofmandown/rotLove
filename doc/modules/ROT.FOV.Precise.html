@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/ROT.Color.html">Color</a></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">DijkstraMap</a></li>
+  <li><a href="../modules/ROT.Display.html">Display</a></li>
+  <li><a href="../modules/ROT.EventQueue.html">EventQueue</a></li>
+  <li><a href="../modules/ROT.FOV.Bresenham.html">FOV.Bresenham</a></li>
+  <li><strong>FOV.Precise</strong></li>
+  <li><a href="../modules/ROT.Lighting.html">Lighting</a></li>
+  <li><a href="../modules/ROT.Map.Arena.html">Map.Arena</a></li>
+  <li><a href="../modules/ROT.Map.Brogue.html">Map.Brogue</a></li>
+  <li><a href="../modules/ROT.Map.BrogueRoom.html">Map.BrogueRoom</a></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">Map.Cellular</a></li>
+  <li><a href="../modules/ROT.Map.Corridor.html">Map.Corridor</a></li>
+  <li><a href="../modules/ROT.Map.Digger.html">Map.Digger</a></li>
+  <li><a href="../modules/ROT.Map.DividedMaze.html">Map.DividedMaze</a></li>
+  <li><a href="../modules/ROT.Map.Dungeon.html">Map.Dungeon</a></li>
+  <li><a href="../modules/ROT.Map.EllerMaze.html">Map.EllerMaze</a></li>
+  <li><a href="../modules/ROT.Map.IceyMaze.html">Map.IceyMaze</a></li>
+  <li><a href="../modules/ROT.Map.Rogue.html">Map.Rogue</a></li>
+  <li><a href="../modules/ROT.Map.Room.html">Map.Room</a></li>
+  <li><a href="../modules/ROT.Map.Uniform.html">Map.Uniform</a></li>
+  <li><a href="../modules/ROT.Noise.Simplex.html">Noise.Simplex</a></li>
+  <li><a href="../modules/ROT.Path.AStar.html">Path.AStar</a></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">Path.Dijkstra</a></li>
+  <li><a href="../modules/ROT.RNG.html">RNG</a></li>
+  <li><a href="../modules/ROT.RNG.LCG.html">RNG.LCG</a></li>
+  <li><a href="../modules/ROT.RNG.MWC.html">RNG.MWC</a></li>
+  <li><a href="../modules/ROT.RNG.Twister.html">RNG.Twister</a></li>
+  <li><a href="../modules/ROT.Scheduler.html">Scheduler</a></li>
+  <li><a href="../modules/ROT.Scheduler.Action.html">Scheduler.Action</a></li>
+  <li><a href="../modules/ROT.Scheduler.Simple.html">Scheduler.Simple</a></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">Scheduler.Speed</a></li>
+  <li><a href="../modules/ROT.StringGenerator.html">StringGenerator</a></li>
+  <li><a href="../modules/ROT.TextDisplay.html">TextDisplay</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ROT.FOV.Precise</code></h1>
+
+<p>Precise Shadowcasting Field of View calculator.</p>
+<p>
+ The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
+ See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Precise:__init">Precise:__init (lightPassesCallback, options)</a></td>
+	<td class="summary">Constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Precise:compute">Precise:compute (x, y, R, callback)</a></td>
+	<td class="summary">Compute.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "Precise:__init"></a>
+    <strong>Precise:__init (lightPassesCallback, options)</strong>
+    </dt>
+    <dd>
+    Constructor.
+ Called with ROT.FOV.Precise:new()
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">lightPassesCallback</span>
+            <span class="types"><span class="type">function</span></span>
+         A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
+        </li>
+        <li><span class="parameter">options</span> Options
+        <ul>
+        <li><span class="parameter">topology</span>
+            <span class="types"><span class="type">int</span></span>
+         Direction for light movement Accepted values: (4 or 8)
+        </li>
+        </li></ul>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Precise:compute"></a>
+    <strong>Precise:compute (x, y, R, callback)</strong>
+    </dt>
+    <dd>
+    Compute.
+ Get visibility from a given point
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of center of FOV
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of center of FOV
+        </li>
+        <li><span class="parameter">R</span>
+            <span class="types"><span class="type">int</span></span>
+         radius of FOV (i.e.: At most, I can see for R cells)
+        </li>
+        <li><span class="parameter">callback</span> A function that is called for every cell in view. Must accept four parameters.
+        <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         x-position of cell that is in view
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         y-position of cell that is in view
+        </li>
+        <li><span class="parameter">r</span>
+            <span class="types"><span class="type">int</span></span>
+         The cell's distance from center of FOV
+        </li>
+        <li><span class="parameter">visibility</span>
+            <span class="types"><span class="type">number</span></span>
+         The cell's visibility rating (from 0-1). How well can you see this cell?
+        </li>
+        </li></ul>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+</div> <!-- id="container" -->
+</body>
+</html>

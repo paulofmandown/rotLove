@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>rotLove Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-40653955-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>rotLove</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/ROT.Color.html">Color</a></li>
+  <li><a href="../modules/ROT.DijkstraMap.html">DijkstraMap</a></li>
+  <li><a href="../modules/ROT.Display.html">Display</a></li>
+  <li><a href="../modules/ROT.EventQueue.html">EventQueue</a></li>
+  <li><a href="../modules/ROT.FOV.Bresenham.html">FOV.Bresenham</a></li>
+  <li><a href="../modules/ROT.FOV.Precise.html">FOV.Precise</a></li>
+  <li><a href="../modules/ROT.Lighting.html">Lighting</a></li>
+  <li><a href="../modules/ROT.Map.Arena.html">Map.Arena</a></li>
+  <li><a href="../modules/ROT.Map.Brogue.html">Map.Brogue</a></li>
+  <li><a href="../modules/ROT.Map.BrogueRoom.html">Map.BrogueRoom</a></li>
+  <li><a href="../modules/ROT.Map.Cellular.html">Map.Cellular</a></li>
+  <li><a href="../modules/ROT.Map.Corridor.html">Map.Corridor</a></li>
+  <li><a href="../modules/ROT.Map.Digger.html">Map.Digger</a></li>
+  <li><a href="../modules/ROT.Map.DividedMaze.html">Map.DividedMaze</a></li>
+  <li><a href="../modules/ROT.Map.Dungeon.html">Map.Dungeon</a></li>
+  <li><a href="../modules/ROT.Map.EllerMaze.html">Map.EllerMaze</a></li>
+  <li><a href="../modules/ROT.Map.IceyMaze.html">Map.IceyMaze</a></li>
+  <li><a href="../modules/ROT.Map.Rogue.html">Map.Rogue</a></li>
+  <li><a href="../modules/ROT.Map.Room.html">Map.Room</a></li>
+  <li><a href="../modules/ROT.Map.Uniform.html">Map.Uniform</a></li>
+  <li><a href="../modules/ROT.Noise.Simplex.html">Noise.Simplex</a></li>
+  <li><a href="../modules/ROT.Path.AStar.html">Path.AStar</a></li>
+  <li><a href="../modules/ROT.Path.Dijkstra.html">Path.Dijkstra</a></li>
+  <li><a href="../modules/ROT.RNG.html">RNG</a></li>
+  <li><a href="../modules/ROT.RNG.LCG.html">RNG.LCG</a></li>
+  <li><a href="../modules/ROT.RNG.MWC.html">RNG.MWC</a></li>
+  <li><a href="../modules/ROT.RNG.Twister.html">RNG.Twister</a></li>
+  <li><a href="../modules/ROT.Scheduler.html">Scheduler</a></li>
+  <li><a href="../modules/ROT.Scheduler.Action.html">Scheduler.Action</a></li>
+  <li><a href="../modules/ROT.Scheduler.Simple.html">Scheduler.Simple</a></li>
+  <li><a href="../modules/ROT.Scheduler.Speed.html">Scheduler.Speed</a></li>
+  <li><strong>StringGenerator</strong></li>
+  <li><a href="../modules/ROT.TextDisplay.html">TextDisplay</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ROT.StringGenerator</code></h1>
+
+<p>Random String Generator.</p>
+<p>
+ Learns from provided strings, and generates similar strings.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#StringGenerator:__init">StringGenerator:__init (options[, rng=false])</a></td>
+	<td class="summary">Constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#StringGenerator:clear">StringGenerator:clear ()</a></td>
+	<td class="summary">Remove all learned data</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#StringGenerator:generate">StringGenerator:generate ()</a></td>
+	<td class="summary">Generate a string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#StringGenerator:observe">StringGenerator:observe (s)</a></td>
+	<td class="summary">Observe
+ Learn from a string</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#StringGenerator:getStats">StringGenerator:getStats ()</a></td>
+	<td class="summary">get Stats
+ Get info about learned strings</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "StringGenerator:__init"></a>
+    <strong>StringGenerator:__init (options[, rng=false])</strong>
+    </dt>
+    <dd>
+    Constructor.
+ Called with ROT.StringGenerator:new()
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">options</span> A table with the following fields:
+        <ul>
+        <li><span class="parameter">words</span>
+            <span class="types"><span class="type">boolean</span></span>
+         Use word mode
+         (<em>default</em> false)
+        </li>
+        <li><span class="parameter">order</span>
+            <span class="types"><span class="type">int</span></span>
+         Number of letters/words to be used as context
+         (<em>default</em> 3)
+        </li>
+        <li><span class="parameter">prior</span>
+            <span class="types"><span class="type">number</span></span>
+         A default priority for characters/words
+         (<em>default</em> 0.001)
+        </li>
+        </li></ul>
+        <li><span class="parameter">rng</span>
+            <span class="types"><span class="type">userdata</span></span>
+         Userdata with a .random(self, min, max) function
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "StringGenerator:clear"></a>
+    <strong>StringGenerator:clear ()</strong>
+    </dt>
+    <dd>
+    Remove all learned data
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "StringGenerator:generate"></a>
+    <strong>StringGenerator:generate ()</strong>
+    </dt>
+    <dd>
+    Generate a string
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        The generated string
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "StringGenerator:observe"></a>
+    <strong>StringGenerator:observe (s)</strong>
+    </dt>
+    <dd>
+    Observe
+ Learn from a string
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">s</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         The string to observe
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "StringGenerator:getStats"></a>
+    <strong>StringGenerator:getStats ()</strong>
+    </dt>
+    <dd>
+    get Stats
+ Get info about learned strings
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Number of observed strings, number of contexts, number of possible characters/words
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+</div> <!-- id="container" -->
+</body>
+</html>

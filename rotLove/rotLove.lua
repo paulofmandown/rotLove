@@ -791,7 +791,7 @@ end
 --- Visual Display.
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
-ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, _defaultForegroundColor, _defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
+ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars, _heightInChars, _full, _vsync, _fsaa, defaultForegroundColor, defaultBackgroundColor, _chars, _backgroundColors, _foregroundColors, _oldChars, _oldBackgroundColors, _oldForegroundColors }
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -823,13 +823,13 @@ function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
 
     love.graphics.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._full, self._vsync, self._fsaa)
 
-    self._defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self._defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
+    self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
+    self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-    love.graphics.setBackgroundColor(self._defaultBackgroundColor.r,
-                                     self._defaultBackgroundColor.g,
-                                     self._defaultBackgroundColor.b,
-                                     self._defaultBackgroundColor.a)
+    love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+                                     self.defaultBackgroundColor.g,
+                                     self.defaultBackgroundColor.b,
+                                     self.defaultBackgroundColor.a)
 
     self._canvas=love.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
 
@@ -840,20 +840,20 @@ function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
     self._oldBackgroundColors={}
     self._oldForegroundColors={}
 
-    for i=1,self._widthInChars do
-        self._chars[i]               = {}
-        self._backgroundColors[i]    = {}
-        self._foregroundColors[i]    = {}
-        self._oldChars[i]            = {}
-        self._oldBackgroundColors[i] = {}
-        self._oldForegroundColors[i] = {}
-        for j=1,self._heightInChars do
-            self._chars[i][j]               = ' '
-            self._backgroundColors[i][j]    = self._defaultBackgroundColor
-            self._foregroundColors[i][j]    = self._defaultForegroundColor
-            self._oldChars[i][j]            = nil
-            self._oldBackgroundColors[i][j] = nil
-            self._oldForegroundColors[i][j] = nil
+    for x=1,self._widthInChars do
+        self._chars[x]               = {}
+        self._backgroundColors[x]    = {}
+        self._foregroundColors[x]    = {}
+        self._oldChars[x]            = {}
+        self._oldBackgroundColors[x] = {}
+        self._oldForegroundColors[x] = {}
+        for y=1,self._heightInChars do
+            self._chars[x][y]               = ' '
+            self._backgroundColors[x][y]    = self.defaultBackgroundColor
+            self._foregroundColors[x][y]    = self.defaultForegroundColor
+            self._oldChars[x][y]            = nil
+            self._oldBackgroundColors[x][y] = nil
+            self._oldForegroundColors[x][y] = nil
         end
     end
 end
@@ -890,8 +890,8 @@ function ROT.TextDisplay:getWidth() return self:getWidthInChars() end
 function ROT.TextDisplay:getHeight() return self:getHeightInChars() end
 function ROT.TextDisplay:getHeightInChars() return self._heightInChars end
 function ROT.TextDisplay:getWidthInChars() return self._widthInChars end
-function ROT.TextDisplay:getDefaultBackgroundColor() return self._defaultBackgroundColor end
-function ROT.TextDisplay:getDefaultForegroundColor() return self._defaultForegroundColor end
+function ROT.TextDisplay:getDefaultBackgroundColor() return self.defaultBackgroundColor end
+function ROT.TextDisplay:getDefaultForegroundColor() return self.defaultForegroundColor end
 
 --- Get a character.
 -- returns the character being displayed at position x, y
@@ -918,14 +918,14 @@ function ROT.TextDisplay:getForegroundColor(x, y) return self._foregroundColors[
 -- Sets the background color to be used when it is not provided
 -- @tparam table c The background color as a table defined as {r,g,b,a}
 function ROT.TextDisplay:setDefaultBackgroundColor(c)
-    self._defaultBackgroundColor=c and c or self._defaultBackgroundColor
+    self.defaultBackgroundColor=c and c or self.defaultBackgroundColor
 end
 
 --- Set Defaul Foreground Color.
 -- Sets the foreground color to be used when it is not provided
 -- @tparam table c The foreground color as a table defined as {r,g,b,a}
 function ROT.TextDisplay:setDefaultForegroundColor(c)
-    self._defaultForegroundColor=c and c or self._defaultForegroundColor
+    self.defaultForegroundColor=c and c or self.defaultForegroundColor
 end
 
 --- Clear the screen.
@@ -1001,7 +1001,7 @@ function ROT.TextDisplay:_writeValidatedString(s, x, y, fg, bg)
     for i=1,#s do
         self._backgroundColors[x+i-1][y] = bg
         self._foregroundColors[x+i-1][y] = fg
-        self._chars[x+i-1][y]            = s
+        self._chars[x+i-1][y]            = s:sub(i,i)
     end
 end
 
@@ -1018,13 +1018,13 @@ function ROT.TextDisplay:_validateY(y)
     return y
 end
 function ROT.TextDisplay:_validateForegroundColor(c)
-    c = c and c or self._defaultForegroundColor
+    c = c and c or self.defaultForegroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
     assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
     return c
 end
 function ROT.TextDisplay:_validateBackgroundColor(c)
-    c = c and c or self._defaultBackgroundColor
+    c = c and c or self.defaultBackgroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
     assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
     return c
@@ -1036,7 +1036,7 @@ function ROT.TextDisplay:_validateHeight(y, h)
     return h
 end
 function ROT.TextDisplay:_setColor(c)
-    c = c and c or self._defaultForegroundColor
+    c = c and c or self.defaultForegroundColor
     love.graphics.setColor(c.r, c.g, c.b, c.a)
 end
 function ROT.TextDisplay:_clamp(n)
