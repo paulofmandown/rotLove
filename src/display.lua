@@ -36,11 +36,11 @@ Display.__name='Display'
 -- @tparam[opt=1] float scale Scale factor applied to characters
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=false] boolean full Use fullscreen
+-- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
+function Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
@@ -54,8 +54,13 @@ function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
     self.graphics=love.graphics
-    local w=love._version>'0.8.0' and love.window or self.graphics
-    w.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, flags)
+    if love._version>'0.8.0' then
+        love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
+        self.drawQ=self.graphics.draw
+    else
+        self.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags, vsync, fsaa)
+        self.drawQ=self.graphics.drawq
+    end
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
@@ -112,7 +117,7 @@ function Display:draw()
                 if c~=32 and c~=255 then
                     local qd=self.glyphs[c]
                     self:_setColor(fg)
-                    self.graphics.draw(self.glyphSprite, qd, px, py)
+                    self.drawQ(self.glyphSprite, qd, px, py)
                 end
 
                 self.oldChars[x][y]            = c

@@ -14,11 +14,11 @@ TextDisplay.__name='TextDisplay'
 -- @tparam[opt=10] int size font size
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=false] boolean full Use fullscreen
+-- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
+function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlogs, vsync, fsaa)
     self.graphics =love.graphics
     self._font    =self.graphics.newFont(font)
     self._fontSize=size and size or 10
@@ -31,9 +31,8 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
     self._charHeight   =self._font:getHeight()
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
-    self._flags        =flags
     local w=love._version > '0.8.0' and love.window or self.graphics
-    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._flags)
+    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlogs, vsync, fsaa)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}

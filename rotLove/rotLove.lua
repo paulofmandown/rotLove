@@ -536,9 +536,11 @@ ROT.Display = class {
 -- @tparam[opt=24] int h Height of display in number of character
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=nil] table flags The flags table defined for love.window.setMode
+-- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
+-- @tparam[opt=false] boolean vsync Use vsync
+-- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function ROT.Display:__init(w, h, dfg, dbg, flags)
+function ROT.Display:__init(w, h, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
@@ -552,8 +554,15 @@ function ROT.Display:__init(w, h, dfg, dbg, flags)
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
     self.graphics=love.graphics
-    local w=love._version>'0.8.0' and love.window or self.graphics
-    w.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, flags)
+    if love._version>'0.8.0' then
+        love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
+        self.drawQ=self.graphics.draw
+    else
+        print('<=080')
+        self.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags, vsync, fsaa)
+        self.drawQ=self.graphics.drawq
+    end
+
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
@@ -610,7 +619,7 @@ function ROT.Display:draw()
                 if c~=32 and c~=255 then
                     local qd=self.glyphs[c]
                     self:_setColor(fg)
-                    self.graphics.draw(self.glyphSprite, qd, px, py)
+                    self.drawQ(self.glyphSprite, qd, px, py)
                 end
 
                 self.oldChars[x][y]            = c
@@ -796,9 +805,11 @@ ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars
 -- @tparam[opt=10] int size font size
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=nil] table flags The flags table defined for love.window.setMode
+-- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
+-- @tparam[opt=false] boolean vsync Use vsync
+-- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, flags)
+function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, flags, vsync, fsaa)
     self.graphics =love.graphics
     self._font    =self.graphics.newFont(font)
     self._fontSize=size and size or 10
@@ -813,7 +824,7 @@ function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, flags)
     self._heightInChars=h and h or 24
     self._flags        =flags
     local w=love._version > '0.8.0' and love.window or self.graphics
-    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._flags)
+    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
