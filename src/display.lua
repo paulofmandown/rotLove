@@ -41,90 +41,89 @@ Display.__name='Display'
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
 function Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
-	self.widthInChars = w and w or 80
-	self.heightInChars= h and h or 24
-	self.full         = full and full or false
-	self.vsync        = vsync and vsync or false
-	self.fsaa         = fsaa and fsaa or 0
-    self.scale=scale and scale or 1
-	self.charWidth=self.scale*9
-	self.charHeight=self.scale*16
-	self.glyphs={}
-	self.chars={{}}
-	self.backgroundColors={{}}
-	self.foregroundColors={{}}
-	self.oldChars={{}}
-	self.oldBackgroundColors={{}}
-	self.oldForegroundColors={{}}
-	love.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, self.full, self.vsync, self.fsaa)
+    self.__name='Display'
+    self.widthInChars = w and w or 80
+    self.heightInChars= h and h or 24
+    self.charWidth=9
+    self.charHeight=16
+    self.glyphs={}
+    self.chars={{}}
+    self.backgroundColors={{}}
+    self.foregroundColors={{}}
+    self.oldChars={{}}
+    self.oldBackgroundColors={{}}
+    self.oldForegroundColors={{}}
+    self.graphics=love.graphics
+    local w=love._version>'0.8.0' and love.window or self.graphics
+    w.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, flags)
 
-	self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-	self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
+    self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
+    self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-	love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
-									 self.defaultBackgroundColor.g,
-									 self.defaultBackgroundColor.b,
-									 self.defaultBackgroundColor.a)
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+                                     self.defaultBackgroundColor.g,
+                                     self.defaultBackgroundColor.b,
+                                     self.defaultBackgroundColor.a)
 
-	self.canvas=love.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+    self.canvas=self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
-	self.glyphSprite=love.graphics.newImage(Display_Path .. 'img/cp437.png')
-	for i=0,255 do
-		sx=(i%32)*9
-		sy=math.floor(i/32)*16
-		self.glyphs[i]=love.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
-	end
+    self.glyphSprite=self.graphics.newImage(Display_Path .. 'img/cp437.png')
+    for i=0,255 do
+        sx=(i%32)*9
+        sy=math.floor(i/32)*16
+        self.glyphs[i]=self.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+    end
 
-	for i=1,self.widthInChars do
-		self.chars[i]               = {}
-		self.backgroundColors[i]    = {}
-		self.foregroundColors[i]    = {}
-		self.oldChars[i]            = {}
-		self.oldBackgroundColors[i] = {}
-		self.oldForegroundColors[i] = {}
-		for j=1,self.heightInChars do
-			self.chars[i][j]               = 32
-			self.backgroundColors[i][j]    = self.defaultBackgroundColor
-			self.foregroundColors[i][j]    = self.defaultForegroundColor
-			self.oldChars[i][j]            = nil
-			self.oldBackgroundColors[i][j] = nil
-			self.oldForegroundColors[i][j] = nil
-		end
-	end
+    for i=1,self.widthInChars do
+        self.chars[i]               = {}
+        self.backgroundColors[i]    = {}
+        self.foregroundColors[i]    = {}
+        self.oldChars[i]            = {}
+        self.oldBackgroundColors[i] = {}
+        self.oldForegroundColors[i] = {}
+        for j=1,self.heightInChars do
+            self.chars[i][j]               = 32
+            self.backgroundColors[i][j]    = self.defaultBackgroundColor
+            self.foregroundColors[i][j]    = self.defaultForegroundColor
+            self.oldChars[i][j]            = nil
+            self.oldBackgroundColors[i][j] = nil
+            self.oldForegroundColors[i][j] = nil
+        end
+    end
 end
 
 --- Draw.
 -- The main draw function. This should be called from love.draw() to display any written characters to screen
 function Display:draw()
-	love.graphics.setCanvas(self.canvas)
-	for x=1,self.widthInChars do
-		for y=1,self.heightInChars do
-	   		local c =self.chars[x][y]
-	   		local bg=self.backgroundColors[x][y]
-			local fg=self.foregroundColors[x][y]
-	   		local px=(x-1)*self.charWidth
-	   		local py=(y-1)*self.charHeight
-	   		if self.oldChars[x][y]            ~= c  or
-			   self.oldBackgroundColors[x][y] ~= bg or
-			   self.oldForegroundColors[x][y] ~= fg then
+    self.graphics.setCanvas(self.canvas)
+    for x=1,self.widthInChars do
+        for y=1,self.heightInChars do
+            local c =self.chars[x][y]
+            local bg=self.backgroundColors[x][y]
+            local fg=self.foregroundColors[x][y]
+            local px=(x-1)*self.charWidth
+            local py=(y-1)*self.charHeight
+            if self.oldChars[x][y]            ~= c  or
+               self.oldBackgroundColors[x][y] ~= bg or
+               self.oldForegroundColors[x][y] ~= fg then
 
-		   		self:_setColor(bg)
-		   		love.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
+                self:_setColor(bg)
+                self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
                 if c~=32 and c~=255 then
-    		   		local qd=self.glyphs[c]
-	       	   		self:_setColor(fg)
-		      		love.graphics.drawq(self.glyphSprite, qd, px, py, nil, self.scale)
+                    local qd=self.glyphs[c]
+                    self:_setColor(fg)
+                    self.graphics.draw(self.glyphSprite, qd, px, py)
                 end
 
-				self.oldChars[x][y]            = c
-				self.oldBackgroundColors[x][y] = bg
-				self.oldForegroundColors[x][y] = fg
-			end
-		end
-	end
-	love.graphics.setCanvas()
-	love.graphics.setColor(255,255,255,255)
-	love.graphics.draw(self.canvas)
+                self.oldChars[x][y]            = c
+                self.oldBackgroundColors[x][y] = bg
+                self.oldForegroundColors[x][y] = fg
+            end
+        end
+    end
+    self.graphics.setCanvas()
+    self.graphics.setColor(255,255,255,255)
+    self.graphics.draw(self.canvas)
 end
 
 function Display:getCharHeight() return self.charHeight end

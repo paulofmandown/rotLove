@@ -533,24 +533,17 @@ ROT.Display = class {
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
 -- @tparam[opt=80] int w Width of display in number of characters
--- @tparam[opt=24] int h Height of display in number of characters
--- @tparam[opt=1] float scale Scale factor applied to characters
+-- @tparam[opt=24] int h Height of display in number of character
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=false] boolean full Use fullscreen
--- @tparam[opt=false] boolean vsync Use vsync
--- @tparam[opt=0] int fsaa Number of fsaa passes
+-- @tparam[opt=nil] table flags The flags table defined for love.window.setMode
 -- @return nil
-function ROT.Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
+function ROT.Display:__init(w, h, dfg, dbg, flags)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
-    self.full         = full and full or false
-    self.vsync        = vsync and vsync or false
-    self.fsaa         = fsaa and fsaa or 0
-    self.scale=scale and scale or 1
-    self.charWidth=self.scale*9
-    self.charHeight=self.scale*16
+    self.charWidth=9
+    self.charHeight=16
     self.glyphs={}
     self.chars={{}}
     self.backgroundColors={{}}
@@ -558,23 +551,25 @@ function ROT.Display:__init(w, h, scale, dfg, dbg, full, vsync, fsaa)
     self.oldChars={{}}
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
-    love.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, self.full, self.vsync, self.fsaa)
+    self.graphics=love.graphics
+    local w=love._version>'0.8.0' and love.window or self.graphics
+    w.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, flags)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-    love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
                                      self.defaultBackgroundColor.g,
                                      self.defaultBackgroundColor.b,
                                      self.defaultBackgroundColor.a)
 
-    self.canvas=love.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+    self.canvas=self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
-    self.glyphSprite=love.graphics.newImage(Display_Path .. 'img/cp437.png')
+    self.glyphSprite=self.graphics.newImage(Display_Path .. 'img/cp437.png')
     for i=0,255 do
         sx=(i%32)*9
         sy=math.floor(i/32)*16
-        self.glyphs[i]=love.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+        self.glyphs[i]=self.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
     end
 
     for i=1,self.widthInChars do
@@ -598,7 +593,7 @@ end
 --- Draw.
 -- The main draw function. This should be called from love.draw() to display any written characters to screen
 function ROT.Display:draw()
-    love.graphics.setCanvas(self.canvas)
+    self.graphics.setCanvas(self.canvas)
     for x=1,self.widthInChars do
         for y=1,self.heightInChars do
             local c =self.chars[x][y]
@@ -611,11 +606,11 @@ function ROT.Display:draw()
                self.oldForegroundColors[x][y] ~= fg then
 
                 self:_setColor(bg)
-                love.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
+                self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
                 if c~=32 and c~=255 then
                     local qd=self.glyphs[c]
                     self:_setColor(fg)
-                    love.graphics.drawq(self.glyphSprite, qd, px, py, nil, self.scale)
+                    self.graphics.draw(self.glyphSprite, qd, px, py)
                 end
 
                 self.oldChars[x][y]            = c
@@ -624,9 +619,9 @@ function ROT.Display:draw()
             end
         end
     end
-    love.graphics.setCanvas()
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(self.canvas)
+    self.graphics.setCanvas()
+    self.graphics.setColor(255,255,255,255)
+    self.graphics.draw(self.canvas)
 end
 
 function ROT.Display:getCharHeight() return self.charHeight end
@@ -801,37 +796,34 @@ ROT.TextDisplay=class { _font, _fontSize, _charWidth, _charHeight, _widthInChars
 -- @tparam[opt=10] int size font size
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
--- @tparam[opt=false] boolean full Use fullscreen
--- @tparam[opt=false] boolean vsync Use vsync
--- @tparam[opt=0] int fsaa Number of fsaa passes
+-- @tparam[opt=nil] table flags The flags table defined for love.window.setMode
 -- @return nil
-function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
-    self._font    =love.graphics.newFont(font)
+function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, flags)
+    self.graphics =love.graphics
+    self._font    =self.graphics.newFont(font)
     self._fontSize=size and size or 10
-    if self._font then love.graphics.setFont(self._font, self._fontSize)
+    if self._font then self.graphics.setFont(self._font, self._fontSize)
     else
-        love.graphics.setFont(self._fontSize)
-        self._font=love.graphics.getFont()
+        self.graphics.setFont(self._fontSize)
+        self._font=self.graphics.getFont()
     end
     self._charWidth    =self._font:getWidth(' ')
     self._charHeight   =self._font:getHeight()
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
-    self._full         = full and full or false
-    self._vsync        = vsync and vsync or false
-    self._fsaa         = fsaa and fsaa or 0
-
-    love.graphics.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._full, self._vsync, self._fsaa)
+    self._flags        =flags
+    local w=love._version > '0.8.0' and love.window or self.graphics
+    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._flags)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-    love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
                                      self.defaultBackgroundColor.g,
                                      self.defaultBackgroundColor.b,
                                      self.defaultBackgroundColor.a)
 
-    self._canvas=love.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
+    self._canvas=self.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
 
     self._chars              ={}
     self._backgroundColors   ={}
@@ -859,7 +851,7 @@ function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
 end
 
 function ROT.TextDisplay:draw()
-    love.graphics.setCanvas(self._canvas)
+    self.graphics.setCanvas(self._canvas)
     for x=1,self._widthInChars do for y=1,self._heightInChars do
         local c =self._chars[x][y]
         local bg=self._backgroundColors[x][y]
@@ -871,17 +863,17 @@ function ROT.TextDisplay:draw()
            self._oldForegroundColors[x][y] ~= fg then
 
             self:_setColor(bg)
-            love.graphics.rectangle('fill', px, py, self._charWidth, self._charHeight)
+            self.graphics.rectangle('fill', px, py, self._charWidth, self._charHeight)
             self:_setColor(fg)
-            love.graphics.print(c, px, py)
+            self.graphics.print(c, px, py)
             self._oldChars[x][y]            = c
             self._oldBackgroundColors[x][y] = bg
             self._oldForegroundColors[x][y] = fg
         end
     end end
-    love.graphics.setCanvas()
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(self._canvas)
+    self.graphics.setCanvas()
+    self.graphics.setColor(255,255,255,255)
+    self.graphics.draw(self._canvas)
 end
 
 function ROT.TextDisplay:getCharHeight() return self._charHeight end
@@ -1001,7 +993,9 @@ function ROT.TextDisplay:_writeValidatedString(s, x, y, fg, bg)
     for i=1,#s do
         self._backgroundColors[x+i-1][y] = bg
         self._foregroundColors[x+i-1][y] = fg
-        self._chars[x+i-1][y]            = s:sub(i,i)
+        local c=s:sub(i,i)
+        --if self._font:getWidth(c)~=self._charWidth then write('HELP') end
+        self._chars[x+i-1][y]            = c
     end
 end
 

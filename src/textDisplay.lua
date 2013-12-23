@@ -19,32 +19,31 @@ TextDisplay.__name='TextDisplay'
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
 function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
-    self._font    =love.graphics.newFont(font)
+    self.graphics =love.graphics
+    self._font    =self.graphics.newFont(font)
     self._fontSize=size and size or 10
-    if self._font then love.graphics.setFont(self._font, self._fontSize)
+    if self._font then self.graphics.setFont(self._font, self._fontSize)
     else
-        love.graphics.setFont(self._fontSize)
-        self._font=love.graphics.getFont()
+        self.graphics.setFont(self._fontSize)
+        self._font=self.graphics.getFont()
     end
     self._charWidth    =self._font:getWidth(' ')
     self._charHeight   =self._font:getHeight()
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
-    self._full         = full and full or false
-    self._vsync        = vsync and vsync or false
-    self._fsaa         = fsaa and fsaa or 0
-
-    love.graphics.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._full, self._vsync, self._fsaa)
+    self._flags        =flags
+    local w=love._version > '0.8.0' and love.window or self.graphics
+    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, self._flags)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
     self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
 
-    love.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
                                      self.defaultBackgroundColor.g,
                                      self.defaultBackgroundColor.b,
                                      self.defaultBackgroundColor.a)
 
-    self._canvas=love.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
+    self._canvas=self.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
 
     self._chars              ={}
     self._backgroundColors   ={}
@@ -53,26 +52,26 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, full, vsync, fsaa)
     self._oldBackgroundColors={}
     self._oldForegroundColors={}
 
-    for i=1,self._widthInChars do
-        self._chars[i]               = {}
-        self._backgroundColors[i]    = {}
-        self._foregroundColors[i]    = {}
-        self._oldChars[i]            = {}
-        self._oldBackgroundColors[i] = {}
-        self._oldForegroundColors[i] = {}
-        for j=1,self._heightInChars do
-            self._chars[i][j]               = ' '
-            self._backgroundColors[i][j]    = self.defaultBackgroundColor
-            self._foregroundColors[i][j]    = self.defaultForegroundColor
-            self._oldChars[i][j]            = nil
-            self._oldBackgroundColors[i][j] = nil
-            self._oldForegroundColors[i][j] = nil
+    for x=1,self._widthInChars do
+        self._chars[x]               = {}
+        self._backgroundColors[x]    = {}
+        self._foregroundColors[x]    = {}
+        self._oldChars[x]            = {}
+        self._oldBackgroundColors[x] = {}
+        self._oldForegroundColors[x] = {}
+        for y=1,self._heightInChars do
+            self._chars[x][y]               = ' '
+            self._backgroundColors[x][y]    = self.defaultBackgroundColor
+            self._foregroundColors[x][y]    = self.defaultForegroundColor
+            self._oldChars[x][y]            = nil
+            self._oldBackgroundColors[x][y] = nil
+            self._oldForegroundColors[x][y] = nil
         end
     end
 end
 
 function TextDisplay:draw()
-    love.graphics.setCanvas(self._canvas)
+    self.graphics.setCanvas(self._canvas)
     for x=1,self._widthInChars do for y=1,self._heightInChars do
         local c =self._chars[x][y]
         local bg=self._backgroundColors[x][y]
@@ -84,17 +83,17 @@ function TextDisplay:draw()
            self._oldForegroundColors[x][y] ~= fg then
 
             self:_setColor(bg)
-            love.graphics.rectangle('fill', px, py, self._charWidth, self._charHeight)
+            self.graphics.rectangle('fill', px, py, self._charWidth, self._charHeight)
             self:_setColor(fg)
-            love.graphics.print(c, px, py)
+            self.graphics.print(c, px, py)
             self._oldChars[x][y]            = c
             self._oldBackgroundColors[x][y] = bg
             self._oldForegroundColors[x][y] = fg
         end
     end end
-    love.graphics.setCanvas()
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(self._canvas)
+    self.graphics.setCanvas()
+    self.graphics.setColor(255,255,255,255)
+    self.graphics.draw(self._canvas)
 end
 
 function TextDisplay:getCharHeight() return self._charHeight end
