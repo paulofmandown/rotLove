@@ -39,7 +39,7 @@ function Precise:compute(x, y, R, callback)
         for i=0,neighborCount-1 do
             local cx=neighbors[i+1][1]
             local cy=neighbors[i+1][2]
-            A1={i>1 and 2*i-1 or 2*neighborCount-1, 2*neighborCount}
+            A1={i>0 and 2*i-1 or 2*neighborCount-1, 2*neighborCount}
             A2={2*i+1, 2*neighborCount}
 
             blocks    =not self:_lightPasses(cx, cy)
