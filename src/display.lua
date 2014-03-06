@@ -131,6 +131,12 @@ function Display:draw()
     self.graphics.draw(self.canvas)
 end
 
+--- Contains point.
+-- Returns true if point x,y can be drawn to display.
+function Display:contains(x, y)
+    return x>0 and x<=self:getWidth() and y>0 and y<=self:getHeight()
+end
+
 function Display:getCharHeight() return self.charHeight end
 function Display:getCharWidth() return self.charWidth end
 function Display:getWidth() return self:getWidthInChars() end
@@ -201,7 +207,7 @@ function Display:clear(c, x, y, w, h, fg, bg)
 	h =self:_validateHeight(y, h)
 	fg=self:_validateForegroundColor(fg)
 	bg=self:_validateBackgroundColor(bg)
-	for i=0,h do
+	for i=0,h-1 do
 		self:_writeValidatedString(s, x, y+i, fg, bg)
 	end
 end

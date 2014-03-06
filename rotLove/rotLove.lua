@@ -633,6 +633,12 @@ function ROT.Display:draw()
     self.graphics.draw(self.canvas)
 end
 
+--- Contains point.
+-- Returns true if point x,y can be drawn to display.
+function ROT.Display:contains(x, y)
+    return x>0 and x<=self:getWidth() and y>0 and y<=self:getHeight()
+end
+
 function ROT.Display:getCharHeight() return self.charHeight end
 function ROT.Display:getCharWidth() return self.charWidth end
 function ROT.Display:getWidth() return self:getWidthInChars() end
@@ -700,7 +706,7 @@ function ROT.Display:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h do
+    for i=0,h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
@@ -887,6 +893,12 @@ function ROT.TextDisplay:draw()
     self.graphics.draw(self._canvas)
 end
 
+--- Contains point.
+-- Returns true if point x,y can be drawn to display.
+function ROT.TextDisplay:contains(x, y)
+    return x>0 and x<=self:getWidth() and y>0 and y<=self:getHeight()
+end
+
 function ROT.TextDisplay:getCharHeight() return self._charHeight end
 function ROT.TextDisplay:getCharWidth() return self._charWidth end
 function ROT.TextDisplay:getWidth() return self:getWidthInChars() end
@@ -954,7 +966,7 @@ function ROT.TextDisplay:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h do
+    for i=0,h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
