@@ -9,7 +9,7 @@ local EventQueue = class {
 	_events    ={},
 	_eventTimes={}
 }
-EventQueue.__name='EventQueue',
+EventQueue.__name='EventQueue'
 --- Get Time.
 -- Get time counted since start
 -- @treturn int elapsed time
