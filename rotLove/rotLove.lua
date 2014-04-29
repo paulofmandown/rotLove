@@ -1908,6 +1908,9 @@ ROT.Map.Cellular = ROT.Map:extends { _rng, _options, _map }
   -- @tparam table options.born List of neighbor counts for a new cell to be born in empty space
   -- @tparam table options.survive List of neighbor counts for an existing  cell to survive
   -- @tparam int options.topology Topology. Accepted values: 4, 8
+  -- @tparam boolean options.connected Set to true to connect open areas on create
+  -- @tparam int options.minimumZoneArea Unconnected zones with fewer tiles than this will be turned to wall instead of being connected
+-- @tparam userdata rng Userdata with a .random(self, min, max) function
 function ROT.Map.Cellular:__init(width, height, options, rng)
     assert(ROT, 'must require rot')
     ROT.Map.Cellular.super.__init(self, width, height)
@@ -1915,7 +1918,9 @@ function ROT.Map.Cellular:__init(width, height, options, rng)
     self._options={
                     born    ={5,6,7,8},
                     survive ={4,5,6,7,8},
-                    topology=8
+                    topology=8,
+                    connected=false,
+                    minimumZoneArea=8
                   }
     if options then
         for k,v in pairs(options) do
@@ -1975,11 +1980,22 @@ function ROT.Map.Cellular:create(callback)
             elseif cur<=0 and table.indexOf(born, ncount)>0 then
                 newMap[i][j]=1
             end
-            if callback then callback(i, j, newMap[i][j]) end
             if not changed and newMap[i][j]~=self._map[i][j] then changed=true end
         end
     end
     self._map=newMap
+
+    if self._options.connected then
+        self._completeMaze()
+    end
+
+    if callback then
+        for i=1,self._width do
+            for j=1,self._height do
+                if callback then callback(i, j, newMap[i][j]) end
+            end
+        end
+    end
     return changed
 end
 
@@ -1996,13 +2012,111 @@ function ROT.Map.Cellular:_getNeighbors(cx, cy)
     return rst
 end
 
+function ROT.Map.Cellular:_completeMaze()
+    -- Collect all zones
+    local zones={}
+    for i=1,self._width do
+        for j=1,self._height do
+            if self._map[i][j]==0 then
+                self:_addZoneFrom(i,j,zones)
+            end
+        end
+    end
+    -- overwrite zones below a certain size
+    -- and connect zones
+    for i=1,#zones do
+        if #zones[i]<self._options.minimumZoneArea then
+            for k,v in pairs(zones[i]) do
+                self._map[v[1]][v[2]]=1
+            end
+        else
+            local rx=self._rng:random(1,self._width)
+            local ry=self._rng:random(1,self._height)
+            while self._map[rx][ry]~=1 and self._map[rx][ry]~=i do
+                rx=self._rng:random(1,self._width)
+                ry=self._rng:random(1,self._height)
+            end
+            local t=zones[i][self._rng:random(1,#zones[i])]
+            self:_tunnel(t[1],t[2],rx,ry)
+            -- re-establish floors as 0 for this zone
+            for k,v in pairs(zones[i]) do
+                self._map[v[1]][v[2]]=0
+            end
+        end
+    end
+end
+
+function ROT.Map.Cellular:_addZoneFrom(x,y,zones)
+    local dirs=self._dirs
+    local todo={{x,y}}
+    table.insert(zones,{})
+    local zId =#zones+1
+    self._map[x][y]=zId
+    table.insert(zones[#zones], {x,y})
+    while #todo>0 do
+        local t=table.remove(todo)
+        local tx=t[1]
+        local ty=t[2]
+        for k,v in pairs(dirs) do
+            local nx=tx+v[1]
+            local ny=ty+v[2]
+            if self._map[nx] and self._map[nx][ny] and self._map[nx][ny]==0 then
+                self._map[nx][ny]=zId
+                table.insert(zones[#zones], {nx,ny})
+                table.insert(todo, {nx,ny})
+            end
+        end
+    end
+end
+
+function ROT.Map.Cellular:_tunnel(sx,sy,ex,ey)
+    local xOffset=ex-sx
+    local yOffset=ey-sy
+    local xpos   =sx
+    local ypos   =sy
+    local moves={}
+    local xAbs=math.abs(xOffset)
+    local yAbs=math.abs(yOffset)
+    local firstHalf =self._rng:random()
+    local secondHalf=1-firstHalf
+    local xDir=xOffset>0 and 3 or 7
+    local yDir=yOffset>0 and 5 or 1
+    if xAbs<yAbs then
+        local tempDist=math.ceil(yAbs*firstHalf)
+        table.insert(moves, {yDir, tempDist})
+        table.insert(moves, {xDir, xAbs})
+        local tempDist=math.floor(yAbs*secondHalf)
+        table.insert(moves, {yDir, tempDist})
+    else
+        local tempDist=math.ceil(xAbs*firstHalf)
+        table.insert(moves, {xDir, tempDist})
+        table.insert(moves, {yDir, yAbs})
+        local tempDist=math.floor(xAbs*secondHalf)
+        table.insert(moves, {xDir, tempDist})
+    end
+
+    local dirs=ROT.DIRS.EIGHT
+    self._map[xpos][ypos]=0
+    while #moves>0 do
+        local move=table.remove(moves)
+        if move and move[1] and move[1]<9 and move[1]>0 then
+            while move[2]>0 do
+                xpos=xpos+dirs[move[1]][1]
+                ypos=ypos+dirs[move[1]][2]
+                self._map[xpos][ypos]=0
+                move[2]=move[2]-1
+            end
+        end
+    end
+end
+
 --- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
 ROT.Map.Dungeon = ROT.Map:extends { _rooms, _corridors }
 
 --- Constructor.
--- Called with ROT.Map.Cellular:new()
+-- Called with ROT.Map.Dungeon:new()
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 function ROT.Map.Dungeon:__init(width, height)
