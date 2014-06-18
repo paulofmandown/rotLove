@@ -2,10 +2,7 @@
 -- The Recursive shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Recursive_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Recursive
-local Recursive_PATH =({...})[1]:gsub("[%.\\/]recursive$", "") .. '/'
-local class  =require (Recursive_PATH .. 'vendor/30log')
-
-local Recursive=ROT.FOV:extends{ __name, _lightPasses, _options }
+local Recursive=ROT.FOV:extends{ }
 Recursive.__name='Recursive'
 --- Constructor.
 -- Called with ROT.FOV.Recursive:new()
@@ -116,7 +113,7 @@ function Recursive:_castVisibility(startX, startY, row, visSlopeStart, visSlopeE
                         self:_castVisibility(startX, startY, i+1, visSlopeStart, slopeStart, radius, xx, xy, yx, yy, callback)
                         newStart=slopeEnd
                     end
-                elseif not self:_lightPasses(mapX, mapY)
+                elseif not self:_lightPasses(mapX, mapY) then
                     newStart=slopeEnd
                 else
                     blocked=false

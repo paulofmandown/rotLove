@@ -1,10 +1,7 @@
 --- A* Pathfinding.
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
-local AStar_PATH=({...})[1]:gsub("[%.\\/]astar$", "") .. '/'
-local class  =require (AStar_PATH .. 'vendor/30log')
-
-local AStar=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _done, _todo, _passableCallback, _options }
+local AStar=ROT.Path:extends { }
 AStar.__name='AStar'
 --- Constructor.
 -- @tparam int toX x-position of destination cell

@@ -1,9 +1,9 @@
 local Noise_PATH =({...})[1]:gsub("[%.\\/]noise$", "") .. '/'
 local class  =require (Noise_PATH .. 'vendor/30log')
 
-local Noise=class{ __name }
+local Noise=class{ }
 Noise.__name='Noise'
 
-function Noise:get(x, y) end
+function Noise:get() end
 
 return Noise

@@ -1,10 +1,6 @@
 --- Mersenne Twister. A random number generator based on RandomLua
 -- @module ROT.RNG.Twister
-
-local Twister_PATH =({...})[1]:gsub("[%.\\/]twister$", "") .. '/'
-local class  =require (Twister_PATH .. 'vendor/30log')
-
-local Twister=ROT.RNG:extends { __name, mt, index, _seed }
+local Twister=ROT.RNG:extends { }
 Twister.__name='Twister'
 function Twister:__init()
     self.mt={}

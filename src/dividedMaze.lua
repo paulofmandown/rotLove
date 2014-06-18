@@ -1,9 +1,6 @@
 --- The Divided Maze Map Generator.
 -- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
 -- @module ROT.Map.DividedMaze
-local DividedMaze_PATH =({...})[1]:gsub("[%.\\/]dividedMaze$", "") .. '/'
-local class  =require (DividedMaze_PATH .. 'vendor/30log')
-
 local DividedMaze = ROT.Map:extends { }
 DividedMaze.__name='DividedMaze'
 --- Constructor.
@@ -76,39 +73,35 @@ function DividedMaze:_partitionRoom(room)
 
 	local walls={}
 
-	local w={}
-	table.insert(walls, w)
+	table.insert(walls, {})
 	for i=room[1],x-1,1 do
 		self._map[i][y]=1
-		table.insert(w, {i,y})
+		table.insert(walls[#walls], {i,y})
 	end
 
-	local w={}
-	table.insert(walls, w)
+	table.insert(walls, {})
 	for i=x+1,room[3],1 do
 		self._map[i][y]=1
-		table.insert(w,{i,y})
+		table.insert(walls[#walls],{i,y})
 	end
 
-	local w={}
-	table.insert(walls, w)
+	table.insert(walls, {})
 	for j=room[2],y-1,1 do
 		self._map[x][j]=1
-		table.insert(w,{x,j})
+		table.insert(walls[#walls],{x,j})
 	end
 
-	local w={}
-	table.insert(walls, w)
+	table.insert(walls, {})
 	for j=y+1,room[4] do
 		self._map[x][j]=1
-		table.insert(w,{x,j})
+		table.insert(walls[#walls],{x,j})
 	end
 
 	local solid= table.random(walls)
 	for i=1,#walls do
 		local w=walls[i]
 		if w~=solid then
-			hole=table.random(w)
+			local hole=table.random(w)
 			self._map[hole[1]][hole[2]]=0
 		end
 	end

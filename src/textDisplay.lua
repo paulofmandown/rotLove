@@ -18,7 +18,7 @@ TextDisplay.__name='TextDisplay'
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlogs, vsync, fsaa)
+function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.graphics =love.graphics
     self._font    =self.graphics.newFont(font)
     self._fontSize=size and size or 10
@@ -32,10 +32,10 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlogs, vsync, fsaa
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
     local w=love._version > '0.8.0' and love.window or self.graphics
-    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlogs, vsync, fsaa)
+    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
+    self.defaultBackgroundColor=dbg and dbg or {r=15,g=15,b=15,a=255}
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
                                      self.defaultBackgroundColor.g,
@@ -162,7 +162,7 @@ function TextDisplay:clear(c, x, y, w, h, fg, bg)
     c =c and c or ' '
     w =w and w or self._widthInChars
     local s=''
-    for i=1,w do
+    for _=1,w do
         s=s..c
     end
     x =self:_validateX(x, s)

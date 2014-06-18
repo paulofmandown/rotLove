@@ -1,11 +1,7 @@
 --- The Icey Maze Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
 -- @module ROT.Map.IceyMaze
-
-local IceyMaze_PATH =({...})[1]:gsub("[%.\\/]iceyMaze$", "") .. '/'
-local class  =require (IceyMaze_PATH .. 'vendor/30log')
-
-local IceyMaze = ROT.Map:extends { _regularity, _rng }
+local IceyMaze = ROT.Map:extends { }
 IceyMaze.__name     ='IceyMaze'
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)

@@ -1,7 +1,7 @@
 local FOV_PATH =({...})[1]:gsub("[%.\\/]fov$", "") .. '/'
 local class  =require (FOV_PATH .. 'vendor/30log')
 
-local FOV=class{ __name, _lightPasses, _options }
+local FOV=class{ }
 FOV.__name='FOV'
 function FOV:__init(lightPassesCallback, options)
     self._lightPasses=lightPassesCallback
@@ -9,7 +9,7 @@ function FOV:__init(lightPassesCallback, options)
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
 end
 
-function FOV:compute(x, y, R, callback) end
+function FOV:compute() end
 
 function FOV:_getCircle(cx, cy, r)
     local result={}
@@ -34,7 +34,7 @@ function FOV:_getCircle(cx, cy, r)
     local y=cy+startOffset[2]*r
 
     for i=1,#dirs do
-        for j=1,r*countFactor do
+        for _=1,r*countFactor do
             table.insert(result, {x, y})
             x=x+dirs[i][1]
             y=y+dirs[i][2]
@@ -48,8 +48,8 @@ function FOV:_getRealCircle(cx, cy, r)
     local result={}
     while i<2*math.pi do
         i=i+0.05
-        x = cx + r * math.cos(i)
-        y = cy + r * math.sin(i)
+        local x = cx + r * math.cos(i)
+        local y = cy + r * math.sin(i)
         table.insert(result, {x,y})
     end
     return result

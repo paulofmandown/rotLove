@@ -14,7 +14,6 @@ end
 
 function RNG:bit_and(a, b)
     local r = 0
-    local m = 0
     for m = 0, 31 do
         if (a % 2 == 1) and (b % 2 == 1) then r = r + 2^m end
         if a % 2 ~= 0 then a = a - 1 end
@@ -26,7 +25,6 @@ end
 
 function RNG:bit_or(a, b)
     local r = 0
-    local m = 0
     for m = 0, 31 do
         if (a % 2 == 1) or (b % 2 == 1) then r = r + 2^m end
         if a % 2 ~= 0 then a = a - 1 end
@@ -38,7 +36,6 @@ end
 
 function RNG:bit_xor(a, b)
     local r = 0
-    local m = 0
     for m = 0, 31 do
         if a % 2 ~= b % 2 then r = r + 2^m end
         if a % 2 ~= 0 then a = a - 1 end

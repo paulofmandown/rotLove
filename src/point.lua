@@ -1,7 +1,7 @@
 local Point_PATH =({...})[1]:gsub("[%.\\/]point$", "") .. '/'
 local class  =require (Point_PATH .. 'vendor/30log')
 
-local Point=class { x, y }
+local Point=class { }
 Point.__name='Point'
 function Point:__init(x, y)
     self.x=x

@@ -4,16 +4,7 @@
 local StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
 local class  =require (StringGen_Path .. 'vendor/30log')
 
-local StringGenerator = class {
-	__name,
-	_options,
-	_boundary,
-	_suffix,
-	_prefix,
-	_priorValues,
-	_data,
-    _rng
-}
+local StringGenerator = class { }
 StringGenerator.__name='StringGenerator'
 
 --- Constructor.
@@ -34,11 +25,11 @@ function StringGenerator:__init(options, rng)
 	self._priorValues={}
 	self._data    ={}
 	if options then
-		for k,v in pairs(options) do
+		for _,v in pairs(options) do
 			self._options.k=v
 		end
 	end
-	for i=1,self._options.order do
+	for _=1,self._options.order do
 		table.insert(self._prefix, self._boundary)
 	end
 	self._priorValues[self._boundary]=self._options.prior
@@ -57,7 +48,6 @@ end
 -- @treturn string The generated string
 function StringGenerator:generate()
 	local result={self:_sample(self._prefix)}
-	local i=0
 	while result[#result] ~= self._boundary do
 		table.insert(result, self:_sample(result))
 	end
@@ -74,7 +64,7 @@ function StringGenerator:observe(s)
 		self._priorValues[tokens[i]] = self._options.prior
 	end
 	local i=1
-	for k,v in pairs(self._prefix) do
+	for _,v in pairs(self._prefix) do
 		table.insert(tokens, i, v)
 		i=i+1
 	end
@@ -95,7 +85,7 @@ end
 function StringGenerator:getStats()
 	local parts={}
 	local prC=0
-	for k,_ in pairs(self._priorValues) do
+	for _ in pairs(self._priorValues) do
 		prC = prC + 1
 	end
 	prC=prC-1
@@ -169,8 +159,8 @@ function StringGenerator:_pickRandom(data)
 	for k,_ in pairs(data) do
 		total=total+data[k]
 	end
-	rand=self._rng:random()*total
-	i=0
+	local rand=self._rng:random()*total
+	local i=0
 	for k,_ in pairs(data) do
 		i=i+data[k]
 		if (rand<i) then

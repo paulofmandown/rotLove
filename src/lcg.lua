@@ -1,10 +1,6 @@
 --- Linear Congruential Generator. A random number generator based on RandomLua
 -- @module ROT.RNG.LCG
-
-local LCG_PATH =({...})[1]:gsub("[%.\\/]lcg$", "") .. '/'
-local class  =require (LCG_PATH .. 'vendor/30log')
-
-local LCG=ROT.RNG:extends { __name, mt, index, a, c, m, x, _seed }
+local LCG=ROT.RNG:extends { }
 LCG.__name='LCG'
 
 --- Constructor.

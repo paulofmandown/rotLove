@@ -1,7 +1,7 @@
 local Path_PATH=({...})[1]:gsub("[%.\\/]path$", "") .. '/'
 local class  =require (Path_PATH .. 'vendor/30log')
 
-local Path=class { _toX, _toY, _fromX, _fromY, _passableCallback, _options, _dirs}
+local Path=class { }
 Path.__name='Path'
 function Path:__init(toX, toY, passableCallback, options)
     self._toX  =toX
@@ -26,7 +26,7 @@ function Path:__init(toX, toY, passableCallback, options)
     end
 end
 
-function Path:compute(fromX, fromY, callback) end
+function Path:compute() end
 
 function Path:_getNeighbors(cx, cy)
     local result={}

@@ -1,10 +1,7 @@
 --- Room object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
-local Room_PATH =({...})[1]:gsub("[%.\\/]room$", "") .. '/'
-local class  =require (Room_PATH .. 'vendor/30log')
-
-local Room = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
+local Room = ROT.Map.Feature:extends { }
 Room.__name='Room'
 --- Constructor.
 -- creates a new room object with the assigned values
@@ -43,8 +40,8 @@ function Room:createRandomAt(x, y, dx, dy, options, rng)
 	local max  =options.roomWidth[2]
 	local width=min+math.floor(rng:random(min, max))
 
-	local min   =options.roomHeight[1]
-	local max   =options.roomHeight[2]
+	min   =options.roomHeight[1]
+	max   =options.roomHeight[2]
 	local height=min+math.floor(rng:random(min,max))
 
 	if dx==1 then
@@ -77,8 +74,8 @@ function Room:createRandomCenter(cx, cy, options, rng)
 	local max  =options.roomWidth[2]
 	local width=min+math.floor(rng:random()*(max-min+1))
 
-	local min   =options.roomHeight[1]
-	local max   =options.roomHeight[2]
+	min   =options.roomHeight[1]
+	max   =options.roomHeight[2]
 	local height=min+math.floor(rng:random()*(max-min+1))
 
 	local x1=cx-math.floor(rng:random()*width)
@@ -101,8 +98,8 @@ function Room:createRandom(availWidth, availHeight, options, rng)
 	local max  =options.roomWidth[2]
 	local width=math.floor(rng:random(min, max))
 
-	local min   =options.roomHeight[1]
-	local max   =options.roomHeight[2]
+	min=options.roomHeight[1]
+	max=options.roomHeight[2]
 	local height=math.floor(rng:random(min, max))
 
 	local left=availWidth-width

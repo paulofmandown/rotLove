@@ -1,8 +1,5 @@
 --- The Speed based scheduler
 -- @module ROT.Scheduler.Speed
-local Speed_Path =({...})[1]:gsub("[%.\\/]speed$", "") .. '/'
-local class  =require (Speed_Path .. 'vendor/30log')
-
 local Speed= ROT.Scheduler:extends {  }
 Speed.__name='Speed'
 --- Add.

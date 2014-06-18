@@ -1,10 +1,7 @@
 --- The Digger Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Digger
-local Digger_PATH =({...})[1]:gsub("[%.\\/]digger$", "") .. '/'
-local class  =require (Digger_PATH .. 'vendor/30log')
-
-local Digger=ROT.Map.Dungeon:extends { _options, _rng }
+local Digger=ROT.Map.Dungeon:extends { }
 Digger.__name='Digger'
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
@@ -178,8 +175,8 @@ function Digger:_removeSurroundingWalls(cx, cy)
 	local deltas=ROT.DIRS.FOUR
 	for i=1,#deltas do
 		local delta=deltas[i]
-		local x    =delta[1]
-		local y    =delta[2]
+		local x    =cx+delta[1]
+		local y    =cy+delta[2]
 		self._walls[x..','..y]=nil
 		x=2*delta[1]
 		y=2*delta[2]

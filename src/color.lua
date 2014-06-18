@@ -7,7 +7,7 @@
 local Color_PATH=({...})[1]:gsub("[%.\\/]color$", "") .. '/'
 local class  =require (Color_PATH .. 'vendor/30log')
 
-local Color=class { _cache, _rng }
+local Color=class { }
 Color.__name='Color'
 function Color:__init()
     self._rng = ROT.RNG.Twister:new()
@@ -168,7 +168,6 @@ end
 -- @tparam string str Accepted formats 'rgb(0..255, 0..255, 0..255)', '#5fe', '#5FE', '#254eff', 'goldenrod'
 function Color:fromString(str)
     local cached={r=0,g=0,b=0,a=255}
-    local r
     if self._cached[str] then cached = self._cached[str]
     else
         local values={}
@@ -338,9 +337,9 @@ end
 
 -- Convert rgb color to hsl
 function Color:rgb2hsl(color)
-    r=color.r/255
-    g=color.g/255
-    b=color.b/255
+    local r=color.r/255
+    local g=color.g/255
+    local b=color.b/255
     local max=math.max(r, g, b)
     local min=math.min(r, g, b)
     local h,s,l=0,0,(max+min)/2
@@ -357,7 +356,7 @@ function Color:rgb2hsl(color)
         end
             h=h/6
     end
-    result={}
+    local result={}
     result.h=h
     result.s=s
     result.l=l

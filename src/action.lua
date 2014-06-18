@@ -1,10 +1,6 @@
 --- Action based turn scheduler.
 -- @module ROT.Scheduler.Action
-
-local Action_Path =({...})[1]:gsub("[%.\\/]action$", "") .. '/'
-local class  =require (Action_Path .. 'vendor/30log')
-
-local Action= ROT.Scheduler:extends { _defaultDuration, _duration }
+local Action= ROT.Scheduler:extends { }
 Action.__name='Action'
 function Action:__init()
 	Action.super.__init(self)

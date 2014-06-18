@@ -1,46 +1,23 @@
 --- Visual Display.
 -- A Code Page 437 terminal emulator based on AsciiPanel.
 -- @module ROT.Display
-
 local Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
 local class=require (Display_Path .. 'vendor/30log')
 
-local Display = class {
-	__name,
-	color,
-	widthInChars,
-	heightInChars,
-	charWidth,
-	charHeight,
-	defaultBackgroundColor,
-	defaultForegroundColor,
-	full,
-	vsync,
-	fsaa,
-	glyphSprite,
-	glyphs,
-	chars,
-	backgroundColors,
-	foregroundColors,
-	oldChars,
-	oldBackgroundColors,
-	oldForegroundColors,
-	canvas
-}
+local Display = class { }
 Display.__name='Display'
 
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
 -- @tparam[opt=80] int w Width of display in number of characters
 -- @tparam[opt=24] int h Height of display in number of characters
--- @tparam[opt=1] float scale Scale factor applied to characters
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
 -- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
+function Display:__init(w, h, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
@@ -63,7 +40,7 @@ function Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
     end
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self.defaultBackgroundColor=dbg and dgb or {r=15,g=15,b=15,a=255}
+    self.defaultBackgroundColor=dbg and dbg or {r=15,g=15,b=15,a=255}
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
                                      self.defaultBackgroundColor.g,
@@ -74,8 +51,8 @@ function Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
 
     self.glyphSprite=self.graphics.newImage(Display_Path .. 'img/cp437.png')
     for i=0,255 do
-        sx=(i%32)*9
-        sy=math.floor(i/32)*16
+        local sx=(i%32)*9
+        local sy=math.floor(i/32)*16
         self.glyphs[i]=self.graphics.newQuad(sx, sy, 9, 16, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
     end
 
@@ -199,7 +176,7 @@ function Display:clear(c, x, y, w, h, fg, bg)
 	c =c and c or ' '
 	w =w and w or self.widthInChars
 	local s=''
-	for i=1,w do
+	for _=1,w do
 		s=s..c
 	end
 	x =self:_validateX(x, s)

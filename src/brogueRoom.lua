@@ -1,10 +1,7 @@
 --- BrogueRoom object.
 -- Used by ROT.Map.Brogue to create maps with 'cross rooms'
 -- @module ROT.Map.BrogueRoom
-local BrogueRoom_PATH =({...})[1]:gsub("[%.\\/]brogueroom$", "") .. '/'
-local class  =require (Room_PATH .. 'vendor/30log')
-
-local BrogueRoom = ROT.Map.Feature:extends { _x1, _x2, _y1, _y2, _doorX, _doorY, _rng }
+local BrogueRoom = ROT.Map.Feature:extends { }
 BrogueRoom.__name='BrogueRoom'
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
@@ -58,16 +55,16 @@ function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
     local max=options.roomWidth[2]
     dims.w1=math.floor(rng:random(min,max))
 
-    local min=options.roomHeight[1]
-    local max=options.roomHeight[2]
+    min=options.roomHeight[1]
+    max=options.roomHeight[2]
     dims.h1=math.floor(rng:random(min,max))
 
-    local min=options.crossWidth[1]
-    local max=options.crossWidth[2]
+    min=options.crossWidth[1]
+    max=options.crossWidth[2]
     dims.w2=math.floor(rng:random(min,max))
 
-    local min=options.crossHeight[1]
-    local max=options.crossHeight[2]
+    min=options.crossHeight[1]
+    max=options.crossHeight[2]
     dims.h2=math.floor(rng:random(min,max))
 
     if dx==1 then
@@ -153,20 +150,20 @@ function BrogueRoom:createRandomCenter(cx, cy, options, rng)
     local max=options.roomWidth[2]
     dims.w1=math.floor(rng:random(min,max))
 
-    local min=options.roomHeight[1]
-    local max=options.roomHeight[2]
+    min=options.roomHeight[1]
+    max=options.roomHeight[2]
     dims.h1=math.floor(rng:random(min,max))
 
     dims.x1=cx-math.floor(rng:random()*dims.w1)
     dims.y1=cy-math.floor(rng:random()*dims.h1)
 
     --- Generate Rectangle Two dimensions
-    local min=options.roomWidth[1]
-    local max=options.roomWidth[2]
+    min=options.roomWidth[1]
+    max=options.roomWidth[2]
     dims.w2=math.floor(rng:random(min,max))
 
-    local min=options.roomHeight[1]
-    local max=options.roomHeight[2]
+    min=options.roomHeight[1]
+    max=options.roomHeight[2]
     dims.h2=math.floor(rng:random(min,max))
 
     dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
@@ -194,8 +191,8 @@ function BrogueRoom:createRandom(availWidth, availHeight, options, rng)
     local max=options.roomWidth[2]
     dims.w1=math.floor(rng:random(min,max))
 
-    local min=options.roomHeight[1]
-    local max=options.roomHeight[2]
+    min=options.roomHeight[1]
+    max=options.roomHeight[2]
     dims.h1=math.floor(rng:random(min,max))
 
     -- Consider moving these to aw-(w1+w2) and ah-(h1+h2)
@@ -206,12 +203,12 @@ function BrogueRoom:createRandom(availWidth, availHeight, options, rng)
     dims.y1=math.floor(rng:random()*top)
 
     --- Generate Rectangle Two dimensions
-    local min=options.crossWidth[1]
-    local max=options.crossWidth[2]
+    min=options.crossWidth[1]
+    max=options.crossWidth[2]
     dims.w2=math.floor(rng:random(min,max))
 
-    local min=options.crossHeight[1]
-    local max=options.crossHeight[2]
+    min=options.crossHeight[1]
+    max=options.crossHeight[2]
     dims.h2=math.floor(rng:random(min,max))
 
     dims.x2=math.floor(rng:random(dims.x1, (dims.x1+dims.w1)-dims.w2))
@@ -313,7 +310,7 @@ function BrogueRoom:getTop()    return math.min(self._dims.y1, self._dims.y2) en
 function BrogueRoom:getBottom() return math.max(self._dims.y1+self._dims.h1, self._dims.y2+self._dims.h2) end
 
 function BrogueRoom:debug()
-    cmd=write and write or io.write
+    local cmd=write and write or io.write
     local str=''
     for k,v in pairs(self._dims) do
         str=str..k..'='..v..','

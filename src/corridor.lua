@@ -1,10 +1,7 @@
 --- Corridor object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
-local Corridor_PATH =({...})[1]:gsub("[%.\\/]corridor$", "") .. '/'
-local class  =require (Corridor_PATH .. 'vendor/30log')
-
-local Corridor = ROT.Map.Feature:extends { _startX, _startY, _endX, _endY, _rng }
+local Corridor = ROT.Map.Feature:extends { }
 Corridor.__name='Corridor'
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
@@ -125,7 +122,6 @@ function Corridor:createPriorityWalls(gen, priorityWallCallback)
 	local sy    =self._startY
 	local dx    =self._endX-sx
 	local dy    =self._endY-sy
-	local length=1+math.max(math.abs(dx), math.abs(dy))
 
 	if dx>0 then dx=dx/math.abs(dx) end
 	if dy>0 then dy=dy/math.abs(dy) end

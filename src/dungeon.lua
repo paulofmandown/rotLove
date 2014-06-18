@@ -1,11 +1,7 @@
 --- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
-
-local Dungeon_PATH =({...})[1]:gsub("[%.\\/]dungeon$", "") .. '/'
-local class  =require (Dungeon_PATH .. 'vendor/30log')
-
-local Dungeon = ROT.Map:extends { _rooms, _corridors }
+local Dungeon = ROT.Map:extends { }
 Dungeon.__name='Dungeon'
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
@@ -27,8 +23,8 @@ function Dungeon:getRooms() return self._rooms end
 -- @treturn table A table {{x=int, y=int},...} for doors.
 function Dungeon:getDoors()
     local result={}
-    for k,v in pairs(self._rooms) do
-        for l,w in pairs(v._doors) do
+    for _,v in pairs(self._rooms) do
+        for l in pairs(v._doors) do
             local s=l:split(',')
             table.insert(result, {x=tonumber(s[1]), y=tonumber(s[2])})
         end

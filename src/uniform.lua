@@ -1,10 +1,7 @@
 --- The Uniform Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Uniform
-local Uniform_PATH =({...})[1]:gsub("[%.\\/]uniform$", "") .. '/'
-local class  =require (Uniform_PATH .. 'vendor/30log')
-
-local Uniform=ROT.Map.Dungeon:extends { _options, _rng }
+local Uniform=ROT.Map.Dungeon:extends { }
 Uniform.__name='Uniform'
 
 --- Constructor.
@@ -182,7 +179,7 @@ function Uniform:_connectRooms(room1, room2)
         self:_digLine({start, endTbl})
     elseif start[index] < min-1 or start[index] > max+1 then
         local diff=start[index]-center2[index]
-        rotation=0
+        local rotation=0
         if dirIndex2==1 or dirIndex2==2 then rotation=diff<0 and 2 or 4
         elseif dirIndex2==3 or dirIndex2==4 then rotation=diff<0 and 4 or 2 end
         if rotation==0 then assert(false, 'failed to rotate') end
@@ -212,7 +209,7 @@ function Uniform:_connectRooms(room1, room2)
     room1:addDoor(start[1],start[2])
     room2:addDoor(endTbl[1], endTbl[2])
 
-    local index=table.indexOf(self._unconnected, room1)
+    index=table.indexOf(self._unconnected, room1)
     if index>0 then
         table.insert(self._connected, table.remove(self._unconnected, index))
     end

@@ -1,11 +1,7 @@
 --- The Eller Maze Map Generator.
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
-
-local EllerMaze_PATH =({...})[1]:gsub("[%.\\/]ellerMaze$", "") .. '/'
-local class  =require (EllerMaze_PATH .. 'vendor/30log')
-
-local EllerMaze = ROT.Map:extends { _rng }
+local EllerMaze = ROT.Map:extends { }
 EllerMaze.__name='EllerMaze'
 
 --- Constructor.

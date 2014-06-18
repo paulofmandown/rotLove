@@ -66,7 +66,7 @@ function DijkstraMap:_manyGoalCompute()
                 if self._passableCallback(i, j) then
                     local cellChanged=false
                     local low=math.huge
-                    for k,v in pairs(self._dirs) do
+                    for _,v in pairs(self._dirs) do
                         local tx=(i+v[1])
                         local ty=(j+v[2])
                         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
@@ -106,7 +106,7 @@ function DijkstraMap:_singleGoalCompute(gx, gy)
     local pq={}
     local ds=self._dirs
 
-    table.insert(wq, {g.x, g.y})
+    table.insert(wq, {gx, gy})
 
     while true do
         while #wq>0 do
@@ -141,7 +141,7 @@ end
 -- @tparam[opt=nil] int gx Will use this value as the x-coordinate of a new goal cell to be inserted
 -- @tparam[opt=nil] int gy Will use this value as the y-coordinate of a new goal cell to be inserted
 function DijkstraMap:removeGoals(gx, gy)
-    while tabel.remove(self._goals) do end
+    while table.remove(self._goals) do end
     if gx and gy then table.insert(self._goals, {x=gx, y=gy}) end
 end
 
@@ -149,9 +149,11 @@ end
 -- For debugging, will send a comma separated output of cell values to the console.
 -- @tparam boolean[opt=false] returnString Will return the output in addition to sending it to console if true.
 function DijkstraMap:writeMapToConsole(returnString)
+    local ls
+    
     if returnString then ls='' end
     for y=1,self._dimensions.h do
-        s=''
+        local s=''
         for x=1,self._dimensions.w do
             s=s..self._map[x][y]..','
         end
@@ -200,11 +202,10 @@ function DijkstraMap:getGoal() return self._goal end
 function DijkstraMap:dirTowardsGoal(x, y)
     local low=self._map[x][y]
     if low==0 then return nil end
-    local key=nil
     local dir=nil
-    for k,v in pairs(self._dirs) do
-        local tx=(i+v[1])
-        local ty=(j+v[2])
+    for _,v in pairs(self._dirs) do
+        local tx=(x+v[1])
+        local ty=(y+v[2])
         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
             local val=self._map[tx][ty]
             if val<low then

@@ -1,10 +1,6 @@
 --- Cellular Automaton Map Generator
 -- @module ROT.Map.Cellular
-
-local Cellular_PATH =({...})[1]:gsub("[%.\\/]cellular$", "") .. '/'
-local class  =require (Cellular_PATH .. 'vendor/30log')
-
-local Cellular = ROT.Map:extends { _rng, _options, _map }
+local Cellular = ROT.Map:extends { }
 Cellular.__name='Cellular'
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
@@ -130,7 +126,7 @@ function Cellular:_completeMaze()
     -- and connect zones
     for i=1,#zones do
         if #zones[i]<self._options.minimumZoneArea then
-            for k,v in pairs(zones[i]) do
+            for _,v in pairs(zones[i]) do
                 self._map[v[1]][v[2]]=1
             end
         else
@@ -143,7 +139,7 @@ function Cellular:_completeMaze()
             local t=zones[i][self._rng:random(1,#zones[i])]
             self:_tunnel(t[1],t[2],rx,ry)
             -- re-establish floors as 0 for this zone
-            for k,v in pairs(zones[i]) do
+            for _,v in pairs(zones[i]) do
                 self._map[v[1]][v[2]]=0
             end
         end
@@ -161,7 +157,7 @@ function Cellular:_addZoneFrom(x,y,zones)
         local t=table.remove(todo)
         local tx=t[1]
         local ty=t[2]
-        for k,v in pairs(dirs) do
+        for _,v in pairs(dirs) do
             local nx=tx+v[1]
             local ny=ty+v[2]
             if self._map[nx] and self._map[nx][ny] and self._map[nx][ny]==0 then
@@ -189,13 +185,13 @@ function Cellular:_tunnel(sx,sy,ex,ey)
         local tempDist=math.ceil(yAbs*firstHalf)
         table.insert(moves, {yDir, tempDist})
         table.insert(moves, {xDir, xAbs})
-        local tempDist=math.floor(yAbs*secondHalf)
+        tempDist=math.floor(yAbs*secondHalf)
         table.insert(moves, {yDir, tempDist})
     else
         local tempDist=math.ceil(xAbs*firstHalf)
         table.insert(moves, {xDir, tempDist})
         table.insert(moves, {yDir, yAbs})
-        local tempDist=math.floor(xAbs*secondHalf)
+        tempDist=math.floor(xAbs*secondHalf)
         table.insert(moves, {xDir, tempDist})
     end
 

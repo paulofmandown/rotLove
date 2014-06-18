@@ -144,7 +144,6 @@ function Lighting:_emitLightFromCell(x, y, color, litCells)
     if self._fovCache[key] then fov=self._fovCache[key]
     else fov=self:_updateFOV(x, y)
     end
-    local result
     local formFactor
     for k,_ in pairs(fov) do
         formFactor=fov[k]

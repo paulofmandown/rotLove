@@ -2,10 +2,7 @@
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-local Rogue_PATH =({...})[1]:gsub("[%.\\/]rogue$", "") .. '/'
-local class  =require (Rogue_PATH .. 'vendor/30log')
-
-local Rogue=ROT.Map:extends { _options, _rng }
+local Rogue=ROT.Map:extends { }
 Rogue.__name='Rogue'
 --- Constructor.
 -- @tparam int width Width in cells of the map
@@ -127,7 +124,6 @@ function Rogue:_connectUnconnectedRooms()
     local cw=self._options.cellWidth
     local ch=self._options.cellHeight
 
-    local randomConnectedCell
     self.connectedCells=table.randomize(self.connectedCells)
     local room, otherRoom, validRoom
 
@@ -188,7 +184,7 @@ function Rogue:_createRooms()
     local roomw, roomh
     local roomWidth =self._options.roomWidth
     local roomHeight=self._options.roomHeight
-    local sx, sy, tx, ty
+    local sx, sy
     local otherRoom
 
 
@@ -301,13 +297,13 @@ function Rogue:_drawCorridore(startPosition, endPosition)
         local tempDist=math.ceil(yAbs*firstHalf)
         table.insert(moves, {yDir, tempDist})
         table.insert(moves, {xDir, xAbs})
-        local tempDist=math.floor(yAbs*secondHalf)
+        tempDist=math.floor(yAbs*secondHalf)
         table.insert(moves, {yDir, tempDist})
     else
         local tempDist=math.ceil(xAbs*firstHalf)
         table.insert(moves, {xDir, tempDist})
         table.insert(moves, {yDir, yAbs})
-        local tempDist=math.floor(xAbs*secondHalf)
+        tempDist=math.floor(xAbs*secondHalf)
         table.insert(moves, {xDir, tempDist})
     end
 

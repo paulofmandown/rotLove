@@ -2,10 +2,7 @@
 -- The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Precise
-local Precise_PATH =({...})[1]:gsub("[%.\\/]precise$", "") .. '/'
-local class  =require (Precise_PATH .. 'vendor/30log')
-
-local Precise=ROT.FOV:extends{ __name, _lightPasses, _options }
+local Precise=ROT.FOV:extends{ }
 Precise.__name='Precise'
 --- Constructor.
 -- Called with ROT.FOV.Precise:new()
@@ -30,7 +27,7 @@ function Precise:compute(x, y, R, callback)
     callback(x, y, 0, 1)
     local SHADOWS={}
 
-    local cx, cy, blocks, A1, A2, visibility
+    local blocks, A1, A2, visibility
 
     for r=1,R do
         local neighbors=self:_getCircle(x, y, r)
@@ -126,7 +123,7 @@ end
 
 function splice(t, i, rn, it) -- table, index, numberToRemove, insertTable
     if rn>0 then
-        for j=1,rn do
+        for _=1,rn do
             table.remove(t, i)
         end
     end

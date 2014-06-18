@@ -1,9 +1,6 @@
 --- The Arena map generator.
 -- Generates an arena style map. All cells except for the extreme borders are floors. The borders are walls.
 -- @module ROT.Map.Arena
-local Arena_PATH =({...})[1]:gsub("[%.\\/]arena$", "") .. '/'
-local class  =require (Arena_PATH .. 'vendor/30log')
-
 local Arena = ROT.Map:extends { }
 Arena.__name='Arena'
 --- Constructor.

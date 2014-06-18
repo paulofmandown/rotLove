@@ -1,10 +1,7 @@
 --- The Brogue Map Generator.
 -- Based on the description of Brogues level generation at http://brogue.wikia.com/wiki/Level_Generation
 -- @module ROT.Map.Brogue
-local Brogue_PATH = ({...})[1]:gsub("[%.\\/]brogue$", "") .. '/'
-local class =require (Brogue_PATH .. 'vendor/30log')
-
-local Brogue=ROT.Map.Dungeon:extends { _options, _rng }
+local Brogue=ROT.Map.Dungeon:extends { }
 Brogue.__name='Brogue'
 
 --- Constructor.
@@ -107,7 +104,7 @@ end
 function Brogue:_buildCave()
     local cl=ROT.Map.Cellular:new(self._width, self._height, nil, self._rng)
     cl:randomize(.55)
-    for i=1,5 do cl:create() end
+    for _=1,5 do cl:create() end
     local map=cl._map
     local id=2
     local largest=2
@@ -181,6 +178,7 @@ function Brogue:_buildRoom(forceNoCorridor)
     local d=self:_getDiggingDirection(p[1], p[2])
     if d then
         if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
+            local cd
             if d[1]~=0 then cd=self._options.corridorWidth
             else cd=self._options.corridorHeight
             end
@@ -239,7 +237,6 @@ function Brogue:_insertWalls(wt)
 end
 
 function Brogue:_generateLoops()
-    local loops=0
     local dirs=ROT.DIRS.FOUR
     local count=0
     local wd=self._width
@@ -251,7 +248,7 @@ function Brogue:_generateLoops()
     local function pass(x,y)
         return m[x][y]~=1
     end
-    for i=1,300 do
+    for _=1,300 do
         if #self._walls<1 then return end
         local w=table.remove(self._walls, self._rng:random(1,#self._walls))
         for j=1,2 do

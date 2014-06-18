@@ -1,9 +1,6 @@
 --- Multiply With Carry. A random number generator based on RandomLua
 -- @module ROT.RNG.MWC
-local MWC_PATH =({...})[1]:gsub("[%.\\/]mwc$", "") .. '/'
-local class  =require (MWC_PATH .. 'vendor/30log')
-
-local MWC=ROT.RNG:extends { __name, mt, index, a, c, ic, m, x, _seed }
+local MWC=ROT.RNG:extends { }
 MWC.__name='MWC'
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)

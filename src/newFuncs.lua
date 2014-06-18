@@ -14,7 +14,7 @@ end
 -- randomly reorders the elements of the provided table and returns the result
 function table.randomize(theTable)
     isATable(theTable)
-    result={}
+    local result={}
     while #theTable>0 do
         table.insert(result, table.remove(theTable, table.randomi(theTable)))
     end
@@ -81,8 +81,8 @@ end
 -- returns string of length n consisting of only char c
 function charNTimes(c, n)
     assert(#c==1, 'character must be a string of length 1')
-    s=''
-    for i=1,n and n or 2 do
+    local s=''
+    for _=1,n and n or 2 do
         s=s..c
     end
     return s

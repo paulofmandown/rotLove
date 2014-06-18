@@ -1,10 +1,7 @@
 --- Dijkstra Pathfinding.
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
-local Dijkstra_PATH=({...})[1]:gsub("[%.\\/]dijkstra$", "") .. '/'
-local class  =require (Dijkstra_PATH .. 'vendor/30log')
-
-local Dijkstra=ROT.Path:extends { _toX, _toY, _fromX, _fromY, _computed, _todo, _passableCallback, _options, _dirs}
+local Dijkstra=ROT.Path:extends { }
 Dijkstra.__name='Dijkstra'
 --- Constructor.
 -- @tparam int toX x-position of destination cell

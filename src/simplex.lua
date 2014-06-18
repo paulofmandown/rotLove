@@ -5,10 +5,7 @@
 -- With Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
 -- Better rank ordering method by Stefan Gustavson in 2012.
 -- @module ROT.Noise.Simplex
-local Simplex_PATH =({...})[1]:gsub("[%.\\/]simplex$", "") .. '/'
-local class  =require (Simplex_PATH .. 'vendor/30log')
-
-local Simplex=ROT.Noise:extends{ __name, _F2, _G2, _gradients, _perms, _indexes }
+local Simplex=ROT.Noise:extends{ }
 Simplex.__name='Simplex'
 --- Constructor.
 -- 2D simplex noise generator.

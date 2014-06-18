@@ -2,10 +2,7 @@
 -- See http://en.wikipedia.org/wiki/Bresenham's_line_algorithm.
 -- Included for sake of having options. Provides three functions for computing FOV
 -- @module ROT.FOV.Bresenham
-local Bresenham_PATH =({...})[1]:gsub("[%.\\/]bresenham$", "") .. '/'
-local class  =require (Bresenham_PATH .. 'vendor/30log')
-
-local Bresenham=ROT.FOV:extends { __name, _lightPasses, _options }
+local Bresenham=ROT.FOV:extends { }
 Bresenham.__name='Bresenham'
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
@@ -120,7 +117,7 @@ end
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:computeQuick(cx, cy, r, callback)
-	visited={}
+	local visited={}
 	callback(cx,cy,1, 1)
     visited[ROT.Point(cx, cy):hashCode()]=0
 
