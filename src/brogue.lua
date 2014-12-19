@@ -50,7 +50,7 @@ end
 -- @tparam function callback This function will be called for every cell. It must accept the following parameters:
   -- @tparam int callback.x The x-position of a cell in the map
   -- @tparam int callback.y The y-position of a cell in the map
-  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
+  -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall, 2==door
 -- @tparam boolean firstFloorBehavior If true will put an upside T (9x10v and 20x4h) at the bottom center of the map.
 -- @treturn ROT.Map.Brogue self
 function Brogue:create(callback, firstFloorBehavior)
@@ -263,7 +263,7 @@ function Brogue:_generateLoops()
                 local path=ROT.Path.AStar(x,y,pass)
                 path:compute(x2, y2, cb)
                 if count>20 then
-                    m[w[1]][w[2]]=3
+                    m[w[1]][w[2]]=2
                 end
                 count=0
             end
