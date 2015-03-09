@@ -4366,9 +4366,10 @@ end
   -- @tparam boolean callback.visibility Indicates if the cell is seen
 function ROT.FOV.Recursive:compute180(x, y, R, dir, callback)
     callback(x, y, 0, true)
-    local prev=(dir-1+8)%8
-    local nPre=(dir-2+8)%8
-    local next=(dir+ 9 )%8
+    local cur = dir - 1
+    local prev=(cur-1+8)%8 + 1
+    local nPre=(cur-2+8)%8 + 1
+    local next=(cur+ 9 )%8 + 1
 
     self:_renderOctant(x, y, self._octants[nPre], R, callback)
     self:_renderOctant(x, y, self._octants[prev], R, callback)
@@ -4386,9 +4387,10 @@ end
   -- @tparam int callback.y y-position of cell that is in view
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam boolean callback.visibility Indicates if the cell is seen
-function ROT.FOV.Recursive:compute180(x, y, R, dir, callback)
+function ROT.FOV.Recursive:compute90(x, y, R, dir, callback)
     callback(x, y, 0, true)
-    local prev=(dir-1+8)%8
+    local cur = dir - 1
+    local prev=(cur-1+8)%8 + 1
 
     self:_renderOctant(x, y, self._octants[dir ], R, callback)
     self:_renderOctant(x, y, self._octants[prev], R, callback)
