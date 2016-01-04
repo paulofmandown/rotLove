@@ -31,7 +31,7 @@ function Display:__init(w, h, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
     self.graphics=love.graphics
-    if love._version>'0.8.0' then
+    if love.window then
         love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
         self.drawQ=self.graphics.draw
     else

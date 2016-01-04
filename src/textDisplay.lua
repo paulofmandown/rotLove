@@ -31,7 +31,7 @@ function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa
     self._charHeight   =self._font:getHeight()
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
-    local w=love._version > '0.8.0' and love.window or self.graphics
+    local w=love.window or self.graphics
     w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}

@@ -530,7 +530,7 @@ function ROT.Display:__init(w, h, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
     self.graphics=love.graphics
-    if love._version>'0.8.0' then
+    if love.window then
         love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
         self.drawQ=self.graphics.draw
     else
@@ -804,7 +804,7 @@ function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, 
     self._charHeight   =self._font:getHeight()
     self._widthInChars =w and w or 80
     self._heightInChars=h and h or 24
-    local w=love._version > '0.8.0' and love.window or self.graphics
+    local w=love.window or self.graphics
     w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
     self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
@@ -2836,7 +2836,7 @@ function ROT.Map.Corridor:createPriorityWalls(gen, priorityWallCallback)
     local sy    =self._startY
     local dx    =self._endX-sx
     local dy    =self._endY-sy
-    
+
     if dx>0 then dx=dx/math.abs(dx) end
     if dy>0 then dy=dy/math.abs(dy) end
     local nx=dy
