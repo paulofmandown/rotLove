@@ -5,7 +5,7 @@ Bringing [rot.js](http://ondras.github.io/rot.js/hp/) functionality to Love2D. T
 See [this page](http://paulofmandown.github.io/rotLove/) for a quick and dirty run down of all the functionality provided.
 
 Included:
-```
+
  * Display          - via [rlLove](https://github.com/paulofmandown/rlLove), only supports cp437 emulation 
                       rather than full font support.
  * TextDisplay      - Text based display, accepts supplied fonts
@@ -22,7 +22,7 @@ Included:
                       (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
  * Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
  * Lighting         - compute light emission and blending, ported from [rot.js](http://ondras.github.io/rot.js/hp/).
-```
+
 Getting started
 ==========
 `git clone git://github.com/paulofmandown/rotLove.git`
