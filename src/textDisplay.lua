@@ -21,7 +21,7 @@ TextDisplay.__name='TextDisplay'
 function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.graphics =love.graphics
     self._fontSize=size or 10
-    self._font    =font and self.graphics.newFont(font, size) or self.graphics.newFont(size)
+    self._font    =font and self.graphics.newFont(font, size) or self.graphics.newFont(self._fontSize)
     self.graphics.setFont(self._font)
     self._charWidth    =self._font:getWidth(' ')
     self._charHeight   =self._font:getHeight()
