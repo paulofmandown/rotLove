@@ -1951,7 +1951,7 @@ function ROT.Map.Cellular:create(callback)
     self._map=newMap
 
     if self._options.connected then
-        self._completeMaze()
+        self:_completeMaze()
     end
 
     if callback then

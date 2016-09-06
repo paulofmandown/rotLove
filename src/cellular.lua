@@ -87,7 +87,7 @@ function Cellular:create(callback)
     self._map=newMap
 
     if self._options.connected then
-        self._completeMaze()
+        self:_completeMaze()
     end
     if callback then
         for i=1,self._width do
