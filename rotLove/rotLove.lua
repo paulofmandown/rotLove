@@ -3601,7 +3601,8 @@ end
 function ROT.Map.Rogue:_getWallPosition(aRoom, aDirection)
     local rx, ry, door
     if aDirection==1 or aDirection==3 then
-        rx=self:_getRandomInt(aRoom.x, aRoom.x+aRoom.width-1)
+        local maxRx=aRoom.x+aRoom.width-1
+        rx=self:_getRandomInt(aRoom.x, maxRx>aRoom.x and maxRx or aRoom.x)
         if aDirection==1 then
             ry  =aRoom.y-2
             door=ry+1
@@ -3612,7 +3613,8 @@ function ROT.Map.Rogue:_getWallPosition(aRoom, aDirection)
         self.map[rx][door]=0
         table.insert(self._doors,{x=rx, y=door})
     elseif aDirection==2 or aDirection==4 then
-        ry=self:_getRandomInt(aRoom.y, aRoom.y+aRoom.height-1)
+        local maxRy=aRoom.y+aRoom.height-1
+        ry=self:_getRandomInt(aRoom.y, maxRy>aRoom.y and maxRy or aRoom.y)
         if aDirection==2 then
             rx  =aRoom.x+aRoom.width+1
             door=rx-1
