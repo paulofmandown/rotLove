@@ -516,12 +516,13 @@ ROT.Display = class { }
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function ROT.Display:__init(w, h, dfg, dbg, fullOrFlags, vsync, fsaa)
+function ROT.Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
-    self.charWidth=9
-    self.charHeight=16
+    self.scale=scale or 1
+    self.charWidth=9*self.scale
+    self.charHeight=16*self.scale
     self.glyphs={}
     self.chars={{}}
     self.backgroundColors={{}}
@@ -595,7 +596,7 @@ function ROT.Display:draw()
                 if c~=32 and c~=255 then
                     local qd=self.glyphs[c]
                     self:_setColor(fg)
-                    self.drawQ(self.glyphSprite, qd, px, py)
+                    self.drawQ(self.glyphSprite, qd, px, py, nil, self.scale)
                 end
 
                 self.oldChars[x][y]            = c
