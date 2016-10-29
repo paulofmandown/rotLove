@@ -37,8 +37,11 @@ end
 function love.draw() f:draw() end
 ```
 
-Demos Folder
+Examples
 ==========
-In Demos/main.lua (you'll want the demos branch), uncomment the line for the demo you'd like to see.
-
-Then, from the Demos directory in the shell, run `love .`
+rotLove has a number of demo projects in `examples/` that you can use to
+get a feel for each API. To see a demo in action, run
+```shell
+	love . my-demo
+```
+from your shell.

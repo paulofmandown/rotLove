@@ -1,74 +1,106 @@
-ROT=require 'vendor/rotLove/rotLove'
-
-data={}
-
+--[[ Rogue ]]
+ROT=require 'rotLove/rotLove'
+movers={}
+clr=ROT.Color:new()
+colors={}
+table.insert(colors, clr:fromString('blue'))
+table.insert(colors, clr:fromString('red'))
+table.insert(colors, clr:fromString('green'))
+table.insert(colors, clr:fromString('yellow'))
 function love.load()
-    f=ROT.Display:new()
-
-    -- use this to stress out the map creation and path finding
-    -- should take about a second to do one demo with this
-    --f=ROT.Display:new(256, 100, .275)
-
-    rng=ROT.RNG.Twister:new()
-    rng:randomseed()
-    map=ROT.Map.Rogue(f:getWidth(), f:getHeight())
+    f  =ROT.Display()
+    maps={
+        "DividedMaze",
+        "IceyMaze",
+        "EllerMaze",
+    }
+    dothething()
 end
-
-update=true
-function love.update()
-    if update then
-        update=false
-        doTheThing()
-    end
+function love.keypressed()
+    dothething()
 end
-
-function doTheThing()
-    map:create(mapCallback)
-    local start=os.clock()
-    local tile=getRandomFloor()
-    local dmap=ROT.DijkstraMap:new(tile[1], tile[2], f:getWidth(), f:getHeight(), passableCallback)
-    --[[
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-        local tile=getRandomFloor()
-        dmap:addGoal(tile[1], tile[2])
-    --]]
-    dmap:compute()
-    dmap:writeMapToConsole()
-    write('O: '..os.clock()-start)
-
-end
-
-function getRandomFloor()
-    local key=nil
-    while true do
-        local i=rng:random(1,f:getWidth())
-        local j=rng:random(1,f:getHeight())
-        if data[i][j]==0 then
-            return {i,j}
+tsl=0
+tbf=1/30
+function love.update(dt)
+    --tsl=tsl+dt
+    if true then --tsl>tbf then
+        tsl=tsl-tbf
+        for _,mover in pairs(movers) do
+            local dir={dijkMap:dirTowardsGoal(mover.x, mover.y)}
+            if dir[1] and dir[2] and mover.x and mover.y then
+                f:write(map[mover.x][mover.y], mover.x, mover.y, nil, clr:interpolate(mover.color, mover.oc))
+                mover.x=mover.x+dir[1]
+                mover.y=mover.y+dir[2]
+                local oc=f:getBackgroundColor(mover.x, mover.y)
+                mover.oc=oc==f:getDefaultBackgroundColor() and clr:fromString('dimgrey') or oc
+                f:write('@', mover.x, mover.y, nil, mover.color)
+            end
         end
     end
 end
 
-function love.keypressed() update=true end
+function dothething()
+    mapType=maps[rng:random(1,#maps)]
+    rog= ROT.Map[mapType]:new(f:getWidth(), f:getHeight())
+    map={}
+    for i=1,f:getWidth() do map[i]={} end
+    if rog.randomize then
+        floorValue=1
+        rog:randomize(.5)
+        for i=1,5 do
+            rog:create(calbak)
+        end
+    else
+        floorValue=0
+        rog:create(calbak)
+    end
+    --rog:randomize(.5)
+    --while rog:create(calbak) do end
+    rog:create(calbak)
+    while true do
+        local x=math.random(1,f:getWidth())
+        local y=math.random(1,f:getHeight())
 
-function passableCallback(x, y) return data[x][y]==0 end
+        if map[x][y]=='.' then
+            dijkMap=ROT.DijkstraMap:new(x,y,f:getWidth(),f:getHeight(),dijkCalbak)
+            break
+        end
+    end
+    dijkMap:compute()
+    movers={}
+    while #movers<40 do
+        local x=math.random(1,f:getWidth())
+        local y=math.random(1,f:getHeight())
 
-function mapCallback(x, y, val)
-    if not data[x] then data[x]={} end
-    data[x][y]=val
+        if map[x][y]=='.' then
+            table.insert(movers, {x=x,y=y,color=getRandomColor(),oc=f:getDefaultBackgroundColor()})
+        end
+    end
+
+    --[[while true do
+        local dir=dijkMap:dirTowardsGoal(mover.x, mover.y)
+        if not dir then break end
+        mover.x=mover.x+dir[1]
+        mover.y=mover.y+dir[2]
+        local x=mover.x
+        local y=mover.y
+        f:write(map[x][y], x, y, nil, {r=125,g=15,b=15,a=255})
+    end--]]
+end
+
+
+function love.draw() f:draw() end
+function calbak(x, y, val)
+    map[x][y]=val==floorValue and '.' or '#'
+    f:write(map[x][y], x, y)
+end
+function dijkCalbak(x,y) return map[x][y]=='.' end
+
+rng=ROT.RNG.Twister:new()
+rng:randomseed()
+function getRandomColor()
+    return { r=math.floor(rng:random(0,255)),
+             g=math.floor(rng:random(0,255)),
+             b=math.floor(rng:random(0,255)),
+             a=255}
 end

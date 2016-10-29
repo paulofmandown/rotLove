@@ -1,5 +1,5 @@
 --[[ Simplex Noise ]]--
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 function generateNoise()
     sim=ROT.Noise.Simplex()
     for j=1,f:getHeight() do
@@ -13,7 +13,7 @@ function generateNoise()
     end
 end
 function love.load()
-    f  =ROT.Display(256, 100, .275)
+    f  =ROT.Display(256, 100)
     generateNoise()
 end
 update=false

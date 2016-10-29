@@ -1,5 +1,5 @@
 --[[ Brogue ]]
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 
 function love.load()
     f  =ROT.Display(80, 30)
