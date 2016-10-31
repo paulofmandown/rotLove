@@ -22,6 +22,7 @@ Included:
                       (straight port from [rot.js](http://ondras.github.io/rot.js/hp/))
  * Path Finding     - Dijkstra and AStar pathfinding ported from [rot.js](http://ondras.github.io/rot.js/hp/).
  * Lighting         - compute light emission and blending, ported from [rot.js](http://ondras.github.io/rot.js/hp/).
+ * Dice             - Roguelike based dice module ported from [RL-Dice](https://github.com/timothymtorres/RL-Dice).
 
 Getting started
 ==========
