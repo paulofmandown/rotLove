@@ -1,23 +1,19 @@
 --[[ Divided Maze ]]
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 function love.load()
-    f =ROT.Display(80,24)
-    dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
-    dm:create(calbak)
-    dm=nil
+	f =ROT.Display(80,24)
+	dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
+	dm:create(calbak)
 end
 function love.draw() f:draw() end
 local update=false
 function love.update()
-    if update then
+	if update then
         update=false
-        f:clear()
-        dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())
-        dm:create(calbak)
-        dm=nil
+    	dm:create(calbak)
     end
 end
 function calbak(x,y,val)
-    f:write(val==1 and '#' or '.', x, y)
+	f:write(val==1 and '#' or '.', x, y)
 end
 function love.keypressed(key) update=true end

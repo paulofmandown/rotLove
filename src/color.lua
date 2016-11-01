@@ -188,7 +188,7 @@ function Color:fromString(str)
         elseif str:gmatch('rgb') then
             local i=1
             for s in str:gmatch('(%d+)') do
-                values[i]=s
+                values[i]=tonumber(s)
                 i=i+1
             end
         end

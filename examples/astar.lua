@@ -1,4 +1,4 @@
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 
 data={}
 
@@ -7,11 +7,11 @@ function love.load()
 
     -- use this to stress out the map creation and path finding
     -- should take about a second to do one demo with this
-    f=ROT.Display:new()
+    f=ROT.Display:new(256, 100, .275)
 
     rng=ROT.RNG.Twister:new()
     rng:randomseed()
-    map=ROT.Map.Rogue(f:getWidth(), f:getHeight())
+    map=ROT.Map.Uniform(f:getWidth(), f:getHeight())
     doTheThing()
 end
 
@@ -27,17 +27,19 @@ end
 function love.keypressed() update=true end
 
 function doTheThing()
+    local start=os.clock()
     map:create(mapCallback)
+    write('Map Create in '..os.clock()-start)
     p1=getRandomFloor(data)
     p2=getRandomFloor(data)
     p3=getRandomFloor(data)
+    start=os.clock()
     astar=ROT.Path.AStar(p1[1], p1[2], passableCallback)
-
-    local start=os.clock()
+    write('AStar init in '..os.clock()-start)
+    start=os.clock()
     astar:compute(p2[1], p2[2], astarCallback)
     write('AStar Compute in '..os.clock()-start)
-
-    local start=os.clock()
+    start=os.clock()
     astar:compute(p3[1], p3[2], astarCallback)
     write('AStar Compute in '..os.clock()-start)
 

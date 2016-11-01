@@ -1,5 +1,5 @@
 --[[ Bresenham Line of Sight ]]--
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 
 function calbak(x, y, val)
     map[x..','..y]=val
@@ -45,7 +45,7 @@ end
 function doTheThing()
     mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
     mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=false})
+    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=true})
     placePlayer()
     fov:compute(player.x, player.y, 10, computeCalbak)
 end

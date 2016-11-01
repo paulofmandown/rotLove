@@ -1,4 +1,4 @@
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 function love.load()
     f =ROT.Display(79,29)
     cl=ROT.Map.Cellular:new(f:getWidth(), f:getHeight())

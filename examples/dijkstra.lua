@@ -1,4 +1,4 @@
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 
 data={}
 

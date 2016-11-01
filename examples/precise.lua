@@ -1,5 +1,5 @@
 --[[ Precise Shadowcasting ]]--
-ROT=require 'vendor/rotLove/rotLove'
+ROT=require 'rotLove/rotLove'
 
 function calbak(x, y, val)
     map[x..','..y]=val
@@ -38,22 +38,18 @@ function placePlayer()
 end
 
 function love.load()
-    f  =ROT.TextDisplay('DejaVuSansMono.ttf', 12, 80, 24)
+    f  =ROT.Display(80, 24)
     map={}
+    doTheThing()
 end
 function doTheThing()
-    print("uni=ROT.Map.Uniform:new(f:getWidth(), f:getHeight())")
     uni=ROT.Map.Uniform:new(f:getWidth(), f:getHeight())
-    print("uni:create(calbak)")
     uni:create(calbak)
-    print("fov=ROT.FOV.Recursive:new(lightCalbak)")
-    fov=ROT.FOV.Recursive:new(lightCalbak)
-    print("placePlayer()")
+    fov=ROT.FOV.Precise:new(lightCalbak)
     placePlayer()
-    print("fov:compute(player.x, player.y, 12, computeCalbak)")
-    fov:compute(player.x, player.y, 12, computeCalbak)
+    fov:compute(player.x, player.y, 10, computeCalbak)
 end
-local update=true
+local update=false
 function love.update()
     if update then
         update=false

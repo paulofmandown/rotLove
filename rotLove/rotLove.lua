@@ -4839,7 +4839,7 @@ function ROT.Color:fromString(str)
         elseif str:gmatch('rgb') then
             local i=1
             for s in str:gmatch('(%d+)') do
-                values[i]=s
+                values[i]=tonumber(s)
                 i=i+1
             end
         end
@@ -5301,7 +5301,7 @@ ROT.Path.Dijkstra.__name='Dijkstra'
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function ROT.Path.Dijkstra:__init(toX, toY, passableCallback, options)ROT.Path.
+function ROT.Path.Dijkstra:__init(toX, toY, passableCallback, options)
     ROT.Path.Dijkstra.super.__init(self, toX, toY, passableCallback, options)
 
     self._computed={}
