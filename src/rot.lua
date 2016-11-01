@@ -40,6 +40,7 @@ ROT.RNG.LCG          = require (ROTLOVE_PATH .. 'lcg')
 ROT.RNG.MWC          = require (ROTLOVE_PATH .. 'mwc')
 --[[--------------------------------]]--
 
+ROT.Dice             = require (ROTLOVE_PATH .. 'dice')
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
 ROT.TextDisplay      = require (ROTLOVE_PATH .. 'textDisplay')
 ROT.StringGenerator  = require (ROTLOVE_PATH .. 'stringGenerator')
