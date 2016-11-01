@@ -74,7 +74,7 @@ end
   -- @tparam int callback.y y-position of cell that is in view
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam boolean callback.visibility Indicates if the cell is seen
-function Recursive:compute180(x, y, R, dir, callback)
+function Recursive:compute90(x, y, R, dir, callback)
     callback(x, y, 0, true)
     local prev=(dir-1+8)%8
 
