@@ -5658,8 +5658,8 @@ function ROT.Dice:__init(dice_notation, minimum, rng)
     self.num = tonumber(string.match(dice_notation, '%d+'))
     self.faces = tonumber(string.match(dice_notation, '[d](%d+)'))
 
-    local double_bonus = string.match(dice_notation, '[^%^+-]([+-]?[+-])%d+')
-    local bonus = string.match(dice_notation, '[^%^+-][+-]?([+-]%d+)')
+    local double_bonus = string.match(dice_notation, '[d]%d+([+-]?[+-])%d+')
+    local bonus = string.match(dice_notation, '[d]%d+[+-]?([+-]%d+)')
     self.is_bonus_plural = double_bonus == '++' or double_bonus == '--'
     self.bonus = tonumber(bonus) or 0
 
