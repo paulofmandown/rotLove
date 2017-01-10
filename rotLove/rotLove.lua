@@ -5649,37 +5649,37 @@ ROT.Dice=class{__name='Dice', minimum = 1} -- class default lowest possible roll
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @treturn dice
 function ROT.Dice:__init(dice_notation, minimum, rng)
-	-- If dice_notation is a number, we must convert it into the proper dice string format
-	if type(dice_notation) ==  'number' then dice_notation = '1d'..dice_notation end
-  
-	local dice_pattern = '[(]?%d+[d]%d+[+-]?[+-]?%d*[%^]?[+-]?[+-]?%d*[)]?[x]?%d*'
-	assert(dice_notation == string.match(dice_notation, dice_pattern), "Dice string incorrectly formatted.") 
+    -- If dice_notation is a number, we must convert it into the proper dice string format
+    if type(dice_notation) ==  'number' then dice_notation = '1d'..dice_notation end
 
-	self.num = tonumber(string.match(dice_notation, '%d+'))
-	self.faces = tonumber(string.match(dice_notation, '[d](%d+)'))
+    local dice_pattern = '[(]?%d+[d]%d+[+-]?[+-]?%d*[%^]?[+-]?[+-]?%d*[)]?[x]?%d*'
+    assert(dice_notation == string.match(dice_notation, dice_pattern), "Dice string incorrectly formatted.")
 
-	local double_bonus = string.match(dice_notation, '[^%^+-]([+-]?[+-])%d+')
-	local bonus = string.match(dice_notation, '[^%^+-][+-]?([+-]%d+)')
-	self.is_bonus_plural = double_bonus == '++' or double_bonus == '--' 
-	self.bonus = tonumber(bonus) or 0
+    self.num = tonumber(string.match(dice_notation, '%d+'))
+    self.faces = tonumber(string.match(dice_notation, '[d](%d+)'))
 
-	local double_reroll = string.match(dice_notation, '[%^]([+-]?[+-])%d+')
-	local reroll = string.match(dice_notation, '[%^][+-]?([+-]%d+)')
-	self.is_reroll_plural = double_reroll == '++' or double_reroll == '--' 
-	self.rerolls = tonumber(reroll) or 0	
+    local double_bonus = string.match(dice_notation, '[^%^+-]([+-]?[+-])%d+')
+    local bonus = string.match(dice_notation, '[^%^+-][+-]?([+-]%d+)')
+    self.is_bonus_plural = double_bonus == '++' or double_bonus == '--'
+    self.bonus = tonumber(bonus) or 0
 
-	self.sets = tonumber(string.match(dice_notation, '[x](%d+)')) or 1
+    local double_reroll = string.match(dice_notation, '[%^]([+-]?[+-])%d+')
+    local reroll = string.match(dice_notation, '[%^][+-]?([+-]%d+)')
+    self.is_reroll_plural = double_reroll == '++' or double_reroll == '--'
+    self.rerolls = tonumber(reroll) or 0
 
-	self.minimum = minimum	
-	
+    self.sets = tonumber(string.match(dice_notation, '[x](%d+)')) or 1
+
+    self.minimum = minimum
+
     self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end	
+    if not rng then self._rng:randomseed() end
 end
 
 --- Sets dice minimum result boundaries (if nil, no minimum result)
 function ROT.Dice:setMin(value) self.minimum = value end
 
---- Get number of total dice 
+--- Get number of total dice
 function ROT.Dice:getNum() return self.num end
 
 --- Get number of total faces on a dice
@@ -5726,61 +5726,61 @@ function ROT.Dice:__mod(value) self.sets = self.sets + value return self end
 
 --- Returns a formatted dice string in roguelike notation
 function ROT.Dice:__tostring()
-	local num_dice, dice_faces, bonus, is_bonus_plural, rerolls, is_reroll_plural, sets = self.num, self.faces, self.bonus, self.is_bonus_plural, self.rerolls, self.is_reroll_plural, self.sets
-  
-	-- num_dice & dice_faces default to 1 if negative or 0!  
-	sets, num_dice, dice_faces = math.max(sets, 1), math.max(num_dice, 1), math.max(dice_faces, 1)
-  
-	local double_bonus = is_bonus_plural and (bonus >= 0 and '+' or '-') or ''
-	bonus = (bonus ~= 0 and double_bonus..string.format('%+d', bonus)) or ''  
-    
-	local double_reroll = is_reroll_plural and (rerolls >= 0 and '+' or '-') or ''    
-	rerolls = (rerolls ~= 0 and '^'..double_reroll..string.format('%+d', rerolls)) or ''  
-  
-  if sets > 1 then return '('..num_dice..'d'..dice_faces..bonus..rerolls..')x'..sets 
+    local num_dice, dice_faces, bonus, is_bonus_plural, rerolls, is_reroll_plural, sets = self.num, self.faces, self.bonus, self.is_bonus_plural, self.rerolls, self.is_reroll_plural, self.sets
+
+    -- num_dice & dice_faces default to 1 if negative or 0!
+    sets, num_dice, dice_faces = math.max(sets, 1), math.max(num_dice, 1), math.max(dice_faces, 1)
+
+    local double_bonus = is_bonus_plural and (bonus >= 0 and '+' or '-') or ''
+    bonus = (bonus ~= 0 and double_bonus..string.format('%+d', bonus)) or ''
+
+    local double_reroll = is_reroll_plural and (rerolls >= 0 and '+' or '-') or ''
+    rerolls = (rerolls ~= 0 and '^'..double_reroll..string.format('%+d', rerolls)) or ''
+
+  if sets > 1 then return '('..num_dice..'d'..dice_faces..bonus..rerolls..')x'..sets
   else return num_dice..'d'..dice_faces..bonus..rerolls
-  end  
+  end
 end
 
---- Modifies whether reroll or bonus applies to individual dice or all of them (pluralism_notation string must be one of the following operators `- + ^` The operator may be double signed to indicate pluralism)  
+--- Modifies whether reroll or bonus applies to individual dice or all of them (pluralism_notation string must be one of the following operators `- + ^` The operator may be double signed to indicate pluralism)
 function ROT.Dice:__concat(pluralism_notation)
-	local str_b = string.match(pluralism_notation, '[+-][+-]?') or ''  
-	local bonus = ((str_b == '++' or str_b == '--') and 'double') or ((str_b == '+' or str_b == '-') and 'single') or nil
+    local str_b = string.match(pluralism_notation, '[+-][+-]?') or ''
+    local bonus = ((str_b == '++' or str_b == '--') and 'double') or ((str_b == '+' or str_b == '-') and 'single') or nil
 
-	local str_r = string.match(pluralism_notation, '[%^][%^]?') or ''
-	local reroll = (str_r == '^^' and 'double') or (str_r == '^' and 'single') or nil
-  
-	if bonus == 'double' then self.is_bonus_plural = true
-	elseif bonus == 'single' then self.is_bonus_plural = false end
-  
-	if reroll == 'double' then self.is_reroll_plural = true
-	elseif reroll == 'single' then self.is_reroll_plural = false end
-	return self
+    local str_r = string.match(pluralism_notation, '[%^][%^]?') or ''
+    local reroll = (str_r == '^^' and 'double') or (str_r == '^' and 'single') or nil
+
+    if bonus == 'double' then self.is_bonus_plural = true
+    elseif bonus == 'single' then self.is_bonus_plural = false end
+
+    if reroll == 'double' then self.is_reroll_plural = true
+    elseif reroll == 'single' then self.is_reroll_plural = false end
+    return self
 end
 
---- Rolls the dice 
+--- Rolls the dice
 -- @tparam ?int|dice|str self
 -- @tparam[opt] int minimum
 function ROT.Dice.roll(self, minimum)
   if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum) end
-  local num_dice, dice_faces = self.num, self.faces 
+  local num_dice, dice_faces = self.num, self.faces
   local bonus, rerolls = self.bonus, self.rerolls
-  local is_bonus_plural, is_reroll_plural = self.is_bonus_plural, self.is_reroll_plural 
-  local sets, minimum = self.sets, self.minimum  
-  
-  sets = math.max(sets, 1)  -- Minimum of 1 needed 
+  local is_bonus_plural, is_reroll_plural = self.is_bonus_plural, self.is_reroll_plural
+  local sets, minimum = self.sets, self.minimum
+
+  sets = math.max(sets, 1)  -- Minimum of 1 needed
   local set_rolls = {}
-  
+
   local bonus_all = is_bonus_plural and bonus or 0
   rerolls = is_reroll_plural and rerolls*num_dice or rerolls
 
   -- num_dice & dice_faces CANNOT be negative!
   num_dice, dice_faces = math.max(num_dice, 1), math.max(dice_faces, 1)
-  
+
   for i=1, sets do
     local rolls = {}
     for ii=1, num_dice + math.abs(rerolls) do
-      rolls[ii] = self._rng:random(1, dice_faces) + bonus_all  -- if is_bonus_plural then bonus_all gets added to every roll, otherwise bonus_all = 0  
+      rolls[ii] = self._rng:random(1, dice_faces) + bonus_all  -- if is_bonus_plural then bonus_all gets added to every roll, otherwise bonus_all = 0
     end
 
     if rerolls ~= 0 then
@@ -5791,10 +5791,10 @@ function ROT.Dice.roll(self, minimum)
 
     -- bonus gets added to the last roll if it is not plural
     if not is_bonus_plural then rolls[#rolls] = rolls[#rolls] + bonus end
-    
+
     local total = 0
     for _, number in ipairs(rolls) do total = total + number end
-    set_rolls[i] = total    
+    set_rolls[i] = total
   end
 
   -- if minimum is empty then use dice class default min
@@ -5804,9 +5804,9 @@ function ROT.Dice.roll(self, minimum)
     for i=1, sets do
       set_rolls[i] = math.max(set_rolls[i], minimum)
     end
-  end  
-  
-  return unpack(set_rolls)  
+  end
+
+  return unpack(set_rolls)
 end
 
 return ROT
