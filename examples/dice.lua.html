@@ -43,7 +43,7 @@
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
   <li><a href="../examples/characters.lua.html">characters.lua</a></li>
   <li><a href="../examples/color.lua.html">color.lua</a></li>
-  <li><a href="../examples/dice.lua.html">dice.lua</a></li>
+  <li><strong>dice.lua</strong></li>
   <li><a href="../examples/dice_advanced_uses.lua.html">dice_advanced_uses.lua</a></li>
   <li><a href="../examples/dice_basic.lua.html">dice_basic.lua</a></li>
   <li><a href="../examples/dice_boundry_behaviour.lua.html">dice_boundry_behaviour.lua</a></li>
@@ -56,7 +56,7 @@
   <li><a href="../examples/dijkstramap.lua.html">dijkstramap.lua</a></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
-  <li><strong>engine.lua</strong></li>
+  <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
   <li><a href="../examples/iceymaze.lua.html">iceymaze.lua</a></li>
   <li><a href="../examples/lighting.lua.html">lighting.lua</a></li>
@@ -114,46 +114,47 @@
 
 <div id="content">
 
-    <h2>engine.lua</h2>
+    <h2>dice.lua</h2>
 <pre>
-<span class="comment">--[[ Engine ]]</span><span class="comment">--
-</span>ROT= <span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
-class= <span class="global">require</span> <span class="string">'src/vendor/30log'</span>
-
-a1=class{lives=<span class="number">3</span>}
-
-<span class="keyword">function</span> a1:act()
-	f:write(<span class="string">'.'</span>..<span class="string">','</span>..<span class="global">os</span>.clock(), <span class="number">1</span>, self.lives)
-	self.lives=self.lives-<span class="number">1</span>
-	<span class="keyword">if</span> self.lives&lt;<span class="number">1</span> <span class="keyword">then</span>
-		s:remove(self)
-		e:lock()
-		love.timer.sleep(.<span class="number">5</span>)
-		unlock()
-	<span class="keyword">end</span>
-<span class="keyword">end</span>
-
-a2=class{}
-
-<span class="keyword">function</span> a2:act()
-	f:write(<span class="string">'@'</span>..<span class="string">','</span>..<span class="global">os</span>.clock(), <span class="number">1</span>, <span class="number">4</span>)
-<span class="keyword">end</span>
-
-<span class="keyword">function</span> unlock()
-	s:add(a2, <span class="keyword">false</span>)
-	e:unlock()
-<span class="keyword">end</span>
-
+ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
+<span class="keyword">local</span> f, d_with_rng, lcg
 <span class="keyword">function</span> love.<span class="global">load</span>()
-	f=ROT.Display(<span class="number">80</span>,<span class="number">24</span>)
-	s=ROT.Scheduler.Simple:new()
-	e=ROT.Engine:new(s)
-	s:add(a1, <span class="keyword">true</span>)
-	e:start()
+    f=ROT.Display:new(<span class="number">80</span>,<span class="number">24</span>)
+    lcg=ROT.RNG.LCG:new()
+    lcg:randomseed()
+    d_with_rng=ROT.Dice:new(<span class="string">'3d6'</span>, <span class="number">1</span>, lcg)
+    d_without_rng=ROT.Dice:new(<span class="string">'3d6'</span>, <span class="number">1</span>)
 <span class="keyword">end</span>
+<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span>
 
-<span class="keyword">function</span> love.draw()
-	f:draw()
+<span class="keyword">local</span> t=<span class="number">1.00000001</span>
+<span class="keyword">function</span> love.update(dt)
+    <span class="keyword">if</span> t&gt;<span class="number">1</span> <span class="keyword">then</span>
+        f:clear()
+        f:writeCenter(<span class="string">"ROLL instance with rng: "</span>..d_with_rng:roll(), <span class="number">1</span>)
+        f:writeCenter(<span class="string">"ROLL instance with rng: "</span>..d_with_rng:roll(), <span class="number">2</span>)
+        f:writeCenter(<span class="string">"ROLL instance with rng: "</span>..d_with_rng:roll(), <span class="number">3</span>)
+        f:writeCenter(<span class="string">"ROLL instance with rng: "</span>..d_with_rng:roll(), <span class="number">4</span>)
+
+        f:writeCenter(<span class="string">"ROLL instance without rng: "</span>..d_without_rng:roll(), <span class="number">6</span>)
+        f:writeCenter(<span class="string">"ROLL instance without rng: "</span>..d_without_rng:roll(), <span class="number">7</span>)
+        f:writeCenter(<span class="string">"ROLL instance without rng: "</span>..d_without_rng:roll(), <span class="number">8</span>)
+        f:writeCenter(<span class="string">"ROLL instance without rng: "</span>..d_without_rng:roll(), <span class="number">9</span>)
+
+        f:writeCenter(<span class="string">"ROLL ROT.Dice with rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>, lcg), <span class="number">11</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice with rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>, lcg), <span class="number">12</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice with rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>, lcg), <span class="number">13</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice with rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>, lcg), <span class="number">14</span>)
+
+        f:writeCenter(<span class="string">"ROLL ROT.Dice without rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>), <span class="number">16</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice without rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>), <span class="number">17</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice without rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>), <span class="number">18</span>)
+        f:writeCenter(<span class="string">"ROLL ROT.Dice without rng: "</span>..ROT.Dice.roll(<span class="string">'3d6'</span>, <span class="number">1</span>), <span class="number">19</span>)
+
+        f:writeCenter(<span class="string">"Rolling 3d6's"</span>, <span class="number">23</span>)
+        t=<span class="number">0</span>
+    <span class="keyword">end</span>
+    t=t+dt
 <span class="keyword">end</span></pre>
 
 
