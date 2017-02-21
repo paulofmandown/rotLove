@@ -272,7 +272,7 @@ end
 -- @return number
 function ROT.RNG:seed()
     --return self:normalize(tonumber(tostring(os.time()):reverse()))
-    return self:normalize(os.time())
+    return self:normalize(os.time() * 1000 + (os.clock() * 1000))
 end
 
 --- Mersenne Twister. A random number generator based on RandomLua
