@@ -5761,8 +5761,8 @@ end
 --- Rolls the dice
 -- @tparam ?int|dice|str self
 -- @tparam[opt] int minimum
-function ROT.Dice.roll(self, minimum)
-  if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum) end
+function ROT.Dice.roll(self, minimum, ...)
+  if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum, unpack(arg)) end
   local num_dice, dice_faces = self.num, self.faces
   local bonus, rerolls = self.bonus, self.rerolls
   local is_bonus_plural, is_reroll_plural = self.is_bonus_plural, self.is_reroll_plural
