@@ -37,7 +37,7 @@
   <li><a href="../examples/action.lua.html">action.lua</a></li>
   <li><a href="../examples/arena.lua.html">arena.lua</a></li>
   <li><a href="../examples/astar.lua.html">astar.lua</a></li>
-  <li><strong>bresenham.lua</strong></li>
+  <li><a href="../examples/bresenham.lua.html">bresenham.lua</a></li>
   <li><a href="../examples/brogue.lua.html">brogue.lua</a></li>
   <li><a href="../examples/broguecavegeneration.lua.html">broguecavegeneration.lua</a></li>
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
@@ -60,7 +60,7 @@
   <li><a href="../examples/iceymaze.lua.html">iceymaze.lua</a></li>
   <li><a href="../examples/lighting.lua.html">lighting.lua</a></li>
   <li><a href="../examples/precise.lua.html">precise.lua</a></li>
-  <li><a href="../examples/precisewithmovingplayer.lua.html">precisewithmovingplayer.lua</a></li>
+  <li><strong>precisewithmovingplayer.lua</strong></li>
   <li><a href="../examples/rng.lua.html">rng.lua</a></li>
   <li><a href="../examples/rogue.lua.html">rogue.lua</a></li>
   <li><a href="../examples/simple.lua.html">simple.lua</a></li>
@@ -113,14 +113,13 @@
 
 <div id="content">
 
-    <h2>bresenham.lua</h2>
+    <h2>precisewithmovingplayer.lua</h2>
 <pre>
-<span class="comment">--[[ Bresenham Line of Sight ]]</span><span class="comment">--
+<span class="comment">--[[ Precise Shadowcasting ]]</span><span class="comment">--
 </span>ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
 
 <span class="keyword">function</span> calbak(x, y, val)
     map[x..<span class="string">','</span>..y]=val
-    f:write(val==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">'.'</span>, x, y, {r=<span class="number">110</span>, g=<span class="number">110</span>, b=<span class="number">110</span>, a=<span class="number">255</span>}, {r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>})
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> lightCalbak(fov, x, y)
@@ -134,10 +133,10 @@
 <span class="keyword">function</span> computeCalbak(x, y, r, v)
     <span class="keyword">local</span> key  =x..<span class="string">','</span>..y
     <span class="keyword">if</span> <span class="keyword">not</span> map[key] <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">local</span> color= {r=<span class="number">121</span>, g=<span class="number">121</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
-    f:write(r&gt;<span class="number">0</span> <span class="keyword">and</span> f:getCharacter(x, y) <span class="keyword">or</span> <span class="string">'@'</span>, x, y, <span class="keyword">nil</span>, color)
+    field[key]=<span class="number">1</span>
+    seen[key]=<span class="number">1</span>
 <span class="keyword">end</span>
-<span class="keyword">local</span> player={x=<span class="number">1</span>, y=<span class="number">1</span>}
+
 <span class="keyword">function</span> placePlayer()
     <span class="keyword">local</span> key =<span class="keyword">nil</span>
     <span class="keyword">local</span> char=<span class="string">'#'</span>
@@ -155,25 +154,71 @@
 <span class="keyword">end</span>
 
 <span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">40</span>, <span class="number">25</span>)
+    f  =ROT.Display(<span class="number">80</span>, <span class="number">24</span>)
     map={}
+    field={}
+    seen={}
+    seenColor={r=<span class="number">100</span>, g=<span class="number">100</span>, b=<span class="number">100</span>, a=<span class="number">255</span>}
+    fieldColor={r=<span class="number">225</span>, g=<span class="number">225</span>, b=<span class="number">225</span>, a=<span class="number">255</span>}
+    fieldbg={r=<span class="number">50</span>, g=<span class="number">50</span>, b=<span class="number">50</span>, a=<span class="number">255</span>}
+    update=<span class="keyword">false</span>
+    player={x=<span class="number">1</span>, y=<span class="number">1</span>}
     doTheThing()
 <span class="keyword">end</span>
+
 <span class="keyword">function</span> doTheThing()
-    mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
-    mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=<span class="keyword">true</span>})
-    placePlayer()
+    uni=ROT.Map.Uniform:new(f:getWidth(), f:getHeight())
+    uni:create(calbak)
+    fov=ROT.FOV.Precise:new(lightCalbak)<span class="comment">--, {topology=4})
+</span>    placePlayer()
     fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
 <span class="keyword">end</span>
-<span class="keyword">local</span> update=<span class="keyword">false</span>
+
 <span class="keyword">function</span> love.update()
     <span class="keyword">if</span> update <span class="keyword">then</span>
         update=<span class="keyword">false</span>
+        seen={}
         doTheThing()
     <span class="keyword">end</span>
+    f:clear()
+    <span class="keyword">for</span> x=<span class="number">1</span>,f:getWidth() <span class="keyword">do</span>
+        <span class="keyword">for</span> y=<span class="number">1</span>,f:getHeight() <span class="keyword">do</span>
+            <span class="keyword">local</span> key=x..<span class="string">','</span>..y
+            <span class="keyword">if</span> seen[key] <span class="keyword">then</span>
+                char=key==player.x..<span class="string">','</span>..player.y <span class="keyword">and</span> <span class="string">'@'</span> <span class="keyword">or</span> map[key]==<span class="number">0</span> <span class="keyword">and</span> <span class="string">'.'</span> <span class="keyword">or</span> map[key]==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span>
+                f:write(char, x, y, field[key] <span class="keyword">and</span> fieldColor <span class="keyword">or</span> seenColor, field[key] <span class="keyword">and</span> fieldbg <span class="keyword">or</span> <span class="keyword">nil</span>)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">local</span> s=<span class="string">'Use numpad/vimkeys to move!'</span>
+    f:write(s, f:getWidth()-#s, f:getHeight())
 <span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
+<span class="keyword">function</span> love.keypressed(key)
+    <span class="keyword">local</span> newPos={<span class="number">0</span>,<span class="number">0</span>}
+    <span class="keyword">if</span>     key==<span class="string">'kp1'</span> <span class="keyword">then</span> newPos={-<span class="number">1</span>, <span class="number">1</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp2'</span> <span class="keyword">or</span> key==<span class="string">'j'</span> <span class="keyword">then</span> newPos={ <span class="number">0</span>, <span class="number">1</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp3'</span> <span class="keyword">then</span> newPos={ <span class="number">1</span>, <span class="number">1</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp4'</span> <span class="keyword">or</span> key==<span class="string">'h'</span> <span class="keyword">then</span> newPos={-<span class="number">1</span>, <span class="number">0</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp5'</span> <span class="keyword">then</span> newPos={ <span class="number">0</span>, <span class="number">0</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp6'</span> <span class="keyword">or</span> key==<span class="string">'l'</span> <span class="keyword">then</span> newPos={ <span class="number">1</span>, <span class="number">0</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp7'</span> <span class="keyword">then</span> newPos={-<span class="number">1</span>,-<span class="number">1</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp8'</span> <span class="keyword">or</span> key==<span class="string">'k'</span> <span class="keyword">then</span> newPos={ <span class="number">0</span>,-<span class="number">1</span>}
+    <span class="keyword">elseif</span> key==<span class="string">'kp9'</span> <span class="keyword">then</span> newPos={ <span class="number">1</span>,-<span class="number">1</span>}
+    <span class="keyword">else</span>
+        update=<span class="keyword">true</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> newPos~={<span class="number">0</span>,<span class="number">0</span>} <span class="keyword">then</span>
+        <span class="keyword">local</span> newx = player.x+newPos[<span class="number">1</span>]
+        <span class="keyword">local</span> newy = player.y+newPos[<span class="number">2</span>]
+        <span class="keyword">if</span> map[newx..<span class="string">','</span>..newy]==<span class="number">0</span> <span class="keyword">then</span>
+            field={}
+            player.x=newx
+            player.y=newy
+            fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
 <span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
 
 

@@ -37,13 +37,13 @@
   <li><a href="../examples/action.lua.html">action.lua</a></li>
   <li><a href="../examples/arena.lua.html">arena.lua</a></li>
   <li><a href="../examples/astar.lua.html">astar.lua</a></li>
-  <li><strong>bresenham.lua</strong></li>
+  <li><a href="../examples/bresenham.lua.html">bresenham.lua</a></li>
   <li><a href="../examples/brogue.lua.html">brogue.lua</a></li>
   <li><a href="../examples/broguecavegeneration.lua.html">broguecavegeneration.lua</a></li>
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
   <li><a href="../examples/characters.lua.html">characters.lua</a></li>
   <li><a href="../examples/color.lua.html">color.lua</a></li>
-  <li><a href="../examples/dice_advanced_uses.lua.html">dice_advanced_uses.lua</a></li>
+  <li><strong>dice_advanced_uses.lua</strong></li>
   <li><a href="../examples/dice_basic.lua.html">dice_basic.lua</a></li>
   <li><a href="../examples/dice_boundry_behaviour.lua.html">dice_boundry_behaviour.lua</a></li>
   <li><a href="../examples/dice_metamethods.lua.html">dice_metamethods.lua</a></li>
@@ -113,68 +113,65 @@
 
 <div id="content">
 
-    <h2>bresenham.lua</h2>
+    <h2>dice_advanced_uses.lua</h2>
 <pre>
-<span class="comment">--[[ Bresenham Line of Sight ]]</span><span class="comment">--
-</span>ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
+dice = <span class="global">require</span>(<span class="string">'dice'</span>)
+<span class="global">math</span>.randomseed(<span class="global">os</span>.time())
 
-<span class="keyword">function</span> calbak(x, y, val)
-    map[x..<span class="string">','</span>..y]=val
-    f:write(val==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">'.'</span>, x, y, {r=<span class="number">110</span>, g=<span class="number">110</span>, b=<span class="number">110</span>, a=<span class="number">255</span>}, {r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>})
-<span class="keyword">end</span>
+<span class="comment">-- Some special ways the user may choose to utilize the dice module
+</span><span class="comment">-- although there are endless creative possiblities
+</span>
+<span class="comment">-- DUAL WIELDING --
+</span>	l_hand_weap, r_hand_weap = dice:new(<span class="string">'1d6'</span>), dice:new(<span class="string">'2d4'</span>)
+	attacks = {l_hand_weap:roll(), r_hand_weap:roll()}
 
-<span class="keyword">function</span> lightCalbak(fov, x, y)
-    <span class="keyword">local</span> key=x..<span class="string">','</span>..y
-    <span class="keyword">if</span> map[key] <span class="keyword">then</span>
-        <span class="keyword">return</span> map[key]==<span class="number">0</span>
-    <span class="keyword">end</span>
-    <span class="keyword">return</span> <span class="keyword">false</span>
-<span class="keyword">end</span>
+	<span class="keyword">for</span> _, attack <span class="keyword">in</span> <span class="global">ipairs</span>(attacks) <span class="keyword">do</span>
+	  <span class="comment">-- apply armor protection
+</span>	  <span class="comment">-- take damage
+</span>	  <span class="comment">-- ...
+</span>	<span class="keyword">end</span>
 
-<span class="keyword">function</span> computeCalbak(x, y, r, v)
-    <span class="keyword">local</span> key  =x..<span class="string">','</span>..y
-    <span class="keyword">if</span> <span class="keyword">not</span> map[key] <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">local</span> color= {r=<span class="number">121</span>, g=<span class="number">121</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
-    f:write(r&gt;<span class="number">0</span> <span class="keyword">and</span> f:getCharacter(x, y) <span class="keyword">or</span> <span class="string">'@'</span>, x, y, <span class="keyword">nil</span>, color)
-<span class="keyword">end</span>
-<span class="keyword">local</span> player={x=<span class="number">1</span>, y=<span class="number">1</span>}
-<span class="keyword">function</span> placePlayer()
-    <span class="keyword">local</span> key =<span class="keyword">nil</span>
-    <span class="keyword">local</span> char=<span class="string">'#'</span>
-    <span class="keyword">local</span> rng=ROT.RNG.Twister:new()
-    rng:randomseed()
-    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        key=rng:random(<span class="number">1</span>,f:getWidth())..<span class="string">','</span>..rng:random(<span class="number">1</span>,f:getHeight())
-        <span class="keyword">if</span> map[key]==<span class="number">0</span> <span class="keyword">then</span>
-            pos = key:split(<span class="string">','</span>)
-            player.x, player.y=<span class="global">tonumber</span>(pos[<span class="number">1</span>]), <span class="global">tonumber</span>(pos[<span class="number">2</span>])
-            f:write(<span class="string">'@'</span>, player.x, player.y)
-            <span class="keyword">break</span>
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
+<span class="comment">-- STATUS EFFECTS --
+</span>	sleep_duration = dice.roll(<span class="string">'1d100+50'</span>)
+	confusion_duration = dice.roll(<span class="string">'1d10'</span>)
+	poison_damage = dice.roll(<span class="string">'1d3'</span>)
 
-<span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">40</span>, <span class="number">25</span>)
-    map={}
-    doTheThing()
-<span class="keyword">end</span>
-<span class="keyword">function</span> doTheThing()
-    mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
-    mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=<span class="keyword">true</span>})
-    placePlayer()
-    fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
-<span class="keyword">end</span>
-<span class="keyword">local</span> update=<span class="keyword">false</span>
-<span class="keyword">function</span> love.update()
-    <span class="keyword">if</span> update <span class="keyword">then</span>
-        update=<span class="keyword">false</span>
-        doTheThing()
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
-<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
+<span class="comment">-- CURSED/BLESSED ITEMS --
+</span>	basic_weapon = dice:new(<span class="string">'1d4'</span>)
+
+	<span class="keyword">if</span> basic_weapon:isCursed() <span class="keyword">then</span>       <span class="comment">-- Add a reroll that removes the highest number
+</span>		basic_weapon = basic_weapon ^ -<span class="number">1</span>
+	<span class="keyword">elseif</span> basic_weapon:isBlessed() <span class="keyword">then</span>  <span class="comment">-- Add a reroll that removes the lowest number
+</span>		basic_weapon = basic_weapon ^ <span class="number">1</span>
+	<span class="keyword">end</span>
+
+<span class="comment">-- SKILL MASTERY --
+</span>	<span class="keyword">if</span> player:hasMasteredSkill() <span class="keyword">then</span>
+		<span class="comment">-- apply a positive reroll when doing something
+</span>	<span class="keyword">end</span>
+
+<span class="comment">-- AIMING AND TO-HIT --
+</span>	weapon_to_hit = dice:new(<span class="string">'1d20'</span>)
+
+	<span class="keyword">if</span> weapon_to_hit:roll() &gt; enemy_def <span class="keyword">then</span>
+		<span class="comment">-- attack is successful
+</span>		<span class="comment">-- apply damage
+</span>	<span class="keyword">end</span>
+
+<span class="comment">-- BURSTFIRE --
+</span>	gattling_gun = dice:new(<span class="string">'(1d5)x6'</span>)
+
+	<span class="keyword">for</span> _, damage <span class="keyword">in</span> <span class="global">ipairs</span>( {gattling_gun:roll()} ) <span class="keyword">do</span>
+		<span class="keyword">if</span> to_hit:roll() &gt; enemy_dodge <span class="keyword">then</span>
+			<span class="comment">-- attack succeeds
+</span>			<span class="comment">-- apply protections
+</span>			<span class="comment">-- apply damage
+</span>		<span class="keyword">else</span>
+			<span class="comment">-- missed
+</span>			<span class="comment">-- skip damage calculations
+</span>			<span class="comment">-- include miss message
+</span>		<span class="keyword">end</span>
+	<span class="keyword">end</span></pre>
 
 
 </div> <!-- id="content" -->

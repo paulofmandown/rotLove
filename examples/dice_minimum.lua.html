@@ -37,7 +37,7 @@
   <li><a href="../examples/action.lua.html">action.lua</a></li>
   <li><a href="../examples/arena.lua.html">arena.lua</a></li>
   <li><a href="../examples/astar.lua.html">astar.lua</a></li>
-  <li><strong>bresenham.lua</strong></li>
+  <li><a href="../examples/bresenham.lua.html">bresenham.lua</a></li>
   <li><a href="../examples/brogue.lua.html">brogue.lua</a></li>
   <li><a href="../examples/broguecavegeneration.lua.html">broguecavegeneration.lua</a></li>
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
@@ -47,7 +47,7 @@
   <li><a href="../examples/dice_basic.lua.html">dice_basic.lua</a></li>
   <li><a href="../examples/dice_boundry_behaviour.lua.html">dice_boundry_behaviour.lua</a></li>
   <li><a href="../examples/dice_metamethods.lua.html">dice_metamethods.lua</a></li>
-  <li><a href="../examples/dice_minimum.lua.html">dice_minimum.lua</a></li>
+  <li><strong>dice_minimum.lua</strong></li>
   <li><a href="../examples/dice_valid_notation.lua.html">dice_valid_notation.lua</a></li>
   <li><a href="../examples/dice_weapon_samples.lua.html">dice_weapon_samples.lua</a></li>
   <li><a href="../examples/digger.lua.html">digger.lua</a></li>
@@ -113,68 +113,35 @@
 
 <div id="content">
 
-    <h2>bresenham.lua</h2>
+    <h2>dice_minimum.lua</h2>
 <pre>
-<span class="comment">--[[ Bresenham Line of Sight ]]</span><span class="comment">--
-</span>ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
+dice = <span class="global">require</span>(<span class="string">'dice'</span>)
+<span class="global">math</span>.randomseed(<span class="global">os</span>.time())
 
-<span class="keyword">function</span> calbak(x, y, val)
-    map[x..<span class="string">','</span>..y]=val
-    f:write(val==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">'.'</span>, x, y, {r=<span class="number">110</span>, g=<span class="number">110</span>, b=<span class="number">110</span>, a=<span class="number">255</span>}, {r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>})
-<span class="keyword">end</span>
+<span class="comment">-- Due to the possiblity of negative rolls and whether the user wishes for this type of behavior, a dice
+</span><span class="comment">-- minimum is factored into rolls to enable or prevent this from happening.  By default the minimum is set to 1
+</span>
+<span class="comment">-- Roll a die with a negative bonus
+</span>dice.roll(<span class="string">'1d1-100'</span>)    <span class="comment">-- RESULT = 1
+</span>
+<span class="comment">-- Disable the minimum
+</span>dice:setMinimum(<span class="keyword">nil</span>)
 
-<span class="keyword">function</span> lightCalbak(fov, x, y)
-    <span class="keyword">local</span> key=x..<span class="string">','</span>..y
-    <span class="keyword">if</span> map[key] <span class="keyword">then</span>
-        <span class="keyword">return</span> map[key]==<span class="number">0</span>
-    <span class="keyword">end</span>
-    <span class="keyword">return</span> <span class="keyword">false</span>
-<span class="keyword">end</span>
-
-<span class="keyword">function</span> computeCalbak(x, y, r, v)
-    <span class="keyword">local</span> key  =x..<span class="string">','</span>..y
-    <span class="keyword">if</span> <span class="keyword">not</span> map[key] <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">local</span> color= {r=<span class="number">121</span>, g=<span class="number">121</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
-    f:write(r&gt;<span class="number">0</span> <span class="keyword">and</span> f:getCharacter(x, y) <span class="keyword">or</span> <span class="string">'@'</span>, x, y, <span class="keyword">nil</span>, color)
-<span class="keyword">end</span>
-<span class="keyword">local</span> player={x=<span class="number">1</span>, y=<span class="number">1</span>}
-<span class="keyword">function</span> placePlayer()
-    <span class="keyword">local</span> key =<span class="keyword">nil</span>
-    <span class="keyword">local</span> char=<span class="string">'#'</span>
-    <span class="keyword">local</span> rng=ROT.RNG.Twister:new()
-    rng:randomseed()
-    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        key=rng:random(<span class="number">1</span>,f:getWidth())..<span class="string">','</span>..rng:random(<span class="number">1</span>,f:getHeight())
-        <span class="keyword">if</span> map[key]==<span class="number">0</span> <span class="keyword">then</span>
-            pos = key:split(<span class="string">','</span>)
-            player.x, player.y=<span class="global">tonumber</span>(pos[<span class="number">1</span>]), <span class="global">tonumber</span>(pos[<span class="number">2</span>])
-            f:write(<span class="string">'@'</span>, player.x, player.y)
-            <span class="keyword">break</span>
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-
-<span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">40</span>, <span class="number">25</span>)
-    map={}
-    doTheThing()
-<span class="keyword">end</span>
-<span class="keyword">function</span> doTheThing()
-    mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
-    mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=<span class="keyword">true</span>})
-    placePlayer()
-    fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
-<span class="keyword">end</span>
-<span class="keyword">local</span> update=<span class="keyword">false</span>
-<span class="keyword">function</span> love.update()
-    <span class="keyword">if</span> update <span class="keyword">then</span>
-        update=<span class="keyword">false</span>
-        doTheThing()
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
-<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
+<span class="comment">-- Try this again
+</span>dice.roll(<span class="string">'1d1-100'</span>)    <span class="comment">-- RESULT = -99
+</span>
+<span class="comment">-- The second argument in dice.roll allows a shortcut to set the minimum
+</span>dice.roll(<span class="string">'1d1-100'</span>, <span class="number">0</span>) <span class="comment">-- RESULT = 0
+</span>
+<span class="comment">-- Another handy feature allows us to place a minimum on each individual dice instance
+</span>
+test_dice = dice:new(<span class="string">'1d1-100'</span>, <span class="number">1</span>)  <span class="comment">-- Yet again a second argument in dice:new is a shortcut to set the minimum
+</span>test_dice:roll()        <span class="comment">-- RESULT = 1
+</span>test_dice:setMinimum(<span class="keyword">nil</span>)
+test_dice:roll()        <span class="comment">-- RESULT = 0  (dice class minimum used instead)
+</span>
+<span class="comment">-- Notice how the dice instance minimum has precedence over dice class minimum although
+</span><span class="comment">-- if a dice instance minimum is not set, then by default the dice class minimum will be used </span></pre>
 
 
 </div> <!-- id="content" -->

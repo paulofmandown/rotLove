@@ -37,7 +37,7 @@
   <li><a href="../examples/action.lua.html">action.lua</a></li>
   <li><a href="../examples/arena.lua.html">arena.lua</a></li>
   <li><a href="../examples/astar.lua.html">astar.lua</a></li>
-  <li><strong>bresenham.lua</strong></li>
+  <li><a href="../examples/bresenham.lua.html">bresenham.lua</a></li>
   <li><a href="../examples/brogue.lua.html">brogue.lua</a></li>
   <li><a href="../examples/broguecavegeneration.lua.html">broguecavegeneration.lua</a></li>
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
@@ -46,7 +46,7 @@
   <li><a href="../examples/dice_advanced_uses.lua.html">dice_advanced_uses.lua</a></li>
   <li><a href="../examples/dice_basic.lua.html">dice_basic.lua</a></li>
   <li><a href="../examples/dice_boundry_behaviour.lua.html">dice_boundry_behaviour.lua</a></li>
-  <li><a href="../examples/dice_metamethods.lua.html">dice_metamethods.lua</a></li>
+  <li><strong>dice_metamethods.lua</strong></li>
   <li><a href="../examples/dice_minimum.lua.html">dice_minimum.lua</a></li>
   <li><a href="../examples/dice_valid_notation.lua.html">dice_valid_notation.lua</a></li>
   <li><a href="../examples/dice_weapon_samples.lua.html">dice_weapon_samples.lua</a></li>
@@ -113,68 +113,66 @@
 
 <div id="content">
 
-    <h2>bresenham.lua</h2>
+    <h2>dice_metamethods.lua</h2>
 <pre>
-<span class="comment">--[[ Bresenham Line of Sight ]]</span><span class="comment">--
-</span>ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
+dice = <span class="global">require</span>(<span class="string">'dice'</span>)
+<span class="global">math</span>.randomseed(<span class="global">os</span>.time())
 
-<span class="keyword">function</span> calbak(x, y, val)
-    map[x..<span class="string">','</span>..y]=val
-    f:write(val==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">'.'</span>, x, y, {r=<span class="number">110</span>, g=<span class="number">110</span>, b=<span class="number">110</span>, a=<span class="number">255</span>}, {r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>})
-<span class="keyword">end</span>
+weapon = dice:new(<span class="string">'1d6'</span>)  <span class="comment">-- 1d6
+</span>
+<span class="comment">-- Subtraction or addition modifies the bonus of the rolls
+</span>weapon = weapon + <span class="number">4</span>       <span class="comment">-- 1d6+4
+</span>weapon = weapon - <span class="number">2</span>       <span class="comment">-- 1d6+2
+</span>
+<span class="comment">-- Multiplcation modifies the number of dice
+</span>weapon = weapon * <span class="number">2</span>       <span class="comment">-- 3d6+2
+</span>
+<span class="comment">-- Division modifies the number of faces on the dice
+</span>weapon = weapon / -<span class="number">2</span>      <span class="comment">-- 3d4+2
+</span>
+<span class="comment">-- Exponential modifies the rerolls (positive number removes low rolls, negative number removes high rolls)
+</span>weapon = weapon ^ <span class="number">1</span>       <span class="comment">-- 3d4+2^+1
+</span>
+<span class="comment">-- Modulo division modifies the dice sets (returns multiple results)
+</span>weapon = weapon % <span class="number">2</span>       <span class="comment">--(3d4+1^+1)x3
+</span>
+<span class="comment">-- To string operations returns a dice notation string
+</span><span class="global">print</span>(weapon)             <span class="comment">--(3d4+2^+1)x3
+</span>
+<span class="comment">-- Concat operations is a tricky concept to explain. Concating the dice with the following strings
+</span><span class="comment">-- '++', '--', '^^', '+', '-', '^' or a combination of both disables or enables plurality of bonus/rerolls
+</span><span class="comment">-- if a double operation sign is used, then the effect will be MULTIPLIED TO ALL dice
+</span><span class="comment">-- if a single operation sign is used, then the effect will apply as normal
+</span>
+<span class="comment">-- Let us create a new weapon to demonstrate this with bonuses
+</span>weapon = dice:new(<span class="string">'3d1+2'</span>)
 
-<span class="keyword">function</span> lightCalbak(fov, x, y)
-    <span class="keyword">local</span> key=x..<span class="string">','</span>..y
-    <span class="keyword">if</span> map[key] <span class="keyword">then</span>
-        <span class="keyword">return</span> map[key]==<span class="number">0</span>
-    <span class="keyword">end</span>
-    <span class="keyword">return</span> <span class="keyword">false</span>
-<span class="keyword">end</span>
+<span class="comment">-- Time to show how it is calculated
+</span><span class="global">print</span>(weapon:roll())       <span class="comment">-- 1 + 1 + (1+2)  RESULT=5
+</span>
+<span class="comment">-- Enable plurality for bonus
+</span>weapon = weapon .. <span class="string">'++'</span>    <span class="comment">-- 3d1++2
+</span>
+<span class="comment">-- Calculation is much different now!
+</span><span class="global">print</span>(weapon:roll())       <span class="comment">-- (1+2) + (1+2) + (1+2)  RESULT=9
+</span>
+<span class="comment">-- Reset back to normal
+</span>weapon = weapon .. <span class="string">'+'</span>     <span class="comment">--Plurality is now disabled for bonus
+</span>
+<span class="comment">-- Alternatively instead of '++' and '+' you may opt to use '--' and '-' instead.
+</span><span class="comment">-- Both signs enable/disable plurality for bonus
+</span>
+<span class="comment">-- Another new weapon to demonstrate plurality for rerolls
+</span>weapon = dice:new(<span class="string">'2d6^+1'</span>)
 
-<span class="keyword">function</span> computeCalbak(x, y, r, v)
-    <span class="keyword">local</span> key  =x..<span class="string">','</span>..y
-    <span class="keyword">if</span> <span class="keyword">not</span> map[key] <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">local</span> color= {r=<span class="number">121</span>, g=<span class="number">121</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
-    f:write(r&gt;<span class="number">0</span> <span class="keyword">and</span> f:getCharacter(x, y) <span class="keyword">or</span> <span class="string">'@'</span>, x, y, <span class="keyword">nil</span>, color)
-<span class="keyword">end</span>
-<span class="keyword">local</span> player={x=<span class="number">1</span>, y=<span class="number">1</span>}
-<span class="keyword">function</span> placePlayer()
-    <span class="keyword">local</span> key =<span class="keyword">nil</span>
-    <span class="keyword">local</span> char=<span class="string">'#'</span>
-    <span class="keyword">local</span> rng=ROT.RNG.Twister:new()
-    rng:randomseed()
-    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        key=rng:random(<span class="number">1</span>,f:getWidth())..<span class="string">','</span>..rng:random(<span class="number">1</span>,f:getHeight())
-        <span class="keyword">if</span> map[key]==<span class="number">0</span> <span class="keyword">then</span>
-            pos = key:split(<span class="string">','</span>)
-            player.x, player.y=<span class="global">tonumber</span>(pos[<span class="number">1</span>]), <span class="global">tonumber</span>(pos[<span class="number">2</span>])
-            f:write(<span class="string">'@'</span>, player.x, player.y)
-            <span class="keyword">break</span>
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
+<span class="comment">-- Rolls 2 dice and one extra
+</span><span class="global">print</span>(weapon:roll())        <span class="comment">-- (5) (3) (1) -- Out of the 3 dice, remove the lowest roll -&gt; (1)  RESULT=8
+</span>
+<span class="comment">-- Enable plurality for rerolls
+</span>weapon = weapon .. <span class="string">'^^'</span>
 
-<span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">40</span>, <span class="number">25</span>)
-    map={}
-    doTheThing()
-<span class="keyword">end</span>
-<span class="keyword">function</span> doTheThing()
-    mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
-    mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=<span class="keyword">true</span>})
-    placePlayer()
-    fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
-<span class="keyword">end</span>
-<span class="keyword">local</span> update=<span class="keyword">false</span>
-<span class="keyword">function</span> love.update()
-    <span class="keyword">if</span> update <span class="keyword">then</span>
-        update=<span class="keyword">false</span>
-        doTheThing()
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
-<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
+<span class="comment">-- Now rolls 2 dice and two extra
+</span><span class="global">print</span>(weapon:roll())        <span class="comment">-- (2) (6) (4) (2) -- Out of the 4 dice, remove the two lowest rolls -&gt; (2) (2)  RESULT=10</span></pre>
 
 
 </div> <!-- id="content" -->
