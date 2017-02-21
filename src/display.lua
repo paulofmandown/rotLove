@@ -11,6 +11,7 @@ Display.__name='Display'
 -- The display constructor. Called when ROT.Display:new() is called.
 -- @tparam[opt=80] int w Width of display in number of characters
 -- @tparam[opt=24] int h Height of display in number of characters
+-- @tparam[opt=1] float scale Window scale modifier applied to glyph dimensions
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
 -- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode

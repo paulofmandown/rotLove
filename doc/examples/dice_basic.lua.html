@@ -37,14 +37,14 @@
   <li><a href="../examples/action.lua.html">action.lua</a></li>
   <li><a href="../examples/arena.lua.html">arena.lua</a></li>
   <li><a href="../examples/astar.lua.html">astar.lua</a></li>
-  <li><strong>bresenham.lua</strong></li>
+  <li><a href="../examples/bresenham.lua.html">bresenham.lua</a></li>
   <li><a href="../examples/brogue.lua.html">brogue.lua</a></li>
   <li><a href="../examples/broguecavegeneration.lua.html">broguecavegeneration.lua</a></li>
   <li><a href="../examples/cellular.lua.html">cellular.lua</a></li>
   <li><a href="../examples/characters.lua.html">characters.lua</a></li>
   <li><a href="../examples/color.lua.html">color.lua</a></li>
   <li><a href="../examples/dice_advanced_uses.lua.html">dice_advanced_uses.lua</a></li>
-  <li><a href="../examples/dice_basic.lua.html">dice_basic.lua</a></li>
+  <li><strong>dice_basic.lua</strong></li>
   <li><a href="../examples/dice_boundry_behaviour.lua.html">dice_boundry_behaviour.lua</a></li>
   <li><a href="../examples/dice_metamethods.lua.html">dice_metamethods.lua</a></li>
   <li><a href="../examples/dice_minimum.lua.html">dice_minimum.lua</a></li>
@@ -113,68 +113,52 @@
 
 <div id="content">
 
-    <h2>bresenham.lua</h2>
+    <h2>dice_basic.lua</h2>
 <pre>
-<span class="comment">--[[ Bresenham Line of Sight ]]</span><span class="comment">--
-</span>ROT=<span class="global">require</span> <span class="string">'rotLove/rotLove'</span>
+dice = <span class="global">require</span>(<span class="string">'dice'</span>)
+<span class="global">math</span>.randomseed(<span class="global">os</span>.time())
 
-<span class="keyword">function</span> calbak(x, y, val)
-    map[x..<span class="string">','</span>..y]=val
-    f:write(val==<span class="number">1</span> <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">'.'</span>, x, y, {r=<span class="number">110</span>, g=<span class="number">110</span>, b=<span class="number">110</span>, a=<span class="number">255</span>}, {r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>})
-<span class="keyword">end</span>
+<span class="comment">-- some basic dice you see in boardgames
+</span>
+single_die = dice:new(<span class="number">6</span>)  <span class="comment">-- is the same as dice:new('1d6')
+</span>die_result = single_die:roll()
 
-<span class="keyword">function</span> lightCalbak(fov, x, y)
-    <span class="keyword">local</span> key=x..<span class="string">','</span>..y
-    <span class="keyword">if</span> map[key] <span class="keyword">then</span>
-        <span class="keyword">return</span> map[key]==<span class="number">0</span>
-    <span class="keyword">end</span>
-    <span class="keyword">return</span> <span class="keyword">false</span>
-<span class="keyword">end</span>
+monopoly_dice = dice:new(<span class="string">'2d6'</span>)
+monopoly_turn = monopoly_dice:roll()
 
-<span class="keyword">function</span> computeCalbak(x, y, r, v)
-    <span class="keyword">local</span> key  =x..<span class="string">','</span>..y
-    <span class="keyword">if</span> <span class="keyword">not</span> map[key] <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
-    <span class="keyword">local</span> color= {r=<span class="number">121</span>, g=<span class="number">121</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
-    f:write(r&gt;<span class="number">0</span> <span class="keyword">and</span> f:getCharacter(x, y) <span class="keyword">or</span> <span class="string">'@'</span>, x, y, <span class="keyword">nil</span>, color)
-<span class="keyword">end</span>
-<span class="keyword">local</span> player={x=<span class="number">1</span>, y=<span class="number">1</span>}
-<span class="keyword">function</span> placePlayer()
-    <span class="keyword">local</span> key =<span class="keyword">nil</span>
-    <span class="keyword">local</span> char=<span class="string">'#'</span>
-    <span class="keyword">local</span> rng=ROT.RNG.Twister:new()
-    rng:randomseed()
-    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
-        key=rng:random(<span class="number">1</span>,f:getWidth())..<span class="string">','</span>..rng:random(<span class="number">1</span>,f:getHeight())
-        <span class="keyword">if</span> map[key]==<span class="number">0</span> <span class="keyword">then</span>
-            pos = key:split(<span class="string">','</span>)
-            player.x, player.y=<span class="global">tonumber</span>(pos[<span class="number">1</span>]), <span class="global">tonumber</span>(pos[<span class="number">2</span>])
-            f:write(<span class="string">'@'</span>, player.x, player.y)
-            <span class="keyword">break</span>
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
+D&amp;D_dice = dice:new(<span class="string">'1d20'</span>)  <span class="comment">-- we could also use dice:new(20)
+</span>roll_to_hit = D&amp;D_dice:roll()
 
-<span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">40</span>, <span class="number">25</span>)
-    map={}
-    doTheThing()
-<span class="keyword">end</span>
-<span class="keyword">function</span> doTheThing()
-    mapgen=ROT.Map.Arena:new(f:getWidth(), f:getHeight())
-    mapgen:create(calbak)
-    fov=ROT.FOV.Bresenham:new(lightCalbak, {useDiamond=<span class="keyword">true</span>})
-    placePlayer()
-    fov:compute(player.x, player.y, <span class="number">10</span>, computeCalbak)
-<span class="keyword">end</span>
-<span class="keyword">local</span> update=<span class="keyword">false</span>
-<span class="keyword">function</span> love.update()
-    <span class="keyword">if</span> update <span class="keyword">then</span>
-        update=<span class="keyword">false</span>
-        doTheThing()
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
-<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
+risk_attackers_dice = dice:new(<span class="string">'(1d6)x3'</span>)
+risk_defenders_dice = dice:new(<span class="string">'(1d6)x2'</span>)
+
+attack_1, attack_2, attack_3 = risk_attackers_dice:roll()
+defend_1, defend_2 = risk_defenders_dice:roll()
+
+<span class="comment">--alternatively we could just put the risk roll results in a table
+</span>attackers_result =  { risk_attackers_dice:roll() }
+defenders_result =  { risk_defenders_dice:roll() }
+
+
+<span class="comment">-- Another method to roll dice is instead of using the roguelike dice notation, we can just feed the roll function a direct number
+</span>
+die_result = dice.roll(<span class="number">6</span>)
+monopoly_turn = dice.roll(<span class="number">6</span>) + dice.roll(<span class="number">6</span>)
+roll_to_hit = dice.roll(<span class="number">20</span>)
+attack_1, attack_2, attack_3 = dice.roll(<span class="number">6</span>), dice.roll(<span class="number">6</span>), dice.roll(<span class="number">6</span>)
+defend_1, defend_2 = dice.roll(<span class="number">6</span>), dice.roll(<span class="number">6</span>)
+
+<span class="comment">-- Or we can roll the dice just using the notation alone without having to use dice:new()
+</span>
+die_result = dice.roll(<span class="string">'1d6'</span>)
+monopoly_turn = dice.roll(<span class="string">'2d6'</span>)
+roll_to_hit = dice.roll(<span class="string">'1d20'</span>)
+attack_1, attack_2, attack_3 = dice.roll(<span class="string">'(1d6)x3'</span>)
+defend_1, defend_2 = dice.roll(<span class="string">'(1d6)x2'</span>)
+
+<span class="comment">-- notice we omitted the colon from the dice roll function because a dice instance is not neccessary although
+</span><span class="comment">-- every roll will initialize the dice table, return the result, and then discard the dice table
+</span><span class="comment">-- which means if you will be using dice continously it will be more efficent to use dice:new()</span></pre>
 
 
 </div> <!-- id="content" -->
