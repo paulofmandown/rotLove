@@ -125,8 +125,16 @@ end
 --- Rolls the dice
 -- @tparam ?int|dice|str self
 -- @tparam[opt] int minimum
-function Dice.roll(self, minimum, ...)
-  if type(self) ~= 'table' then self = Dice:new(self, minimum, unpack(arg)) end
+-- @tparam[opt] ROT.RNG rng When called directly as ROT.Dice.roll, is used
+--     in call to ROT.Dice.new. Not used when called on an instance of ROT.Dice.
+--
+--     i.e.: `ROT.Dice.roll('3d6', 1, rng) -- rng arg used`
+--
+--           `d = ROT.Dice:new('3d6', 1); d:roll(nil, rng) -- rng arg not used`
+--
+--
+function Dice.roll(self, minimum, rng)
+  if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum, rng) end
   local num_dice, dice_faces = self.num, self.faces
   local bonus, rerolls = self.bonus, self.rerolls
   local is_bonus_plural, is_reroll_plural = self.is_bonus_plural, self.is_reroll_plural
