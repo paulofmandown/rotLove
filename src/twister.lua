@@ -1,6 +1,8 @@
 --- Mersenne Twister. A random number generator based on RandomLua
 -- @module ROT.RNG.Twister
-local Twister=ROT.RNG:extends("Twister")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Twister = ROT.RNG:extend("Twister")
+
 function Twister:init()
     self.mt={}
     self.index=0

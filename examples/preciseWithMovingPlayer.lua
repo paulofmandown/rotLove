@@ -1,5 +1,8 @@
 --[[ Precise Shadowcasting ]]--
-ROT=require 'rotLove/rotLove'
+
+setmetatable(_G, { __newindex = function (k, v) error('global ' .. v, 2) end })
+local ROT=require 'src/rot'
+setmetatable(_G, nil)
 
 function calbak(x, y, val)
     map[x..','..y]=val

@@ -2,7 +2,8 @@
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-local Rogue=ROT.Map:extends("Rogue")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Rogue=ROT.Map:extend("Rogue")
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -275,7 +276,7 @@ function Rogue:_getWallPosition(aRoom, aDirection)
     return {rx, ry}
 end
 
-function roomDebug(room)
+local function roomDebug(room)
     write(room.x
           ..','..room.y
           ..','..room.width

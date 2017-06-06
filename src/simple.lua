@@ -1,6 +1,7 @@
 --- The simple scheduler.
 -- @module ROT.Scheduler.Simple
-local Simple= ROT.Scheduler:extends("Simple")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Simple= ROT.Scheduler:extend("Simple")
 
 --- Add.
 -- Add an item to the schedule

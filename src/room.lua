@@ -1,7 +1,8 @@
 --- Room object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
-local Room = ROT.Map.Feature:extends("Room")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Room = ROT.Map.Feature:extend("Room")
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall

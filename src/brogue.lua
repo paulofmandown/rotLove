@@ -1,7 +1,8 @@
 --- The Brogue Map Generator.
 -- Based on the description of Brogues level generation at http://brogue.wikia.com/wiki/Level_Generation
 -- @module ROT.Map.Brogue
-local Brogue=ROT.Map.Dungeon:extends("Brogue")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Brogue=ROT.Map.Dungeon:extend("Brogue")
 
 --- Constructor.
 -- Called with ROT.Map.Brogue:new(). A note: Brogue's map is 79x29. Consider using those dimensions for Display if you're looking to build a brogue-like.

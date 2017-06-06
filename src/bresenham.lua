@@ -2,7 +2,8 @@
 -- See http://en.wikipedia.org/wiki/Bresenham's_line_algorithm.
 -- Included for sake of having options. Provides three functions for computing FOV
 -- @module ROT.FOV.Bresenham
-local Bresenham=ROT.FOV:extends("Bresenham")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Bresenham=ROT.FOV:extend("Bresenham")
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through

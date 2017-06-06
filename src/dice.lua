@@ -2,10 +2,8 @@
 -- Based off the RL-Dice library at https://github.com/timothymtorres/RL-Dice
 -- @module ROT.Dice
 
-local Dice_PATH =({...})[1]:gsub("[%.\\/]dice$", "") .. '/'
-local class  =require (Dice_PATH .. 'vendor/30log')
-
-local Dice=class("Dice", {minimum=1}) -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Dice = ROT.Class:extend("Dice", {minimum=1}) -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
 
 --- Constructor that creates a new dice instance
 -- @tparam ?int|string dice_notation Can be either a dice string, or int

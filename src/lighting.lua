@@ -1,10 +1,9 @@
 --- Lighting Calculator.
 -- based on a traditional FOV for multiple light sources and multiple passes.
 -- @module ROT.Lighting
-local Lighting_PATH=({...})[1]:gsub("[%.\\/]lighting$", "") .. '/'
-local class  =require (Lighting_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Lighting = ROT.Class:extend("Lighting")
 
-local Lighting=class("Lighting")
 --- Constructor.
 -- Called with ROT.Color:new()
 -- @tparam function reflectivityCallback Callback to retrieve cell reflectivity must return float(0..1)

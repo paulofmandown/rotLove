@@ -1,7 +1,8 @@
 --- A* Pathfinding.
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
-local AStar=ROT.Path:extends("AStar")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local AStar=ROT.Path:extend("AStar")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell

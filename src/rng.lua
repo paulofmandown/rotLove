@@ -1,11 +1,8 @@
 --- The RNG Prototype.
 -- The base class that is extended by all rng classes
--- @module ROT.RNG
-
-local RNG_PATH =({...})[1]:gsub("[%.\\/]rng$", "") .. '/'
-local class  =require (RNG_PATH .. 'vendor/30log')
-
-local RNG=class("RNG")
+-- @module ROT.RNG.
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local RNG = ROT.Class:extend("RNG")
 
 function RNG:normalize(n) --keep numbers at (positive) 32 bits
     return n % 0x80000000

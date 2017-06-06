@@ -1,6 +1,7 @@
 --- Action based turn scheduler.
 -- @module ROT.Scheduler.Action
-local Action= ROT.Scheduler:extends("Action")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Action= ROT.Scheduler:extend("Action")
 function Action:init()
 	Action.super.init(self)
 	self._defaultDuration=1

@@ -1,7 +1,8 @@
 --- The Digger Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Digger
-local Digger=ROT.Map.Dungeon:extends("Digger")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Digger=ROT.Map.Dungeon:extend("Digger")
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
 -- @tparam int width Width in cells of the map

@@ -1,10 +1,9 @@
 --- Visual Display.
 -- A Code Page 437 terminal emulator based on AsciiPanel.
 -- @module ROT.Display
-local Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
-local class=require (Display_Path .. 'vendor/30log')
-
-local Display = class("Display")
+local Display_Path = (...):gsub('[^./\\]*$', ''):gsub('[./\\]', '/')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Display = ROT.Class:extend("Display")
 
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.

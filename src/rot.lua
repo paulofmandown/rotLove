@@ -1,7 +1,7 @@
-local ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
-local class  =require (ROTLOVE_PATH .. 'vendor/30log')
+local ROTLOVE_PATH = (...):gsub('[^./\\]*$', '')
+local Class = require (ROTLOVE_PATH .. 'class')
 
-ROT=class("ROT", {
+local ROT = Class:extend('ROT', {
 	DEFAULT_WIDTH =80,
 	DEFAULT_HEIGHT=24,
 
@@ -23,7 +23,10 @@ ROT=class("ROT", {
 		       }
 		  }
 })
+package.loaded[...] = ROT
 require (ROTLOVE_PATH .. 'newFuncs')
+
+ROT.Class = Class
 
 --[[--------------------------------]]--
 -- All RNG 'classes' and functions derived from RandomLua

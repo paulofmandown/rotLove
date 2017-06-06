@@ -1,7 +1,8 @@
 --- Corridor object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
-local Corridor = ROT.Map.Feature:extends("Corridor")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Corridor = ROT.Map.Feature:extend("Corridor")
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
 -- @tparam int startX x-position of first floospace in corridor

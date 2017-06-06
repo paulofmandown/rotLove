@@ -2,7 +2,8 @@
 -- The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Precise
-local Precise=ROT.FOV:extends("Precise")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Precise=ROT.FOV:extend("Precise")
 --- Constructor.
 -- Called with ROT.FOV.Precise:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
@@ -44,6 +45,20 @@ function Precise:compute(x, y, R, callback)
             if #SHADOWS==2 and SHADOWS[1][1]==0 and SHADOWS[2][1]==SHADOWS[2][2] then
                 break
             end
+        end
+    end
+end
+
+local function splice(t, i, rn, it) -- table, index, numberToRemove, insertTable
+    if rn>0 then
+        for _=1,rn do
+            table.remove(t, i)
+        end
+    end
+    if it and #it>0 then
+        for idx=i,i+#it-1 do
+            local el=table.remove(it, 1)
+            if el then table.insert(t, idx, el) end
         end
     end
 end
@@ -118,20 +133,6 @@ function Precise:_checkVisibility(A1, A2, blocks, SHADOWS)
 
     local arcLength=(A2[1]*A1[2] - A1[1]*A2[2]) / (A1[2]*A2[2])
     return visibleLength/arcLength
-end
-
-function splice(t, i, rn, it) -- table, index, numberToRemove, insertTable
-    if rn>0 then
-        for _=1,rn do
-            table.remove(t, i)
-        end
-    end
-    if it and #it>0 then
-        for idx=i,i+#it-1 do
-            local el=table.remove(it, 1)
-            if el then table.insert(t, idx, el) end
-        end
-    end
 end
 
 return Precise

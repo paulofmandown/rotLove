@@ -1,3 +1,23 @@
+-- asserts the type of 'theTable' is table
+local function isATable(theTable)
+    assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")
+end
+
+-- returns string of length n consisting of only char c
+local function charNTimes(c, n)
+    assert(#c==1, 'character must be a string of length 1')
+    local s=''
+    for _=1,n and n or 2 do
+        s=s..c
+    end
+    return s
+end
+
+-- io.write(arg..'\n')
+local function write(str)
+    io.write(str..'\n')
+end
+
 -- New Table Functions
 -- returns random table element, nil if length is 0
 function table.random(theTable)
@@ -68,24 +88,10 @@ function table.indexOfTable(values, value)
     return 0
 end
 
--- asserts the type of 'theTable' is table
-function isATable(theTable)
-    assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")
-end
-
 -- New String functions
 -- first letter capitalized
 function string:capitalize()
     return self:sub(1,1):upper() .. self:sub(2)
-end
--- returns string of length n consisting of only char c
-function charNTimes(c, n)
-    assert(#c==1, 'character must be a string of length 1')
-    local s=''
-    for _=1,n and n or 2 do
-        s=s..c
-    end
-    return s
 end
 -- left pad with c char, repeated n times
 function string:lpad(c, n)
@@ -140,7 +146,3 @@ function math.round(n, mult)
     return math.floor((n + mult/2)/mult) * mult
 end
 
--- io.write(arg..'\n')
-function write(str)
-    io.write(str..'\n')
-end

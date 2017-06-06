@@ -1,7 +1,8 @@
 --- The Uniform Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Uniform
-local Uniform=ROT.Map.Dungeon:extends("Uniform")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Uniform=ROT.Map.Dungeon:extend("Uniform")
 
 --- Constructor.
 -- Called with ROT.Map.Uniform:new()

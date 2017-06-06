@@ -5,7 +5,8 @@
 -- With Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
 -- Better rank ordering method by Stefan Gustavson in 2012.
 -- @module ROT.Noise.Simplex
-local Simplex=ROT.Noise:extends("Simplex")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Simplex=ROT.Noise:extend("Simplex")
 --- Constructor.
 -- 2D simplex noise generator.
 -- @tparam int gradients The random values for the noise.

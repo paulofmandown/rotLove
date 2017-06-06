@@ -1,7 +1,6 @@
-local Point_PATH =({...})[1]:gsub("[%.\\/]point$", "") .. '/'
-local class  =require (Point_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Point = ROT.Class:extend("Point")
 
-local Point=class("Point")
 function Point:init(x, y)
     self.x=x
     self.y=y

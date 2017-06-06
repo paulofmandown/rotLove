@@ -1,10 +1,8 @@
 --- DijkstraMap Pathfinding.
 -- Based on the DijkstraMap Article on RogueBasin, http://roguebasin.roguelikedevelopment.org/index.php?title=The_Incredible_Power_of_Dijkstra_Maps
 -- @module ROT.DijkstraMap
-local DijkstraMap_PATH=({...})[1]:gsub("[%.\\/]dijkstraMap$", "") .. '/'
-local class  =require (DijkstraMap_PATH .. 'vendor/30log')
-
-local DijkstraMap=class("DijkstraMap")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local DijkstraMap = ROT.Class:extend("DijkstraMap")
 
 --- Constructor.
 -- @tparam int goalX x-position of cell that map will 'roll down' to

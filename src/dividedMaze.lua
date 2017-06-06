@@ -1,7 +1,8 @@
 --- The Divided Maze Map Generator.
 -- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
 -- @module ROT.Map.DividedMaze
-local DividedMaze = ROT.Map:extends("DividedMaze")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local DividedMaze = ROT.Map:extend("DividedMaze")
 --- Constructor.
 -- Called with ROT.Map.DividedMaze:new(width, height)
 -- @tparam int width Width in cells of the map

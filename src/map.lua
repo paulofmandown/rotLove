@@ -1,7 +1,6 @@
-local Map_PATH =({...})[1]:gsub("[%.\\/]map$", "") .. '/'
-local class  =require (Map_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Map = ROT.Class:extend("Map")
 
-local Map=class("Map")
 function Map:init(width, height)
 	self._width = width and width or ROT.DEFAULT_WIDTH
 	self._height= height and height or ROT.DEFAULT_HEIGHT

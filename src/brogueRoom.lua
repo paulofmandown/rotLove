@@ -1,7 +1,8 @@
 --- BrogueRoom object.
 -- Used by ROT.Map.Brogue to create maps with 'cross rooms'
 -- @module ROT.Map.BrogueRoom
-local BrogueRoom = ROT.Map.Feature:extends("BrogueRoom")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local BrogueRoom = ROT.Map.Feature:extend("BrogueRoom")
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles

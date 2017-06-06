@@ -1,10 +1,8 @@
 --- The Scheduler Prototype
 -- @module ROT.Scheduler
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Scheduler = ROT.Class:extend("Scheduler")
 
-local Scheduler_Path =({...})[1]:gsub("[%.\\/]scheduler$", "") .. '/'
-local class  =require (Scheduler_Path .. 'vendor/30log')
-
-local Scheduler = class("Scheduler")
 function Scheduler:init()
 	self._queue=ROT.EventQueue:new()
 	self._repeat ={}

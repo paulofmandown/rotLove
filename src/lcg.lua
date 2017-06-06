@@ -1,6 +1,7 @@
 --- Linear Congruential Generator. A random number generator based on RandomLua
 -- @module ROT.RNG.LCG
-local LCG=ROT.RNG:extends("LCG")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local LCG=ROT.RNG:extend("LCG")
 
 --- Constructor.
 -- Called with ROT.RNG.LCG:new(r)

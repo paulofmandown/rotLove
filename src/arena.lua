@@ -1,7 +1,8 @@
 --- The Arena map generator.
 -- Generates an arena style map. All cells except for the extreme borders are floors. The borders are walls.
 -- @module ROT.Map.Arena
-local Arena = ROT.Map:extends("Arena")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Arena = ROT.Map:extend("Arena")
 --- Constructor.
 -- Called with ROT.Map.Arena:new(width, height)
 -- @tparam int width Width in cells of the map

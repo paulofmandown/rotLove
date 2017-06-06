@@ -1,7 +1,6 @@
-local Engine_PATH =({...})[1]:gsub("[%.\\/]engine$", "") .. '/'
-local class  =require (Engine_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Engine = ROT.Class:extend("Engine")
 
-local Engine = class("Engine")
 function Engine:init(scheduler)
 	self._scheduler=scheduler
 	self._lock     =1

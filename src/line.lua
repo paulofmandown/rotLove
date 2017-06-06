@@ -1,7 +1,6 @@
-local Line_PATH =({...})[1]:gsub("[%.\\/]line$", "") .. '/'
-local class  =require (Line_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Line = ROT.Class:extend("Line")
 
-local Line=class("Line")
 function Line:init(x1, y1, x2, y2)
     self.x1=x1
     self.y1=y1
