@@ -3,8 +3,7 @@
 -- @module ROT.TextDisplay
 local TextDisplay_Path = ({...})[1]:gsub("[%.\\/]textDisplay$", "") .. '/'
 local class=require (TextDisplay_Path .. 'vendor/30log')
-local TextDisplay=class {  }
-TextDisplay.__name='TextDisplay'
+local TextDisplay=class("TextDisplay")
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -18,7 +17,7 @@ TextDisplay.__name='TextDisplay'
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
+function TextDisplay:init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.graphics =love.graphics
     self._fontSize=size or 10
     self._font    =font and self.graphics.newFont(font, size) or self.graphics.newFont(self._fontSize)

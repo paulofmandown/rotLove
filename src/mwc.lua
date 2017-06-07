@@ -1,11 +1,10 @@
 --- Multiply With Carry. A random number generator based on RandomLua
 -- @module ROT.RNG.MWC
-local MWC=ROT.RNG:extends { }
-MWC.__name='MWC'
+local MWC=ROT.RNG:extends("MWC")
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
-function MWC:__init(r)
+function MWC:init(r)
     self.a= 1103515245
     self.c= 12345
     self.ic=self.c

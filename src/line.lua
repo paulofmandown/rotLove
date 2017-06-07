@@ -1,9 +1,8 @@
 local Line_PATH =({...})[1]:gsub("[%.\\/]line$", "") .. '/'
 local class  =require (Line_PATH .. 'vendor/30log')
 
-local Line=class{ }
-Line.__name='Line'
-function Line:__init(x1, y1, x2, y2)
+local Line=class("Line")
+function Line:init(x1, y1, x2, y2)
     self.x1=x1
     self.y1=y1
     self.x2=x2

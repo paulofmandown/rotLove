@@ -2,8 +2,7 @@
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-local Rogue=ROT.Map:extends { }
-Rogue.__name='Rogue'
+local Rogue=ROT.Map:extends("Rogue")
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -13,8 +12,8 @@ Rogue.__name='Rogue'
   -- @tparam int options.roomWidth Room min and max width
   -- @tparam int options.roomHeight Room min and max height
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Rogue:__init(width, height, options, rng)
-    Rogue.super.__init(self, width, height)
+function Rogue:init(width, height, options, rng)
+    Rogue.super.init(self, width, height)
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=rng and rng or ROT.RNG.Twister:new()

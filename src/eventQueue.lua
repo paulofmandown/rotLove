@@ -4,12 +4,11 @@
 local EventQueue_Path =({...})[1]:gsub("[%.\\/]eventQueue$", "") .. '/'
 local class  =require (EventQueue_Path .. 'vendor/30log')
 
-local EventQueue = class {
-	_time      =0,
-	_events    ={},
-	_eventTimes={}
-}
-EventQueue.__name='EventQueue'
+local EventQueue = class("EventQueue", {
+    _time      =0,
+    _events    ={},
+    _eventTimes={}
+})
 --- Get Time.
 -- Get time counted since start
 -- @treturn int elapsed time

@@ -4,9 +4,8 @@
 local Scheduler_Path =({...})[1]:gsub("[%.\\/]scheduler$", "") .. '/'
 local class  =require (Scheduler_Path .. 'vendor/30log')
 
-local Scheduler = class { }
-Scheduler.__name  ='Scheduler'
-function Scheduler:__init()
+local Scheduler = class("Scheduler")
+function Scheduler:init()
 	self._queue=ROT.EventQueue:new()
 	self._repeat ={}
 	self._current=nil

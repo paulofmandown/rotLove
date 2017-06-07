@@ -1,8 +1,7 @@
 --- The Digger Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Digger
-local Digger=ROT.Map.Dungeon:extends { }
-Digger.__name='Digger'
+local Digger=ROT.Map.Dungeon:extends("Digger")
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
 -- @tparam int width Width in cells of the map
@@ -15,8 +14,8 @@ Digger.__name='Digger'
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Digger:__init(width, height, options, rng)
-	Digger.super.__init(self, width, height)
+function Digger:init(width, height, options, rng)
+	Digger.super.init(self, width, height)
 
 	self._options={
 					roomWidth={3,8},

@@ -1,9 +1,8 @@
 --- Action based turn scheduler.
 -- @module ROT.Scheduler.Action
-local Action= ROT.Scheduler:extends { }
-Action.__name='Action'
-function Action:__init()
-	Action.super.__init(self)
+local Action= ROT.Scheduler:extends("Action")
+function Action:init()
+	Action.super.init(self)
 	self._defaultDuration=1
 	self._duration=self._defaultDuration
 end

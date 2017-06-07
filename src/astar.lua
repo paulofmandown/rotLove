@@ -1,16 +1,15 @@
 --- A* Pathfinding.
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
-local AStar=ROT.Path:extends { }
-AStar.__name='AStar'
+local AStar=ROT.Path:extends("AStar")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function AStar:__init(toX, toY, passableCallback, options)
-    AStar.super.__init(self, toX, toY, passableCallback, options)
+function AStar:init(toX, toY, passableCallback, options)
+    AStar.super.init(self, toX, toY, passableCallback, options)
     self._todo={}
     self._done={}
     self._fromX=nil

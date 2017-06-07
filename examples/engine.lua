@@ -19,6 +19,7 @@ a2=class{}
 
 function a2:act()
 	f:write('@'..','..os.clock(), 1, 4)
+    s:remove(self)
 end
 
 function unlock()

@@ -2,16 +2,15 @@
 -- See http://en.wikipedia.org/wiki/Bresenham's_line_algorithm.
 -- Included for sake of having options. Provides three functions for computing FOV
 -- @module ROT.FOV.Bresenham
-local Bresenham=ROT.FOV:extends { }
-Bresenham.__name='Bresenham'
+local Bresenham=ROT.FOV:extends("Bresenham")
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
   -- @tparam boolean options.useDiamond If true, the FOV will be a diamond shape as opposed to a circle shape.
-function Bresenham:__init(lightPassesCallback, options)
-    Bresenham.super.__init(self, lightPassesCallback, options)
+function Bresenham:init(lightPassesCallback, options)
+    Bresenham.super.init(self, lightPassesCallback, options)
 end
 
 --- Compute.

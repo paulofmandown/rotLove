@@ -1,14 +1,13 @@
 --- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
-local Dungeon = ROT.Map:extends { }
-Dungeon.__name='Dungeon'
+local Dungeon = ROT.Map:extends("Dungeon")
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function Dungeon:__init(width, height)
-	Dungeon.super.__init(self, width, height)
+function Dungeon:init(width, height)
+	Dungeon.super.init(self, width, height)
 	self._rooms    ={}
 	self._corridors={}
 end

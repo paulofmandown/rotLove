@@ -1,16 +1,15 @@
 --- Dijkstra Pathfinding.
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
-local Dijkstra=ROT.Path:extends { }
-Dijkstra.__name='Dijkstra'
+local Dijkstra=ROT.Path:extends("Dijkstra")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function Dijkstra:__init(toX, toY, passableCallback, options)
-    Dijkstra.super.__init(self, toX, toY, passableCallback, options)
+function Dijkstra:init(toX, toY, passableCallback, options)
+    Dijkstra.super.init(self, toX, toY, passableCallback, options)
 
     self._computed={}
     self._todo    ={}

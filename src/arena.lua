@@ -1,14 +1,13 @@
 --- The Arena map generator.
 -- Generates an arena style map. All cells except for the extreme borders are floors. The borders are walls.
 -- @module ROT.Map.Arena
-local Arena = ROT.Map:extends { }
-Arena.__name='Arena'
+local Arena = ROT.Map:extends("Arena")
 --- Constructor.
 -- Called with ROT.Map.Arena:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function Arena:__init(width, height)
-	Arena.super.__init(self, width, height)
+function Arena:init(width, height)
+	Arena.super.init(self, width, height)
 end
 
 --- Create.

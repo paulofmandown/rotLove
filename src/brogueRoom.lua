@@ -1,15 +1,14 @@
 --- BrogueRoom object.
 -- Used by ROT.Map.Brogue to create maps with 'cross rooms'
 -- @module ROT.Map.BrogueRoom
-local BrogueRoom = ROT.Map.Feature:extends { }
-BrogueRoom.__name='BrogueRoom'
+local BrogueRoom = ROT.Map.Feature:extends("BrogueRoom")
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function BrogueRoom:__init(dims, doorX, doorY, rng)
+function BrogueRoom:init(dims, doorX, doorY, rng)
     self._dims =dims
     self._doors={}
     self._walls={}

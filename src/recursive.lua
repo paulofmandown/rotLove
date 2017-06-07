@@ -2,15 +2,14 @@
 -- The Recursive shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Recursive_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Recursive
-local Recursive=ROT.FOV:extends{ }
-Recursive.__name='Recursive'
+local Recursive=ROT.FOV:extends("Recursive")
 --- Constructor.
 -- Called with ROT.FOV.Recursive:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
-function Recursive:__init(lightPassesCallback, options)
-    Recursive.super.__init(self, lightPassesCallback, options)
+function Recursive:init(lightPassesCallback, options)
+    Recursive.super.init(self, lightPassesCallback, options)
 end
 
  Recursive._octants = {

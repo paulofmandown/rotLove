@@ -1,8 +1,7 @@
 --- Room object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
-local Room = ROT.Map.Feature:extends { }
-Room.__name='Room'
+local Room = ROT.Map.Feature:extends("Room")
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -12,7 +11,7 @@ Room.__name='Room'
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Room:__init(x1, y1, x2, y2, doorX, doorY, rng)
+function Room:init(x1, y1, x2, y2, doorX, doorY, rng)
 	self._x1   =x1
 	self._x2   =x2
 	self._y1   =y1

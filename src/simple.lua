@@ -1,7 +1,6 @@
 --- The simple scheduler.
 -- @module ROT.Scheduler.Simple
-local Simple= ROT.Scheduler:extends {  }
-Simple.__name='Simple'
+local Simple= ROT.Scheduler:extends("Simple")
 
 --- Add.
 -- Add an item to the schedule

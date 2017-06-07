@@ -29,11 +29,10 @@ _class = function(name, attr) local c = deep_copy(attr); _classes[c] = tostring(
         assert(self.mixins[mixin] == true, ('Attempted to remove a mixin which is not included in %s'):format(tostring(self))); local classes = self:subclasses(); classes[#classes + 1] = self
         for _, class in ipairs(classes) do for method_name, method in pairs(mixin) do if type(method) == 'function' then class[method_name] = nil end end end; self.mixins[mixin] = nil end; return self end; return setmetatable(c, baseMt) end
 class._DESCRIPTION = '30 lines library for object orientation in Lua'; class._VERSION = '30log v1.2.0'; class._URL = 'http://github.com/Yonaba/30log'; class._LICENSE = 'MIT LICENSE <http://www.opensource.org/licenses/mit-license.php>'
-return setmetatable(class,{__call = function(_,...) return _class(...) end })
+setmetatable(class,{__call = function(_,...) return _class(...) end })
 -- End 30Log
 
-
-local ROT=class {
+local ROT=class("ROT", {
     DEFAULT_WIDTH =80,
     DEFAULT_HEIGHT=24,
 
@@ -54,7 +53,7 @@ local ROT=class {
                 {-1,-1}
                }
           }
-}
+})
 
 -- New Table Functions
 -- returns random table element, nil if length is 0
@@ -208,8 +207,8 @@ end
 --- The RNG Prototype.
 -- The base class that is extended by all rng classes
 -- @module ROT.RNG
-ROT.RNG=class {  }
-function ROT.RNG:__init()
+ROT.RNG=class("RNG")
+function ROT.RNG:init()
     self.__name='RNG'
 end
 
@@ -279,9 +278,9 @@ end
 
 --- Mersenne Twister. A random number generator based on RandomLua
 -- @module ROT.RNG.Twister
-ROT.RNG.Twister=ROT.RNG:extends { }
+ROT.RNG.Twister=ROT.RNG:extend("Twister")
 
-function ROT.RNG.Twister:__init()
+function ROT.RNG.Twister:init()
     self.__name='Twister'
     self.mt={}
     self.index=0
@@ -357,12 +356,12 @@ end
 
 --- Linear Congruential Generator. A random number generator based on RandomLua
 -- @module ROT.RNG.LCG
-ROT.RNG.LCG=ROT.RNG:extends { }
+ROT.RNG.LCG=ROT.RNG:extend("LCG")
 
 --- Constructor.
 -- Called with ROT.RNG.LCG:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
-function ROT.RNG.LCG:__init(r)
+function ROT.RNG.LCG:init(r)
     self.__name='LCG'
     self.a= 1103515245   -- Ansi C
     self.c= 12345
@@ -425,12 +424,12 @@ end
 
 --- Multiply With Carry. A random number generator based on RandomLua
 -- @module ROT.RNG.MWC
-ROT.RNG.MWC=ROT.RNG:extends {  }
+ROT.RNG.MWC=ROT.RNG:extend("MWC")
 
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
-function ROT.RNG.MWC:__init(r)
+function ROT.RNG.MWC:init(r)
     self.__name='MWC'
 
     self.a= 1103515245
@@ -505,8 +504,8 @@ end
 --- Visual Display.
 -- A Code Page 437 terminal emulator based on AsciiPanel.
 -- @module ROT.Display
-local Display_Path = ({...})[1]:gsub("[%.\\/]rotLove$", "") .. '/'
-ROT.Display = class { }
+local Display_Path=({...})[1]:gsub("[%.\\/]rotLove$", "") .. '/'
+ROT.Display=class("Display")
 
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
@@ -518,7 +517,7 @@ ROT.Display = class { }
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function ROT.Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
+function ROT.Display:init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
@@ -780,7 +779,7 @@ end
 --- Visual Display.
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
-ROT.TextDisplay=class { }
+ROT.TextDisplay=class("TextDisplay")
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.
@@ -794,7 +793,7 @@ ROT.TextDisplay=class { }
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function ROT.TextDisplay:__init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
+function ROT.TextDisplay:init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.graphics =love.graphics
     self._fontSize=size or 10
     self._font    =font and self.graphics.newFont(font, size) or self.graphics.newFont(self._fontSize)
@@ -1037,7 +1036,7 @@ end
 --- Random String Generator.
 -- Learns from provided strings, and generates similar strings.
 -- @module ROT.StringGenerator
-ROT.StringGenerator = class { }
+ROT.StringGenerator=class("StringGenerator")
 
 --- Constructor.
 -- Called with ROT.StringGenerator:new()
@@ -1045,7 +1044,7 @@ ROT.StringGenerator = class { }
     -- @tparam[opt=false] boolean options.words Use word mode
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
-function ROT.StringGenerator:__init(options, rng)
+function ROT.StringGenerator:init(options, rng)
     self.__name   ='StringGenerator'
     self._options = {words=false,
                      order=3,
@@ -1203,12 +1202,11 @@ end
 
 --- Stores and retrieves events based on time.
 -- @module ROT.EventQueue
-ROT.EventQueue = class {
-    __name     ='EventQueue',
+ROT.EventQueue=class("EventQueue",{
     _time      =0,
     _events    ={},
     _eventTimes={}
-}
+})
 
 --- Get Time.
 -- Get time counted since start
@@ -1278,8 +1276,8 @@ end
 
 --- The Scheduler Prototype
 -- @module ROT.Scheduler
-ROT.Scheduler = class { }
-function ROT.Scheduler:__init()
+ROT.Scheduler=class("Scheduler")
+function ROT.Scheduler:init()
     self.__name  ='Scheduler'
     self._queue=ROT.EventQueue:new()
     self._repeat ={}
@@ -1335,7 +1333,7 @@ end
 
 --- The simple scheduler
 -- @module ROT.Scheduler.Simple
-ROT.Scheduler.Simple= ROT.Scheduler:extends { __name='Simple' }
+ROT.Scheduler.Simple=ROT.Scheduler:extend("Simple")
 
 --- Add.
 -- Add an item to the schedule
@@ -1375,7 +1373,7 @@ end
 
 --- The Speed based scheduler
 -- @module ROT.Scheduler.Speed
-ROT.Scheduler.Speed= ROT.Scheduler:extends { __name='Speed' }
+ROT.Scheduler.Speed=ROT.Scheduler:extend("Speed")
 
 --- Add.
 -- Add an item to the schedule
@@ -1415,10 +1413,10 @@ end
 
 --- Action based turn scheduler.
 -- @module ROT.Scheduler.Action
-ROT.Scheduler.Action= ROT.Scheduler:extends { }
+ROT.Scheduler.Action=ROT.Scheduler:extend("Action")
 
-function ROT.Scheduler.Action:__init()
-    ROT.Scheduler.Action.super.__init(self)
+function ROT.Scheduler.Action:init()
+    ROT.Scheduler.Action.super.init(self)
     self.__name='Action'
     self._defaultDuration=1
     self._duration=self._defaultDuration
@@ -1471,9 +1469,8 @@ function ROT.Scheduler.Action:setDuration(time)
     return self
 end
 
-ROT.Engine = class { }
-function ROT.Engine:__init(scheduler)
-    self.__name='Engine'
+ROT.Engine=class("Engine")
+function ROT.Engine:init(scheduler)
     self._scheduler=scheduler
     self._lock     =1
 end
@@ -1497,8 +1494,8 @@ function ROT.Engine:unlock()
     return self
 end
 
-ROT.Map=class { }
-function ROT.Map:__init(width, height)
+ROT.Map=class("Map")
+function ROT.Map:init(width, height)
     self.__name= 'Map'
     self._width = width and width or ROT.DEFAULT_WIDTH
     self._height= height and height or ROT.DEFAULT_HEIGHT
@@ -1518,14 +1515,14 @@ end
 --- The Arena map generator.
 -- Generates an arena style map. All cells except for the extreme borders are floors. The borders are walls.
 -- @module ROT.Map.Arena
-ROT.Map.Arena = ROT.Map:extends { }
+ROT.Map.Arena=ROT.Map:extend("Arena")
 
 --- Constructor.
 -- Called with ROT.Map.Arena:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function ROT.Map.Arena:__init(width, height)
-    ROT.Map.Arena.super.__init(self, width, height)
+function ROT.Map.Arena:init(width, height)
+    ROT.Map.Arena.super.init(self, width, height)
     self.__name = 'Arena'
 end
 
@@ -1551,14 +1548,14 @@ end
 --- The Divided Maze Map Generator.
 -- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
 -- @module ROT.Map.DividedMaze
-ROT.Map.DividedMaze = ROT.Map:extends { }
+ROT.Map.DividedMaze=ROT.Map:extend("DividedMaze")
 
 --- Constructor.
 -- Called with ROT.Map.DividedMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function ROT.Map.DividedMaze:__init(width, height)
-    ROT.Map.DividedMaze.super.__init(self, width, height)
+function ROT.Map.DividedMaze:init(width, height)
+    ROT.Map.DividedMaze.super.init(self, width, height)
     self.__name = 'DividedMaze'
 end
 
@@ -1664,16 +1661,16 @@ end
 --- The Icey Maze Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
 -- @module ROT.Map.IceyMaze
-ROT.Map.IceyMaze = ROT.Map:extends { }
+ROT.Map.IceyMaze=ROT.Map:extend("IceyMaze")
 
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 -- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
-function ROT.Map.IceyMaze:__init(width, height, rng, regularity)
+function ROT.Map.IceyMaze:init(width, height, rng, regularity)
     assert(ROT and ROT.RNG.Twister, 'require rot or require RandomLua, IceyMaze requires twister() be available')
-    ROT.Map.IceyMaze.super.__init(self, width, height)
+    ROT.Map.IceyMaze.super.init(self, width, height)
     self.__name     ='IceyMaze'
     self._regularity= regularity and regularity or 0
     self._rng       =rng and rng or ROT.RNG.Twister:new()
@@ -1776,15 +1773,15 @@ end
 --- The Eller Maze Map Generator.
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
-ROT.Map.EllerMaze = ROT.Map:extends { }
+ROT.Map.EllerMaze=ROT.Map:extend("EllerMaze")
 
 
 --- Constructor.
 -- Called with ROT.Map.EllerMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function ROT.Map.EllerMaze:__init(width, height, rng)
-    ROT.Map.EllerMaze.super.__init(self, width, height)
+function ROT.Map.EllerMaze:init(width, height, rng)
+    ROT.Map.EllerMaze.super.init(self, width, height)
     self.__name='EllerMaze'
     self._rng  =rng and rng or ROT.RNG.Twister:new()
     if not rng then self._rng:randomseed() end
@@ -1866,7 +1863,7 @@ end
 
 --- Cellular Automaton Map Generator
 -- @module ROT.Map.Cellular
-ROT.Map.Cellular = ROT.Map:extends { }
+ROT.Map.Cellular=ROT.Map:extend("Cellular")
 
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
@@ -1879,9 +1876,9 @@ ROT.Map.Cellular = ROT.Map:extends { }
   -- @tparam boolean options.connected Set to true to connect open areas on create
   -- @tparam int options.minimumZoneArea Unconnected zones with fewer tiles than this will be turned to wall instead of being connected
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function ROT.Map.Cellular:__init(width, height, options, rng)
+function ROT.Map.Cellular:init(width, height, options, rng)
     assert(ROT, 'must require rot')
-    ROT.Map.Cellular.super.__init(self, width, height)
+    ROT.Map.Cellular.super.init(self, width, height)
     self.__name='Cellular'
     self._options={
                     born    ={5,6,7,8},
@@ -2081,14 +2078,14 @@ end
 --- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
-ROT.Map.Dungeon = ROT.Map:extends { }
+ROT.Map.Dungeon=ROT.Map:extend("Dungeon")
 
 --- Constructor.
 -- Called with ROT.Map.Dungeon:new()
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function ROT.Map.Dungeon:__init(width, height)
-    ROT.Map.Dungeon.super.__init(self, width, height)
+function ROT.Map.Dungeon:init(width, height)
+    ROT.Map.Dungeon.super.init(self, width, height)
     self._rooms    ={}
     self._corridors={}
 end
@@ -2117,7 +2114,7 @@ end
 -- @treturn table A table containing objects of the type ROT.Map.Corridor
 function ROT.Map.Dungeon:getCorridors() return self._corridors end
 
-ROT.Map.Feature = class { __name='Feature' }
+ROT.Map.Feature=class("Feature")
 function ROT.Map.Feature:isValid() end
 function ROT.Map.Feature:create() end
 function ROT.Map.Feature:debug() end
@@ -2126,7 +2123,7 @@ function ROT.Map.Feature:createRandomAt() end
 --- Room object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
-ROT.Map.Room = ROT.Map.Feature:extends { }
+ROT.Map.Room=ROT.Map.Feature:extend("Room")
 
 --- Constructor.
 -- creates a new room object with the assigned values
@@ -2136,7 +2133,7 @@ ROT.Map.Room = ROT.Map.Feature:extends { }
 -- @tparam int y2 Bottom wall
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
-function ROT.Map.Room:__init(x1, y1, x2, y2, doorX, doorY, rng)
+function ROT.Map.Room:init(x1, y1, x2, y2, doorX, doorY, rng)
     self._x1   =x1
     self._x2   =x2
     self._y1   =y1
@@ -2363,15 +2360,14 @@ function ROT.Map.Room:getBottom() return self._y2 end
 --- BrogueRoom object.
 -- Used by ROT.Map.Brogue to create maps with 'cross rooms'
 -- @module ROT.Map.BrogueRoom
-ROT.Map.BrogueRoom = ROT.Map.Feature:extends { }
-ROT.Map.BrogueRoom.__name='BrogueRoom'
+ROT.Map.BrogueRoom=ROT.Map.Feature:extend("BrogueRoom")
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function ROT.Map.BrogueRoom:__init(dims, doorX, doorY, rng)
+function ROT.Map.BrogueRoom:init(dims, doorX, doorY, rng)
     self._dims =dims
     self._doors={}
     self._walls={}
@@ -2712,7 +2708,7 @@ end
 --- Corridor object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
-ROT.Map.Corridor = ROT.Map.Feature:extends { }
+ROT.Map.Corridor=ROT.Map.Feature:extend("Corridor")
 
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
@@ -2720,7 +2716,7 @@ ROT.Map.Corridor = ROT.Map.Feature:extends { }
 -- @tparam int startY y-position of first floospace in corridor
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
-function ROT.Map.Corridor:__init(startX, startY, endX, endY, rng)
+function ROT.Map.Corridor:init(startX, startY, endX, endY, rng)
     assert(ROT, 'require rot')
     self._startX       =startX
     self._startY       =startY
@@ -2849,7 +2845,7 @@ end
 --- The Digger Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Digger
-ROT.Map.Digger=ROT.Map.Dungeon:extends { }
+ROT.Map.Digger=ROT.Map.Dungeon:extend("Digger")
 
 --- Constructor.
 -- Called with ROT.Map.Digger:new()
@@ -2862,8 +2858,8 @@ ROT.Map.Digger=ROT.Map.Dungeon:extends { }
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
-function ROT.Map.Digger:__init(width, height, options, rng)
-    ROT.Map.Digger.super.__init(self, width, height)
+function ROT.Map.Digger:init(width, height, options, rng)
+    ROT.Map.Digger.super.init(self, width, height)
 
     self._options={
                     roomWidth={3,8},
@@ -3059,7 +3055,7 @@ end
 
 --- The Uniform Map Generator.
 -- See http://www.roguebasin.rogue
-ROT.Map.Uniform=ROT.Map.Dungeon:extends { }
+ROT.Map.Uniform=ROT.Map.Dungeon:extend("Uniform")
 
 --- Constructor.
 -- Called with ROT.Map.Uniform:new()
@@ -3070,8 +3066,8 @@ ROT.Map.Uniform=ROT.Map.Dungeon:extends { }
   -- @tparam[opt={4,6}] table options.roomHeight room minimum and maximum height
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
-function ROT.Map.Uniform:__init(width, height, options, rng)
-    ROT.Map.Uniform.super.__init(self, width, height)
+function ROT.Map.Uniform:init(width, height, options, rng)
+    ROT.Map.Uniform.super.init(self, width, height)
     assert(ROT, 'require rot')
     self.__name='Uniform'
     self._options={
@@ -3353,7 +3349,7 @@ end
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-ROT.Map.Rogue=ROT.Map.Dungeon:extends { }
+ROT.Map.Rogue=ROT.Map.Dungeon:extend("Rogue")
 
 --- Constructor.
 -- @tparam int width Width in cells of the map
@@ -3363,8 +3359,8 @@ ROT.Map.Rogue=ROT.Map.Dungeon:extends { }
   -- @tparam int options.cellHeight Number of cells to create on the vertical (number of rooms vertically)
   -- @tparam int options.roomWidth Room min and max width
   -- @tparam int options.roomHeight Room min and max height
-function ROT.Map.Rogue:__init(width, height, options, rng)
-    ROT.Map.Rogue.super.__init(self, width, height)
+function ROT.Map.Rogue:init(width, height, options, rng)
+    ROT.Map.Rogue.super.init(self, width, height)
     self.__name='Rogue'
     self._doors={}
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
@@ -3705,7 +3701,7 @@ end
 --- The Brogue Map Generator.
 -- Based on the description of Brogues level generation at http://brogue.wikia.com/wiki/Level_Generation
 -- @module ROT.Map.Brogue
-ROT.Map.Brogue=ROT.Map.Dungeon:extends { }
+ROT.Map.Brogue=ROT.Map.Dungeon:extend("Brogue")
 ROT.Map.Brogue.__name='Brogue'
 
 --- Constructor.
@@ -3720,8 +3716,8 @@ ROT.Map.Brogue.__name='Brogue'
   -- @tparam[opt={3,12}] table options.corridorWidth Length of east-west corridors
   -- @tparam[opt={2,5}] table options.corridorHeight Length of north-south corridors
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function ROT.Map.Brogue:__init(width, height, options, rng)
-    ROT.Map.Brogue.super.__init(self, width, height)
+function ROT.Map.Brogue:init(width, height, options, rng)
+    ROT.Map.Brogue.super.init(self, width, height)
     self._options={
                     roomWidth={4,20},
                     roomHeight={3,7},
@@ -4001,9 +3997,9 @@ function ROT.Map.Brogue:_canBeDugCallback(x, y)
     return true
 end
 
-ROT.Noise=class{ }
+ROT.Noise=class("Noise")
 
-function ROT.Noise:__init()
+function ROT.Noise:init()
     self.__name='Noise'
 end
 
@@ -4016,14 +4012,14 @@ function ROT.Noise:get() end
 -- With Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
 -- Better rank ordering method by Stefan Gustavson in 2012.
 -- @module ROT.Noise.Simplex
-ROT.Noise.Simplex=ROT.Noise:extends{ }
+ROT.Noise.Simplex=ROT.Noise:extend("Simplex")
 
 --- Constructor.
 -- 2D simplex noise generator.
 -- @tparam int gradients The random values for the noise.
-function ROT.Noise.Simplex:__init(gradients)
+function ROT.Noise.Simplex:init(gradients)
     self.__name='Simplex'
-    ROT.Noise.Simplex.super.__init(self)
+    ROT.Noise.Simplex.super.init(self)
 
     self._F2=.5*(math.sqrt(3)-1)
     self._G2=(3-math.sqrt(3))/6
@@ -4119,9 +4115,9 @@ function ROT.Noise.Simplex:get(xin, yin)
     return 70*(n0+n1+n2)
 end
 
-ROT.FOV=class{ }
+ROT.FOV=class("FOV")
 
-function ROT.FOV:__init(lightPassesCallback, options)
+function ROT.FOV:init(lightPassesCallback, options)
     self.__name='FOV'
     self._lightPasses=lightPassesCallback
     self._options={topology=8}
@@ -4178,15 +4174,15 @@ end
 -- The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Precise
-ROT.FOV.Precise=ROT.FOV:extends{ }
+ROT.FOV.Precise=ROT.FOV:extend("Precise")
 
 --- Constructor.
 -- Called with ROT.FOV.Precise:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
-function ROT.FOV.Precise:__init(lightPassesCallback, options)
-    ROT.FOV.Precise.super.__init(self, lightPassesCallback, options)
+function ROT.FOV.Precise:init(lightPassesCallback, options)
+    ROT.FOV.Precise.super.init(self, lightPassesCallback, options)
 end
 
 --- Compute.
@@ -4315,15 +4311,14 @@ end
 -- The Recursive shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Recursive_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Recursive
-ROT.FOV.Recursive=ROT.FOV:extends{ }
-ROT.FOV.Recursive.__name='Recursive'
+ROT.FOV.Recursive=ROT.FOV:extend("Recursive")
 --- Constructor.
 -- Called with ROT.FOV.Recursive:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
-function ROT.FOV.Recursive:__init(lightPassesCallback, options)
-    ROT.FOV.Recursive.super.__init(self, lightPassesCallback, options)
+function ROT.FOV.Recursive:init(lightPassesCallback, options)
+    ROT.FOV.Recursive.super.init(self, lightPassesCallback, options)
 end
 
  ROT.FOV.Recursive._octants = {
@@ -4440,8 +4435,8 @@ function ROT.FOV.Recursive:_castVisibility(startX, startY, row, visSlopeStart, v
     end
 end
 
-ROT.Line=class{ }
-function ROT.Line:__init(x1, y1, x2, y2)
+ROT.Line=class("Line")
+function ROT.Line:init(x1, y1, x2, y2)
     self.x1=x1
     self.y1=y1
     self.x2=x2
@@ -4471,8 +4466,8 @@ function ROT.Line:getPoints()
     return self
 end
 
-ROT.Point=class { }
-function ROT.Point:__init(x, y)
+ROT.Point=class("Point")
+function ROT.Point:init(x, y)
     self.x=x
     self.y=y
 end
@@ -4508,7 +4503,7 @@ end
 -- See http://en.wikipedia.org/wiki/Bresenham's_line_algorithm.
 -- Included for sake of having options. Provides three functions for computing FOV
 -- @module ROT.FOV.Bresenham
-ROT.FOV.Bresenham=ROT.FOV:extends { }
+ROT.FOV.Bresenham=ROT.FOV:extend("Bresenham")
 
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
@@ -4516,8 +4511,8 @@ ROT.FOV.Bresenham=ROT.FOV:extends { }
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
   -- @tparam boolean options.useDiamond If true, the FOV will be a diamond shape as opposed to a circle shape.
-function ROT.FOV.Bresenham:__init(lightPassesCallback, options)
-    ROT.FOV.Bresenham.super.__init(self, lightPassesCallback, options)
+function ROT.FOV.Bresenham:init(lightPassesCallback, options)
+    ROT.FOV.Bresenham.super.init(self, lightPassesCallback, options)
     self.__name='Bresenham'
 end
 
@@ -4660,9 +4655,9 @@ end
 -- objects intended to represent a color as a
 -- table of the following schema:
 -- @module ROT.Color
-ROT.Color=class { }
+ROT.Color=class("Color")
 
-function ROT.Color:__init(rng)
+function ROT.Color:init(rng)
     self._rng = rng and rng or ROT.RNG.Twister:new()
     if not rng then self._rng:randomseed() end
     self._cached={
@@ -5082,7 +5077,7 @@ end
 --- Lighting Calculator.
 -- based on a traditional FOV for multiple light sources and multiple passes.
 -- @module ROT.Lighting
-ROT.Lighting=class {  }
+ROT.Lighting=class("Lighting")
 
 --- Constructor.
 -- Called with ROT.Color:new()
@@ -5093,7 +5088,7 @@ ROT.Lighting=class {  }
   -- @tparam[opt=1] int options.passes Number of passes. 1 equals to simple FOV of all light sources, >1 means a *highly simplified* radiosity-like algorithm.
   -- @tparam[opt=100] int options.emissionThreshold Cells with emissivity > threshold will be treated as light source in the next pass.
   -- @tparam[opt=10] int options.range Max light range
-function ROT.Lighting:__init(reflectivityCallback, options)
+function ROT.Lighting:init(reflectivityCallback, options)
     self._reflectivityCallback=reflectivityCallback
     self._options={passes=1, emissionThreshold=100, range=10}
     self._fov=nil
@@ -5252,9 +5247,9 @@ function ROT.Lighting:_updateFOV(x, y)
     return cache
 end
 
-ROT.Path=class { }
+ROT.Path=class("Path")
 
-function ROT.Path:__init(toX, toY, passableCallback, options)
+function ROT.Path:init(toX, toY, passableCallback, options)
     self._toX  =toX
     self._toY  =toY
     self._fromX=nil
@@ -5295,16 +5290,15 @@ end
 --- Dijkstra Pathfinding.
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
-ROT.Path.Dijkstra=ROT.Path:extends { }
-ROT.Path.Dijkstra.__name='Dijkstra'
+ROT.Path.Dijkstra=ROT.Path:extend("Dijkstra")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function ROT.Path.Dijkstra:__init(toX, toY, passableCallback, options)
-    ROT.Path.Dijkstra.super.__init(self, toX, toY, passableCallback, options)
+function ROT.Path.Dijkstra:init(toX, toY, passableCallback, options)
+    ROT.Path.Dijkstra.super.init(self, toX, toY, passableCallback, options)
 
     self._computed={}
     self._todo    ={}
@@ -5365,7 +5359,7 @@ end
 --- DijkstraMap Pathfinding.
 -- Based on the DijkstraMap Article on RogueBasin, http://roguebasin.roguelikedevelopment.org/index.php?title=The_Incredible_Power_of_Dijkstra_Maps
 -- @module ROT.DijkstraMap
-ROT.DijkstraMap=class {  }
+ROT.DijkstraMap=class("DijkstraMap")
 
 --- Constructor.
 -- @tparam int goalX x-position of cell that map will 'roll down' to
@@ -5373,7 +5367,7 @@ ROT.DijkstraMap=class {  }
 -- @tparam int mapWidth width of the map
 -- @tparam int mapHeight height of the map
 -- @tparam function passableCallback a function with two parameters (x, y) that returns true if a map cell is passable
-function ROT.DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
+function ROT.DijkstraMap:init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._map={}
     self._goals={}
     table.insert(self._goals, {x=goalX, y=goalY})
@@ -5557,16 +5551,15 @@ end
 --- A* Pathfinding.
 -- Simplified A* algorithm: all edges have a value of 1
 -- @module ROT.Path.AStar
-ROT.Path.AStar=ROT.Path:extends { }
-ROT.Path.AStar.__name='AStar'
+ROT.Path.AStar=ROT.Path:extend("AStar")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell
 -- @tparam function passableCallback Function with two parameters (x, y) that returns true if the cell at x,y is able to be crossed
 -- @tparam table options Options
   -- @tparam[opt=8] int options.topology Directions for movement Accepted values (4 or 8)
-function ROT.Path.AStar:__init(toX, toY, passableCallback, options)
-    ROT.Path.AStar.super.__init(self, toX, toY, passableCallback, options)
+function ROT.Path.AStar:init(toX, toY, passableCallback, options)
+    ROT.Path.AStar.super.init(self, toX, toY, passableCallback, options)
     self._todo={}
     self._done={}
     self._fromX=nil
@@ -5642,7 +5635,7 @@ end
 --- A module used to roll and manipulate roguelike based dice
 -- Based off the RL-Dice library at https://github.com/timothymtorres/RL-Dice
 -- @module ROT.Dice
-ROT.Dice=class{__name='Dice', minimum = 1} -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
+ROT.Dice=class("Dice", {minimum = 1}) -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
 
 --- Constructor that creates a new dice instance
 -- Called with ROT.Dice:new()
@@ -5650,7 +5643,7 @@ ROT.Dice=class{__name='Dice', minimum = 1} -- class default lowest possible roll
 -- @tparam[opt] int minimum Sets dice instance roll's minimum result boundaries
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @treturn dice
-function ROT.Dice:__init(dice_notation, minimum, rng)
+function ROT.Dice:init(dice_notation, minimum, rng)
     -- If dice_notation is a number, we must convert it into the proper dice string format
     if type(dice_notation) ==  'number' then dice_notation = '1d'..dice_notation end
 

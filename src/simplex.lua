@@ -5,12 +5,11 @@
 -- With Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
 -- Better rank ordering method by Stefan Gustavson in 2012.
 -- @module ROT.Noise.Simplex
-local Simplex=ROT.Noise:extends{ }
-Simplex.__name='Simplex'
+local Simplex=ROT.Noise:extends("Simplex")
 --- Constructor.
 -- 2D simplex noise generator.
 -- @tparam int gradients The random values for the noise.
-function Simplex:__init(gradients)
+function Simplex:init(gradients)
     self._F2=.5*(math.sqrt(3)-1)
     self._G2=(3-math.sqrt(3))/6
 

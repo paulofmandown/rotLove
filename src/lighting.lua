@@ -4,8 +4,7 @@
 local Lighting_PATH=({...})[1]:gsub("[%.\\/]lighting$", "") .. '/'
 local class  =require (Lighting_PATH .. 'vendor/30log')
 
-local Lighting=class {  }
-Lighting.__name='Lighting'
+local Lighting=class("Lighting")
 --- Constructor.
 -- Called with ROT.Color:new()
 -- @tparam function reflectivityCallback Callback to retrieve cell reflectivity must return float(0..1)
@@ -15,7 +14,7 @@ Lighting.__name='Lighting'
   -- @tparam[opt=1] int options.passes Number of passes. 1 equals to simple FOV of all light sources, >1 means a *highly simplified* radiosity-like algorithm.
   -- @tparam[opt=100] int options.emissionThreshold Cells with emissivity > threshold will be treated as light source in the next pass.
   -- @tparam[opt=10] int options.range Max light range
-function Lighting:__init(reflectivityCallback, options)
+function Lighting:init(reflectivityCallback, options)
     self._reflectivityCallback=reflectivityCallback
     self._options={passes=1, emissionThreshold=100, range=10}
     self._fov=nil

@@ -1,16 +1,15 @@
 --- The Eller Maze Map Generator.
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
-local EllerMaze = ROT.Map:extends { }
-EllerMaze.__name='EllerMaze'
+local EllerMaze = ROT.Map:extends("EllerMaze")
 
 --- Constructor.
 -- Called with ROT.Map.EllerMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function EllerMaze:__init(width, height, rng)
-	EllerMaze.super.__init(self, width, height)
+function EllerMaze:init(width, height, rng)
+	EllerMaze.super.init(self, width, height)
     self._rng = rng and rng or ROT.RNG.Twister:new()
     if not rng then self._rng:randomseed() end
 end

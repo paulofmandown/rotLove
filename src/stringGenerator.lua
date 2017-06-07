@@ -4,8 +4,7 @@
 local StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
 local class  =require (StringGen_Path .. 'vendor/30log')
 
-local StringGenerator = class { }
-StringGenerator.__name='StringGenerator'
+local StringGenerator = class("StringGenerator")
 
 --- Constructor.
 -- Called with ROT.StringGenerator:new()
@@ -14,7 +13,7 @@ StringGenerator.__name='StringGenerator'
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function StringGenerator:__init(options, rng)
+function StringGenerator:init(options, rng)
 	self._options = {words=false,
 					 order=3,
 					 prior=0.001

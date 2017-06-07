@@ -1,8 +1,7 @@
 --- The Uniform Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm.
 -- @module ROT.Map.Uniform
-local Uniform=ROT.Map.Dungeon:extends { }
-Uniform.__name='Uniform'
+local Uniform=ROT.Map.Dungeon:extends("Uniform")
 
 --- Constructor.
 -- Called with ROT.Map.Uniform:new()
@@ -14,8 +13,8 @@ Uniform.__name='Uniform'
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Uniform:__init(width, height, options, rng)
-    Uniform.super.__init(self, width, height)
+function Uniform:init(width, height, options, rng)
+    Uniform.super.init(self, width, height)
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},

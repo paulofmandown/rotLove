@@ -1,7 +1,6 @@
 --- Cellular Automaton Map Generator
 -- @module ROT.Map.Cellular
-local Cellular = ROT.Map:extends { }
-Cellular.__name='Cellular'
+local Cellular = ROT.Map:extends("Cellular")
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map
@@ -13,9 +12,9 @@ Cellular.__name='Cellular'
   -- @tparam boolean options.connected Set to true to connect open areas on create
   -- @tparam int options.minimumZoneArea Unconnected zones with fewer tiles than this will be turned to wall instead of being connected
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Cellular:__init(width, height, options, rng)
+function Cellular:init(width, height, options, rng)
 	assert(ROT, 'must require rot')
-	Cellular.super.__init(self, width, height)
+	Cellular.super.init(self, width, height)
 	self._options={
 					born    ={5,6,7,8},
 					survive ={4,5,6,7,8},

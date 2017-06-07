@@ -1,9 +1,8 @@
 local FOV_PATH =({...})[1]:gsub("[%.\\/]fov$", "") .. '/'
 local class  =require (FOV_PATH .. 'vendor/30log')
 
-local FOV=class{ }
-FOV.__name='FOV'
-function FOV:__init(lightPassesCallback, options)
+local FOV=class{("FOV")
+function FOV:init(lightPassesCallback, options)
     self._lightPasses=lightPassesCallback
     self._options={topology=8}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end

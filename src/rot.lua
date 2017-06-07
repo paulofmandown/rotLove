@@ -1,7 +1,7 @@
 local ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
 local class  =require (ROTLOVE_PATH .. 'vendor/30log')
 
-ROT=class {
+ROT=class("ROT", {
 	DEFAULT_WIDTH =80,
 	DEFAULT_HEIGHT=24,
 
@@ -22,8 +22,7 @@ ROT=class {
 				{-1,-1}
 		       }
 		  }
-}
-ROT.__name='ROT'
+})
 require (ROTLOVE_PATH .. 'newFuncs')
 
 --[[--------------------------------]]--

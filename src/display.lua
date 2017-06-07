@@ -4,8 +4,7 @@
 local Display_Path = ({...})[1]:gsub("[%.\\/]display$", "") .. '/'
 local class=require (Display_Path .. 'vendor/30log')
 
-local Display = class { }
-Display.__name='Display'
+local Display = class("Display")
 
 --- Constructor.
 -- The display constructor. Called when ROT.Display:new() is called.
@@ -18,7 +17,7 @@ Display.__name='Display'
 -- @tparam[opt=false] boolean vsync Use vsync
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
-function Display:__init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
+function Display:init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24

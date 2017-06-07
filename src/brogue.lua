@@ -1,8 +1,7 @@
 --- The Brogue Map Generator.
 -- Based on the description of Brogues level generation at http://brogue.wikia.com/wiki/Level_Generation
 -- @module ROT.Map.Brogue
-local Brogue=ROT.Map.Dungeon:extends { }
-Brogue.__name='Brogue'
+local Brogue=ROT.Map.Dungeon:extends("Brogue")
 
 --- Constructor.
 -- Called with ROT.Map.Brogue:new(). A note: Brogue's map is 79x29. Consider using those dimensions for Display if you're looking to build a brogue-like.
@@ -16,8 +15,8 @@ Brogue.__name='Brogue'
   -- @tparam[opt={3,12}] table options.corridorWidth Length of east-west corridors
   -- @tparam[opt={2,5}] table options.corridorHeight Length of north-south corridors
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Brogue:__init(width, height, options, rng)
-    Brogue.super.__init(self, width, height)
+function Brogue:init(width, height, options, rng)
+    Brogue.super.init(self, width, height)
     self._options={
                     roomWidth={4,20},
                     roomHeight={3,7},

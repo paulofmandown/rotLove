@@ -1,12 +1,11 @@
 --- Linear Congruential Generator. A random number generator based on RandomLua
 -- @module ROT.RNG.LCG
-local LCG=ROT.RNG:extends { }
-LCG.__name='LCG'
+local LCG=ROT.RNG:extends("LCG")
 
 --- Constructor.
 -- Called with ROT.RNG.LCG:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'
-function LCG:__init(r)
+function LCG:init(r)
     self.a= 1103515245   -- Ansi C
     self.c= 12345
     self.m= 0x10000

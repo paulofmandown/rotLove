@@ -1,8 +1,7 @@
 --- Corridor object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Corridor
-local Corridor = ROT.Map.Feature:extends { }
-Corridor.__name='Corridor'
+local Corridor = ROT.Map.Feature:extends("Corridor")
 --- Constructor.
 -- Called with ROT.Map.Corridor:new()
 -- @tparam int startX x-position of first floospace in corridor
@@ -10,7 +9,7 @@ Corridor.__name='Corridor'
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Corridor:__init(startX, startY, endX, endY, rng)
+function Corridor:init(startX, startY, endX, endY, rng)
 	self._startX       =startX
 	self._startY       =startY
 	self._endX         =endX

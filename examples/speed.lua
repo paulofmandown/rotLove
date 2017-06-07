@@ -2,8 +2,8 @@
 ROT= require 'rotLove/rotLove'
 class= require 'src/vendor/30log'
 
-actor=class { speed, number }
-function actor:__init(speed, number)
+actor=class("actor", {speed, number})
+function actor:init(speed, number)
 	self.speed=speed
 	self.number=number
 end

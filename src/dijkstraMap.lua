@@ -4,7 +4,7 @@
 local DijkstraMap_PATH=({...})[1]:gsub("[%.\\/]dijkstraMap$", "") .. '/'
 local class  =require (DijkstraMap_PATH .. 'vendor/30log')
 
-local DijkstraMap=class {  }
+local DijkstraMap=class("DijkstraMap")
 
 --- Constructor.
 -- @tparam int goalX x-position of cell that map will 'roll down' to
@@ -12,7 +12,7 @@ local DijkstraMap=class {  }
 -- @tparam int mapWidth width of the map
 -- @tparam int mapHeight height of the map
 -- @tparam function passableCallback a function with two parameters (x, y) that returns true if a map cell is passable
-function DijkstraMap:__init(goalX, goalY, mapWidth, mapHeight, passableCallback)
+function DijkstraMap:init(goalX, goalY, mapWidth, mapHeight, passableCallback)
     self._map={}
     self._goals={}
     table.insert(self._goals, {x=goalX, y=goalY})
@@ -150,7 +150,7 @@ end
 -- @tparam boolean[opt=false] returnString Will return the output in addition to sending it to console if true.
 function DijkstraMap:writeMapToConsole(returnString)
     local ls
-    
+
     if returnString then ls='' end
     for y=1,self._dimensions.h do
         local s=''

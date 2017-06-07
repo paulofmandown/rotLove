@@ -1,14 +1,13 @@
 --- The Divided Maze Map Generator.
 -- Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
 -- @module ROT.Map.DividedMaze
-local DividedMaze = ROT.Map:extends { }
-DividedMaze.__name='DividedMaze'
+local DividedMaze = ROT.Map:extends("DividedMaze")
 --- Constructor.
 -- Called with ROT.Map.DividedMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
-function DividedMaze:__init(width, height)
-	DividedMaze.super.__init(self, width, height)
+function DividedMaze:init(width, height)
+	DividedMaze.super.init(self, width, height)
 end
 
 --- Create.

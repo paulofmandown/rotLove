@@ -5,14 +5,14 @@
 local Dice_PATH =({...})[1]:gsub("[%.\\/]dice$", "") .. '/'
 local class  =require (Dice_PATH .. 'vendor/30log')
 
-local Dice=class {__name='Dice', minimum=1} -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
+local Dice=class("Dice", {minimum=1}) -- class default lowest possible roll is 1  (can set to nil to allow negative rolls)
 
 --- Constructor that creates a new dice instance
 -- @tparam ?int|string dice_notation Can be either a dice string, or int
 -- @tparam[opt] int minimum Sets dice instance roll's minimum result boundaries
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @treturn dice
-function Dice:__init(dice_notation, minimum, rng)
+function Dice:init(dice_notation, minimum, rng)
   -- If dice_notation is a number, we must convert it into the proper dice string format
   if type(dice_notation) ==  'number' then dice_notation = '1d'..dice_notation end
 

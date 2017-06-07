@@ -1,16 +1,15 @@
 --- The Icey Maze Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
 -- @module ROT.Map.IceyMaze
-local IceyMaze = ROT.Map:extends { }
-IceyMaze.__name     ='IceyMaze'
+local IceyMaze = ROT.Map:extends("IceyMaze")
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
-function IceyMaze:__init(width, height, rng, regularity)
-	IceyMaze.super.__init(self, width, height)
+function IceyMaze:init(width, height, rng, regularity)
+	IceyMaze.super.init(self, width, height)
 	self._regularity= regularity and regularity or 0
     self._rng       =rng and rng or ROT.RNG.Twister:new()
     if not rng then self._rng:randomseed() end

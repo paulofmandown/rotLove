@@ -2,15 +2,14 @@
 -- The Precise shadow casting algorithm developed by Ondřej Žára for rot.js.
 -- See http://roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript
 -- @module ROT.FOV.Precise
-local Precise=ROT.FOV:extends{ }
-Precise.__name='Precise'
+local Precise=ROT.FOV:extends("Precise")
 --- Constructor.
 -- Called with ROT.FOV.Precise:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
 -- @tparam table options Options
   -- @tparam int options.topology Direction for light movement Accepted values: (4 or 8)
-function Precise:__init(lightPassesCallback, options)
-    Precise.super.__init(self, lightPassesCallback, options)
+function Precise:init(lightPassesCallback, options)
+    Precise.super.init(self, lightPassesCallback, options)
 end
 
 --- Compute.
