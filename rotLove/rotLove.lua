@@ -684,7 +684,7 @@ function ROT.Display:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h-1 do
+    for i=0,h do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
@@ -939,7 +939,7 @@ function ROT.TextDisplay:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h-1 do
+    for i=0,h do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
