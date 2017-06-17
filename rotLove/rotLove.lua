@@ -765,7 +765,7 @@ end
 function ROT.Display:_validateHeight(y, h)
     h=h and h or self.heightInChars-y
     assert(h>0, "Height must be greater than 0. Height provided: "..h)
-    assert(y+h<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
+    assert(y+h-1<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
     return h
 end
 function ROT.Display:_setColor(c)
@@ -1022,7 +1022,7 @@ end
 function ROT.TextDisplay:_validateHeight(y, h)
     h=h and h or self._heightInChars-y
     assert(h>0, "Height must be greater than 0. Height provided: "..h)
-    assert(y+h<=self._heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
+    assert(y+h-1<=self._heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
     return h
 end
 function ROT.TextDisplay:_setColor(c)
