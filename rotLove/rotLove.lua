@@ -684,7 +684,7 @@ function ROT.Display:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h do
+    for i=0,h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
@@ -763,7 +763,7 @@ function ROT.Display:_validateBackgroundColor(c)
     return c
 end
 function ROT.Display:_validateHeight(y, h)
-    h=h and h or self.heightInChars-y
+    h=h and h or self.heightInChars-y+1
     assert(h>0, "Height must be greater than 0. Height provided: "..h)
     assert(y+h-1<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
     return h
@@ -939,7 +939,7 @@ function ROT.TextDisplay:clear(c, x, y, w, h, fg, bg)
     h =self:_validateHeight(y, h)
     fg=self:_validateForegroundColor(fg)
     bg=self:_validateBackgroundColor(bg)
-    for i=0,h do
+    for i=0,h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
@@ -1020,7 +1020,7 @@ function ROT.TextDisplay:_validateBackgroundColor(c)
     return c
 end
 function ROT.TextDisplay:_validateHeight(y, h)
-    h=h and h or self._heightInChars-y
+    h=h and h or self._heightInChars-y+1
     assert(h>0, "Height must be greater than 0. Height provided: "..h)
     assert(y+h-1<=self._heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
     return h
