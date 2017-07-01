@@ -149,7 +149,11 @@ function Room:addDoors(gen, isWallCallback)
         for y=top,bottom do
             if x~=left and x~=right and y~=top and y~=bottom then
             elseif isWallCallback(gen, x,y) then
-            else self:addDoor(x,y) end
+            elseif (x==left or x==right) and not isWallCallback(gen, x+1, y) and not isWallCallback(gen, x-1, y) then
+                self:addDoor(x,y)
+            elseif (y==top or y==bottom) and not isWallCallback(gen, x, y+1) and not isWallCallback(gen, x, y-1)  then
+                self:addDoor(x,y)
+            end
         end
     end
     return self

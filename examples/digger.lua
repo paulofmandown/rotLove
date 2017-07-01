@@ -1,18 +1,22 @@
 --[[ Digger ]]
 ROT=require 'rotLove/rotLove'
 
+local update=false
 function love.load()
-	f  =ROT.Display(80, 24)
-	dgr=ROT.Map.Digger(f:getWidth(), f:getHeight())
-	dgr:create(calbak)
+    f  =ROT.Display(80, 24)
+    dgr=ROT.Map.Digger(f:getWidth(), f:getHeight())
+    update=true
 end
 function love.draw() f:draw() end
 function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
-local update=false
 function love.update()
 	if update then
         update=false
     	dgr:create(calbak)
+        local rooms=dgr:getDoors()
+        for k,v in pairs(rooms) do
+            f:write('+', v.x, v.y)
+        end
     end
 end
 function love.keypressed(key) update=true end
