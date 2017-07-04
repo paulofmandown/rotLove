@@ -18,6 +18,11 @@ local Digger=ROT.Map.Dungeon:extend("Digger")
 function Digger:init(width, height, options, rng)
 	Digger.super.init(self, width, height)
 
+    self._digCallback = self:bind(self._digCallback)
+    self._canBeDugCallback = self:bind(self._canBeDugCallback)
+    self._isWallCallback = self:bind(self._isWallCallback)
+    self._priorityWallCallback = self:bind(self._priorityWallCallback)
+    
 	self._options={
 					roomWidth={3,8},
 					roomHeight={3,5},
@@ -134,7 +139,7 @@ function Digger:_firstRoom()
 	local cy  =math.floor(self._height/2)
 	local room=ROT.Map.Room:new():createRandomCenter(cx, cy, self._options, self._rng)
 	table.insert(self._rooms, room)
-	room:create(self, self._digCallback)
+	room:create(self._digCallback)
 end
 
 function Digger:_findWall()
@@ -155,16 +160,16 @@ function Digger:_tryFeature(x, y, dx, dy)
     local type=self._rng:getWeightedValue(self._features)
     local feature=ROT.Map[type]:createRandomAt(x,y,dx,dy,self._options,self._rng)
 
-    if not feature:isValid(self, self._isWallCallback, self._canBeDugCallback) then
+    if not feature:isValid(self._isWallCallback, self._canBeDugCallback) then
         return false
     end
 
-    feature:create(self, self._digCallback)
+    feature:create(self._digCallback)
 
     if type=='Room' then
         table.insert(self._rooms, feature)
     elseif type=='Corridor' then
-        feature:createPriorityWalls(self, self._priorityWallCallback)
+        feature:createPriorityWalls(self._priorityWallCallback)
         table.insert(self._corridors, feature)
     end
 
@@ -207,7 +212,7 @@ function Digger:_addDoors()
     for i=1,#self._rooms do
         local room=self._rooms[i]
         room:clearDoors()
-        room:addDoors(self, self._isWallCallback)
+        room:addDoors(self._isWallCallback)
     end
 end
 

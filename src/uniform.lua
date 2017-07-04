@@ -16,6 +16,11 @@ local Uniform=ROT.Map.Dungeon:extend("Uniform")
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 function Uniform:init(width, height, options, rng)
     Uniform.super.init(self, width, height)
+    
+    self._digCallback = self:bind(self._digCallback)
+    self._canBeDugCallback = self:bind(self._canBeDugCallback)
+    self._isWallCallback = self:bind(self._isWallCallback)
+    
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},
@@ -62,6 +67,7 @@ function Uniform:create(callback)
             end
         end
     end
+    
     return self
 end
 
@@ -80,8 +86,8 @@ function Uniform:_generateRoom()
     while count<self._roomAttempts do
         count=count+1
         local room=ROT.Map.Room:createRandom(self._width, self._height, self._options, self._rng)
-        if room:isValid(self, self._isWallCallback, self._canBeDugCallback) then
-            room:create(self, self._digCallback)
+        if room:isValid(self._isWallCallback, self._canBeDugCallback) then
+            room:create(self._digCallback)
             table.insert(self._rooms, room)
             return room
         end
@@ -98,7 +104,7 @@ function Uniform:_generateCorridors()
         for i=1,#self._rooms do
             local room=self._rooms[i]
             room:clearDoors()
-            room:create(self, self._digCallback)
+            room:create(self._digCallback)
         end
 
         self._unconnected=table.randomize(table.slice(self._rooms))
@@ -271,7 +277,7 @@ function Uniform:_digLine(points)
         local start=points[i-1]
         local endPt=points[i]
         local corridor=ROT.Map.Corridor:new(start[1], start[2], endPt[1], endPt[2])
-        corridor:create(self, self._digCallback)
+        corridor:create(self._digCallback)
         table.insert(self._corridors, corridor)
     end
 end

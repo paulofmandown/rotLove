@@ -219,11 +219,10 @@ function BrogueRoom:createRandom(availWidth, availHeight, options, rng)
 end
 
 --- Use two callbacks to confirm room validity.
--- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
--- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
--- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @tparam function isWallCallback A function with two parameters (x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with two parameters (x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if room is valid.
-function BrogueRoom:isValid(gen, isWallCallback, canBeDugCallback)
+function BrogueRoom:isValid(isWallCallback, canBeDugCallback)
     local dims=self._dims
     if dims.x2~=dims.x2 or dims.y2~=dims.y2 or dims.x1~=dims.x1 or dims.y1~=dims.y1  then
         return false
@@ -236,7 +235,7 @@ function BrogueRoom:isValid(gen, isWallCallback, canBeDugCallback)
     for x=left,right do
         for y=top,bottom do
             if self:_coordIsFloor(x, y) then
-                if not isWallCallback(gen, x, y) or not canBeDugCallback(gen, x, y) then
+                if not isWallCallback(x, y) or not canBeDugCallback(x, y) then
                     return false
                 end
             elseif self:_coordIsWall(x, y) then table.insert(self._walls, {x,y}) end
@@ -248,9 +247,8 @@ end
 
 --- Create.
 -- Function runs a callback to dig the room into a map
--- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
 -- @tparam function digCallback The function responsible for digging the room into a map.
-function BrogueRoom:create(gen, digCallback)
+function BrogueRoom:create(digCallback)
     local value=0
     local left  =self:getLeft()-1
     local right =self:getRight()+1
@@ -265,7 +263,7 @@ function BrogueRoom:create(gen, digCallback)
             else
                 value=1
             end
-            digCallback(gen, x, y, value)
+            digCallback(x, y, value)
         end
     end
 end
@@ -323,10 +321,9 @@ function BrogueRoom:addDoor(x, y)
 end
 
 --- Add all doors based on available walls.
--- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
 -- @tparam function isWallCallback
 -- @treturn ROT.Map.Room self
-function BrogueRoom:addDoors(gen, isWallCallback)
+function BrogueRoom:addDoors(isWallCallback)
     local left  =self:getLeft()
     local right =self:getRight()
     local top   =self:getTop()
@@ -334,7 +331,7 @@ function BrogueRoom:addDoors(gen, isWallCallback)
     for x=left,right do
         for y=top,bottom do
             if x~=left and x~=right and y~=top and y~=bottom then
-            elseif isWallCallback(gen, x,y) then
+            elseif isWallCallback(x,y) then
             else self:addDoor(x,y) end
         end
     end

@@ -44,11 +44,10 @@ function Corridor:debug()
 end
 
 --- Use two callbacks to confirm corridor validity.
--- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
--- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
--- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @tparam function isWallCallback A function with two parameters (x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with two parameters (x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if corridor is valid.
-function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
+function Corridor:isValid(isWallCallback, canBeDugCallback)
 	local sx    =self._startX
 	local sy    =self._startY
 	local dx    =self._endX-sx
@@ -66,9 +65,9 @@ function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 		local x=sx+i*dx
 		local y=sy+i*dy
 
-		if not canBeDugCallback(gen,    x,    y) then ok=false end
-		if not isWallCallback  (gen, x+nx, y+ny) then ok=false end
-		if not isWallCallback  (gen, x-nx, y-ny) then ok=false end
+		if not canBeDugCallback(x,    y) then ok=false end
+		if not isWallCallback  (x+nx, y+ny) then ok=false end
+		if not isWallCallback  (x-nx, y-ny) then ok=false end
 
 		if not ok then
 			length=i
@@ -79,11 +78,11 @@ function Corridor:isValid(gen, isWallCallback, canBeDugCallback)
 	end
 
 	if length==0 then return false end
-	if length==1 and isWallCallback(gen, self._endX+dx, self._endY+dy) then return false end
+	if length==1 and isWallCallback(self._endX+dx, self._endY+dy) then return false end
 
-	local firstCornerBad=not isWallCallback(gen, self._endX+dx+nx, self._endY+dy+ny)
-	local secondCornrBad=not isWallCallback(gen, self._endX+dx-nx, self._endY+dy-ny)
-	self._endsWithAWall =    isWallCallback(gen, self._endX+dx   , self._endY+dy   )
+	local firstCornerBad=not isWallCallback(self._endX+dx+nx, self._endY+dy+ny)
+	local secondCornrBad=not isWallCallback(self._endX+dx-nx, self._endY+dy-ny)
+	self._endsWithAWall =    isWallCallback(self._endX+dx   , self._endY+dy   )
 	if (firstCornerBad or secondCornrBad) and self._endsWithAWall then return false end
 
 	return true
@@ -91,9 +90,8 @@ end
 
 --- Create.
 -- Function runs a callback to dig the corridor into a map
--- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
 -- @tparam function digCallback The function responsible for digging the corridor into a map.
-function Corridor:create(gen, digCallback)
+function Corridor:create(digCallback)
 	local sx    =self._startX
 	local sy    =self._startY
 	local dx    =self._endX-sx
@@ -106,7 +104,7 @@ function Corridor:create(gen, digCallback)
 	for i=0,length-1 do
 		local x=sx+i*dx
 		local y=sy+i*dy
-		digCallback(gen, x, y, 0)
+		digCallback(x, y, 0)
 	end
 	return true
 end
@@ -115,7 +113,7 @@ end
 -- Use this for storing the three points at the end of the corridor that you probably want to make sure gets a room attached.
 -- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
 -- @tparam function priorityWallCallback The function responsible for receiving and processing the priority walls
-function Corridor:createPriorityWalls(gen, priorityWallCallback)
+function Corridor:createPriorityWalls(priorityWallCallback)
 	if not self._endsWithAWall then return end
 
 	local sx    =self._startX
@@ -128,9 +126,9 @@ function Corridor:createPriorityWalls(gen, priorityWallCallback)
 	local nx=dy
 	local ny=-dx
 
-	priorityWallCallback(gen, self._endX+dx, self._endY+dy)
-	priorityWallCallback(gen, self._endX+nx, self._endY+ny)
-	priorityWallCallback(gen, self._endX-nx, self._endY-ny)
+	priorityWallCallback(self._endX+dx, self._endY+dy)
+	priorityWallCallback(self._endX+nx, self._endY+ny)
+	priorityWallCallback(self._endX-nx, self._endY-ny)
 end
 
 return Corridor

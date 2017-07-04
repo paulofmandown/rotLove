@@ -1,24 +1,42 @@
 local USE_30LOG = true
 local PATH = (...):gsub('[^./\\]*$', '')
 
-if USE_30LOG then
+local BaseClass
+
+-- try loading 30log
+
+if not BaseClass and USE_30LOG then
     local ok, class = pcall(require, PATH .. 'vendor.30log')
-    if ok then return class('BaseClass') end
+    if ok then BaseClass = class('BaseClass') end
 end
 
--- built-in fallback
+-- fallback if no class library present
 
-local function new (proto, ...)
-    local instance = setmetatable({}, proto)
-    instance:init(...)
-    return instance
+if not BaseClass then
+    BaseClass = {}
+    
+    function BaseClass:new (...)
+        local t = setmetatable({}, self)
+        t:init(...)
+        return t
+    end
+
+    function BaseClass:extend (name, t)
+        t = t or {}
+        t.__index = t
+        t.super = self
+        return setmetatable(t, { __call = self.new, __index = self })
+    end
+    
+    function BaseClass:init ()
+    end
 end
 
-local function extend (super, name, t)
-    t = t or {}
-    t.__index, t.super = t, super
-    return setmetatable(t, { __call = new, __index = super })
+-- shared methods
+
+function BaseClass:bind (func)
+    return function (...) return func(self, ...) end
 end
 
-return extend(nil, nil, { new = new, extend = extend, init = function()end })
+return BaseClass
 
