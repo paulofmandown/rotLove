@@ -1,5 +1,5 @@
 --[[ Cellular ]]--
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	f =ROT.Display(80,24)
 	cl=ROT.Map.Cellular:new(f:getWidth(), f:getHeight())

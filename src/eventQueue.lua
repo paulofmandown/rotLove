@@ -1,10 +1,7 @@
 --- Stores and retrieves events based on time.
 -- @module ROT.EventQueue
-
-local EventQueue_Path =({...})[1]:gsub("[%.\\/]eventQueue$", "") .. '/'
-local class  =require (EventQueue_Path .. 'vendor/30log')
-
-local EventQueue = class("EventQueue", {
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local EventQueue = ROT.Class:extend("EventQueue", {
     _time      =0,
     _events    ={},
     _eventTimes={}

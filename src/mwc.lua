@@ -1,6 +1,7 @@
 --- Multiply With Carry. A random number generator based on RandomLua
 -- @module ROT.RNG.MWC
-local MWC=ROT.RNG:extends("MWC")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local MWC=ROT.RNG:extend("MWC")
 --- Constructor.
 -- Called with ROT.RNG.MWC:new(r)
 -- @tparam[opt] string r Choose to populate the rng with values from numerical recipes or mvc as opposed to Ansi C. Accepted values 'nr', 'mvc'

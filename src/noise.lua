@@ -1,7 +1,5 @@
-local Noise_PATH =({...})[1]:gsub("[%.\\/]noise$", "") .. '/'
-local class  =require (Noise_PATH .. 'vendor/30log')
-
-local Noise=class("Noise")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Noise = ROT.Class:extend("Noise")
 
 function Noise:get() end
 

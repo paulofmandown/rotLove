@@ -1,10 +1,8 @@
 --- DijkstraMap Pathfinding.
 -- Based on the DijkstraMap Article on RogueBasin, http://roguebasin.roguelikedevelopment.org/index.php?title=The_Incredible_Power_of_Dijkstra_Maps
 -- @module ROT.DijkstraMap
-local DijkstraMap_PATH=({...})[1]:gsub("[%.\\/]dijkstraMap$", "") .. '/'
-local class  =require (DijkstraMap_PATH .. 'vendor/30log')
-
-local DijkstraMap=class("DijkstraMap")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local DijkstraMap = ROT.Class:extend("DijkstraMap")
 
 --- Constructor.
 -- @tparam int goalX x-position of cell that map will 'roll down' to
@@ -91,7 +89,8 @@ function DijkstraMap:_manyGoalCompute()
     end
 end
 
-function DijkstraMap:_singleGoalCompute(gx, gy)
+function DijkstraMap:_singleGoalCompute()
+    local g=self._goals[1]
     for i=1,self._dimensions.w do
         self._map[i]={}
         for j=1,self._dimensions.h do
@@ -99,14 +98,14 @@ function DijkstraMap:_singleGoalCompute(gx, gy)
         end
     end
 
-    self._map[gx][gy]=0
+    self._map[g.x][g.y]=0
 
     local val=1
     local wq={}
     local pq={}
     local ds=self._dirs
 
-    table.insert(wq, {gx, gy})
+    table.insert(wq, {g.x, g.y})
 
     while true do
         while #wq>0 do
@@ -181,18 +180,10 @@ function DijkstraMap:getDimensions() return self._dimensions end
 -- @treturn table map A 2d array of map values, access like map[x][y]
 function DijkstraMap:getMap() return self._map end
 
---- Get the x-value of the goal cell.
--- @treturn int x x-value of goal cell
-function DijkstraMap:getGoalX() return self._goal.x end
-
---- Get the y-value of the goal cell.
--- @treturn int y y-value of goal cell
-function DijkstraMap:getGoalY() return self._goal.y end
-
 --- Get the goal cell as a table.
 -- @treturn table goal table containing goal position
   -- @treturn int goal.x x-value of goal cell
-function DijkstraMap:getGoal() return self._goal end
+function DijkstraMap:getGoals() return self._goals end
 
 --- Get the direction of the goal from a given position
 -- @tparam int x x-value of current position

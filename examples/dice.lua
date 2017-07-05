@@ -1,4 +1,4 @@
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 local f, d_with_rng, lcg
 function love.load()
     f=ROT.Display:new(80,24)

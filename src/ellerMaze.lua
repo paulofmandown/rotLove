@@ -1,7 +1,8 @@
 --- The Eller Maze Map Generator.
 -- See http://homepages.cwi.nl/~tromp/maze.html for explanation
 -- @module ROT.Map.EllerMaze
-local EllerMaze = ROT.Map:extends("EllerMaze")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local EllerMaze = ROT.Map:extend("EllerMaze")
 
 --- Constructor.
 -- Called with ROT.Map.EllerMaze:new(width, height)

@@ -1,4 +1,4 @@
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 data={}
 
@@ -29,21 +29,16 @@ function love.keypressed() update=true end
 function doTheThing()
     local start=os.clock()
     map:create(mapCallback)
-    write('Map Create in '..os.clock()-start)
-
     p1=getRandomFloor(data)
     p2=getRandomFloor(data)
     p3=getRandomFloor(data)
 
     start=os.clock()
     dijkstra=ROT.Path.Dijkstra(p1[1], p1[2], passableCallback)
-    write('Dijkstra init in '..os.clock()-start)
     start=os.clock()
     dijkstra:compute(p2[1], p2[2], dijkstraCallback)
-    write('Dijkstra Compute in '..os.clock()-start)
     start=os.clock()
     dijkstra:compute(p3[1], p3[2], dijkstraCallback)
-    write('Dijkstra Compute in '..os.clock()-start)
 
     f:write('S', tonumber(p1[1]), tonumber(p1[2]), nil, {r=0, g=0, b=255, a=255})
     f:write('E', tonumber(p2[1]), tonumber(p2[2]), nil, {r=0, g=0, b=255, a=255})

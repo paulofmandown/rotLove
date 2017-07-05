@@ -1,7 +1,7 @@
-local ROTLOVE_PATH =({...})[1]:gsub("[%.\\/]rot$", "") .. '/'
-local class  =require (ROTLOVE_PATH .. 'vendor/30log')
+local ROTLOVE_PATH = (...):gsub('[^./\\]*$', '')
+local Class = require (ROTLOVE_PATH .. 'class')
 
-ROT=class("ROT", {
+local ROT = Class:extend('ROT', {
 	DEFAULT_WIDTH =80,
 	DEFAULT_HEIGHT=24,
 
@@ -23,7 +23,15 @@ ROT=class("ROT", {
 		       }
 		  }
 })
+package.loaded[...] = ROT
 require (ROTLOVE_PATH .. 'newFuncs')
+
+ROT.Class = Class
+
+-- bind a function to a class instance
+function Class:bind (func)
+    return function (...) return func(self, ...) end
+end
 
 --[[--------------------------------]]--
 -- All RNG 'classes' and functions derived from RandomLua
@@ -62,6 +70,8 @@ ROT.Map.Corridor     = require (ROTLOVE_PATH .. 'corridor')
 ROT.Map.Digger       = require (ROTLOVE_PATH .. 'digger')
 ROT.Map.Uniform      = require (ROTLOVE_PATH .. 'uniform')
 ROT.Map.Rogue        = require (ROTLOVE_PATH .. 'rogue')
+ROT.Map.BrogueRoom   = require (ROTLOVE_PATH .. 'brogueRoom')
+ROT.Map.Brogue       = require (ROTLOVE_PATH .. 'brogue')
 ROT.Noise            = require (ROTLOVE_PATH .. 'noise')
 ROT.Noise.Simplex    = require (ROTLOVE_PATH .. 'simplex')
 ROT.FOV              = require (ROTLOVE_PATH .. 'fov')

@@ -1,5 +1,5 @@
 --[[ Divided Maze ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	f =ROT.Display(80,24)
 	dm=ROT.Map.DividedMaze:new(f:getWidth(), f:getHeight())

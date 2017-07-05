@@ -1,5 +1,5 @@
 --[[ ActionScheduler ]]--
-ROT= require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 function love.load()
 	s  =ROT.Scheduler.Action:new()

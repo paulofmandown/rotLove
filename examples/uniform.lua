@@ -1,5 +1,5 @@
 --[[ Uniform ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 update=false
 function love.load()

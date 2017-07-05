@@ -1,7 +1,8 @@
 --- Room object.
 -- Used by ROT.Map.Uniform and ROT.Map.Digger to create maps
 -- @module ROT.Map.Room
-local Room = ROT.Map.Feature:extends("Room")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Room = ROT.Map.Feature:extend("Room")
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -137,10 +138,9 @@ function Room:clearDoors()
 end
 
 --- Add all doors based on available walls.
--- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
 -- @tparam function isWallCallback
 -- @treturn ROT.Map.Room self
-function Room:addDoors(gen, isWallCallback)
+function Room:addDoors(isWallCallback)
     local left  =self._x1-1
     local right =self._x2+1
     local top   =self._y1-1
@@ -148,10 +148,10 @@ function Room:addDoors(gen, isWallCallback)
     for x=left,right do
         for y=top,bottom do
             if x~=left and x~=right and y~=top and y~=bottom then
-            elseif isWallCallback(gen, x,y) then
-            elseif (x==left or x==right) and not isWallCallback(gen, x+1, y) and not isWallCallback(gen, x-1, y) then
+            elseif isWallCallback(x,y) then
+            elseif (x==left or x==right) and not isWallCallback(x+1, y) and not isWallCallback(x-1, y) then
                 self:addDoor(x,y)
-            elseif (y==top or y==bottom) and not isWallCallback(gen, x, y+1) and not isWallCallback(gen, x, y-1)  then
+            elseif (y==top or y==bottom) and not isWallCallback(x, y+1) and not isWallCallback(x, y-1)  then
                 self:addDoor(x,y)
             end
         end
@@ -173,11 +173,10 @@ function Room:debug()
 end
 
 --- Use two callbacks to confirm room validity.
--- @tparam userdata gen The map generator calling this function. Lack of bind() function requires this. This is mainly so the map generator can hava a self reference in the two callbacks.
--- @tparam function isWallCallback A function with three parameters (gen, x, y) that will return true if x, y represents a wall space in a map.
--- @tparam function canBeDugCallback A function with three parameters (gen, x, y) that will return true if x, y represents a map cell that can be made into floorspace.
+-- @tparam function isWallCallback A function with two parameters (x, y) that will return true if x, y represents a wall space in a map.
+-- @tparam function canBeDugCallback A function with two parameters (x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if room is valid.
-function Room:isValid(gen, isWallCallback, canBeDugCallback)
+function Room:isValid(isWallCallback, canBeDugCallback)
 	local left  =self._x1-1
 	local right =self._x2+1
 	local top   =self._y1-1
@@ -185,9 +184,9 @@ function Room:isValid(gen, isWallCallback, canBeDugCallback)
 	for x=left,right do
 		for y=top,bottom do
 			if x==left or x==right or y==top or y==bottom then
-				if not isWallCallback(gen, x, y) then return false end
+				if not isWallCallback(x, y) then return false end
 			else
-				if not canBeDugCallback(gen, x, y) then return false end
+				if not canBeDugCallback(x, y) then return false end
 			end
 		end
 	end
@@ -196,9 +195,8 @@ end
 
 --- Create.
 -- Function runs a callback to dig the room into a map
--- @tparam userdata gen The map generator calling this function. Passed as self to the digCallback
 -- @tparam function digCallback The function responsible for digging the room into a map.
-function Room:create(gen, digCallback)
+function Room:create(digCallback)
 	local left  =self._x1-1
 	local top   =self._y1-1
 	local right =self._x2+1
@@ -213,7 +211,7 @@ function Room:create(gen, digCallback)
 			else
 				value=0
 			end
-			digCallback(gen, x, y, value)
+			digCallback(x, y, value)
 		end
 	end
 end

@@ -2,7 +2,8 @@
 -- A map generator based on the original Rogue map gen algorithm
 -- See http://kuoi.com/~kamikaze/GameDesign/art07_rogue_dungeon.php
 -- @module ROT.Map.Rogue
-local Rogue=ROT.Map:extends("Rogue")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Rogue=ROT.Map:extend("Rogue")
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -14,6 +15,7 @@ local Rogue=ROT.Map:extends("Rogue")
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 function Rogue:init(width, height, options, rng)
     Rogue.super.init(self, width, height)
+    self._doors={}
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
     self._rng=rng and rng or ROT.RNG.Twister:new()
@@ -275,14 +277,7 @@ function Rogue:_getWallPosition(aRoom, aDirection)
     return {rx, ry}
 end
 
-function roomDebug(room)
-    write(room.x
-          ..','..room.y
-          ..','..room.width
-          ..','..room.height)
-end
-
-function Rogue:_drawCorridore(startPosition, endPosition)
+function Rogue:_drawCorridor(startPosition, endPosition)
     local xOffset=endPosition[1]-startPosition[1]
     local yOffset=endPosition[2]-startPosition[2]
     local xpos   =startPosition[1]
@@ -348,7 +343,7 @@ function Rogue:_createCorridors()
                     wall     =1
                     otherWall=3
                 end
-                self:_drawCorridore(self:_getWallPosition(room, wall), self:_getWallPosition(otherRoom, otherWall))
+                self:_drawCorridor(self:_getWallPosition(room, wall), self:_getWallPosition(otherRoom, otherWall))
             end
         end
     end

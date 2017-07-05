@@ -1,7 +1,6 @@
-local FOV_PATH =({...})[1]:gsub("[%.\\/]fov$", "") .. '/'
-local class  =require (FOV_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local FOV = ROT.Class:extend("FOV")
 
-local FOV=class{("FOV")
 function FOV:init(lightPassesCallback, options)
     self._lightPasses=lightPassesCallback
     self._options={topology=8}

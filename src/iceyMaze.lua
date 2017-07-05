@@ -1,7 +1,8 @@
 --- The Icey Maze Map Generator.
 -- See http://www.roguebasin.roguelikedevelopment.org/index.php?title=Simple_maze for explanation
 -- @module ROT.Map.IceyMaze
-local IceyMaze = ROT.Map:extends("IceyMaze")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local IceyMaze = ROT.Map:extend("IceyMaze")
 --- Constructor.
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map

@@ -1,9 +1,8 @@
 --- Visual Display.
 -- A UTF-8 based text display.
 -- @module ROT.TextDisplay
-local TextDisplay_Path = ({...})[1]:gsub("[%.\\/]textDisplay$", "") .. '/'
-local class=require (TextDisplay_Path .. 'vendor/30log')
-local TextDisplay=class("TextDisplay")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local TextDisplay = ROT.Class:extend("TextDisplay")
 
 --- Constructor.
 -- The display constructor. Called when ROT.TextDisplay:new() is called.

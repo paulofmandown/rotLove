@@ -1,5 +1,5 @@
 --[[ Rogue ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 movers={}
 clr=ROT.Color:new()
 colors={}

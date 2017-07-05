@@ -1,6 +1,7 @@
 --- The Speed based scheduler
 -- @module ROT.Scheduler.Speed
-local Speed= ROT.Scheduler:extends("Speed")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Speed= ROT.Scheduler:extend("Speed")
 --- Add.
 -- Add an item to the schedule
 -- @tparam userdata item Any class/module/userdata with a :getSpeed() function. The value returned by getSpeed() should be a number.

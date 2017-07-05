@@ -1,8 +1,7 @@
 --[[ Engine ]]--
-ROT= require 'rotLove/rotLove'
-class= require 'src/vendor/30log'
+ROT=require 'src.rot'
 
-a1=class{lives=3}
+a1=ROT.Class:extend("ActorOne", {lives=3})
 
 function a1:act()
 	f:write('.'..','..os.clock(), 1, self.lives)
@@ -15,7 +14,7 @@ function a1:act()
 	end
 end
 
-a2=class{}
+a2=ROT.Class:extend("ActorTwo")
 
 function a2:act()
 	f:write('@'..','..os.clock(), 1, 4)

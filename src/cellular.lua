@@ -1,6 +1,7 @@
 --- Cellular Automaton Map Generator
 -- @module ROT.Map.Cellular
-local Cellular = ROT.Map:extends("Cellular")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Cellular = ROT.Map:extend("Cellular")
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map

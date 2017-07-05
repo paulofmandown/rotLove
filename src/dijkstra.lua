@@ -1,7 +1,8 @@
 --- Dijkstra Pathfinding.
 -- Simplified Dijkstra's algorithm: all edges have a value of 1
 -- @module ROT.Path.Dijkstra
-local Dijkstra=ROT.Path:extends("Dijkstra")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Dijkstra=ROT.Path:extend("Dijkstra")
 --- Constructor.
 -- @tparam int toX x-position of destination cell
 -- @tparam int toY y-position of destination cell

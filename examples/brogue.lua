@@ -1,5 +1,5 @@
 --[[ Brogue ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 function love.load()
     f  =ROT.Display(80, 30)

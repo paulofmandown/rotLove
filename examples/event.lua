@@ -1,5 +1,5 @@
 --[[ Event Queue ]]--
-ROT= require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	f=ROT.Display(80,24)
 	q=ROT.EventQueue()

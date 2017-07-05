@@ -1,7 +1,8 @@
 --- The Dungeon-style map Prototype.
 -- This class is extended by ROT.Map.Digger and ROT.Map.Uniform
 -- @module ROT.Map.Dungeon
-local Dungeon = ROT.Map:extends("Dungeon")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Dungeon = ROT.Map:extend("Dungeon")
 --- Constructor.
 -- Called with ROT.Map.Cellular:new()
 -- @tparam int width Width in cells of the map

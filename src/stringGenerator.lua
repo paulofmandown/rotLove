@@ -1,10 +1,8 @@
 --- Random String Generator.
 -- Learns from provided strings, and generates similar strings.
 -- @module ROT.StringGenerator
-local StringGen_Path =({...})[1]:gsub("[%.\\/]stringGenerator$", "") .. '/'
-local class  =require (StringGen_Path .. 'vendor/30log')
-
-local StringGenerator = class("StringGenerator")
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local StringGenerator = ROT.Class:extend("StringGenerator")
 
 --- Constructor.
 -- Called with ROT.StringGenerator:new()
@@ -24,8 +22,8 @@ function StringGenerator:init(options, rng)
 	self._priorValues={}
 	self._data    ={}
 	if options then
-		for _,v in pairs(options) do
-			self._options.k=v
+		for k,v in pairs(options) do
+			self._options[k]=v
 		end
 	end
 	for _=1,self._options.order do

@@ -1,7 +1,6 @@
-local Path_PATH=({...})[1]:gsub("[%.\\/]path$", "") .. '/'
-local class  =require (Path_PATH .. 'vendor/30log')
+local ROT = require((...):gsub('[^./\\]*$', '') .. 'rot')
+local Path = ROT.Class:extend("Path")
 
-local Path=class("Path")
 function Path:init(toX, toY, passableCallback, options)
     self._toX  =toX
     self._toY  =toY

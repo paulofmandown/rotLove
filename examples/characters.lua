@@ -1,4 +1,4 @@
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 DSP=ROT.Display:new()
 function love.load()
     local y=1
