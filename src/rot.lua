@@ -28,6 +28,11 @@ require (ROTLOVE_PATH .. 'newFuncs')
 
 ROT.Class = Class
 
+-- bind a function to a class instance
+function Class:bind (func)
+    return function (...) return func(self, ...) end
+end
+
 --[[--------------------------------]]--
 -- All RNG 'classes' and functions derived from RandomLua
 --[[------------------------------------

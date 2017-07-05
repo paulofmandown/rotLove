@@ -32,11 +32,5 @@ if not BaseClass then
     end
 end
 
--- shared methods
-
-function BaseClass:bind (func)
-    return function (...) return func(self, ...) end
-end
-
 return BaseClass
 
