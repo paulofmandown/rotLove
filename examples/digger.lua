@@ -1,5 +1,5 @@
 --[[ Digger ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 local update=false
 function love.load()

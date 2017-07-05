@@ -1,5 +1,5 @@
 --[[ Display, RNG ]]--
-    ROT = require 'rotLove/rotLove'
+    ROT=require 'src.rot'
     function love.load()
 		-- text display requires love.graphics to be loaded
 		love.window.setMode(800, 600)

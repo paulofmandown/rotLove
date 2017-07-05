@@ -1,5 +1,5 @@
 --[[ Divided Maze ]]
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	-- Icey works better with odd width/height
 	f =ROT.Display:new(81,25)

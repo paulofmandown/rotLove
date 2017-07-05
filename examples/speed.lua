@@ -1,8 +1,7 @@
 --[[ SpeedScheduler ]]--
-ROT= require 'rotLove/rotLove'
-class= require 'src/vendor/30log'
+ROT=require 'src.rot'
 
-actor=class("actor", {speed, number})
+actor=ROT.Class:extend("actor", {speed, number})
 function actor:init(speed, number)
 	self.speed=speed
 	self.number=number

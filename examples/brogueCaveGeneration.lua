@@ -1,4 +1,4 @@
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
     f =ROT.Display(79,29)
     cl=ROT.Map.Cellular:new(f:getWidth(), f:getHeight())
@@ -17,7 +17,6 @@ function love.update()
     if wait then return end
     local cellStart=os.clock()
     for i=1,5 do cl:create(calbak) end
-    write('cellGen in ' .. os.clock()-cellStart)
     for x=1,f:getWidth() do
         for y=1,f:getHeight() do
             if cl._map[x][y]==1 then
@@ -30,7 +29,6 @@ function love.update()
             end
         end
     end
-    write('built in '..os.clock()-start)
     writeMap()
     largest=2
     id=2

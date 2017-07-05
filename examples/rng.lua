@@ -1,4 +1,4 @@
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	f=ROT.Display:new()
 	doTheThing()

@@ -1,5 +1,4 @@
-ROT=require 'rotLove/rotLove'
-
+ROT=require 'src.rot'
 function love.load()
     colorHandler=ROT.Color:new()
     f=ROT.Display()

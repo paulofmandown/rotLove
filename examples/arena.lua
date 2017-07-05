@@ -1,5 +1,5 @@
 --[[ Arena ]]--
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 function love.load()
 	f=ROT.Display:new(80,24)
 	m=ROT.Map.Arena:new(f:getWidth(), f:getHeight())

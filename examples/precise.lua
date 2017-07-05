@@ -1,5 +1,5 @@
 --[[ Precise Shadowcasting ]]--
-ROT=require 'rotLove/rotLove'
+ROT=require 'src.rot'
 
 function calbak(x, y, val)
     map[x..','..y]=val

@@ -22,8 +22,8 @@ function StringGenerator:init(options, rng)
 	self._priorValues={}
 	self._data    ={}
 	if options then
-		for _,v in pairs(options) do
-			self._options.k=v
+		for k,v in pairs(options) do
+			self._options[k]=v
 		end
 	end
 	for _=1,self._options.order do
