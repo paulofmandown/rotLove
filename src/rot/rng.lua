@@ -41,6 +41,13 @@ function RNG:bit_xor(a, b)
     return self:normalize(r)
 end
 
+-- use LuaJIT's bit ops if available
+if _G.bit and bit.band and bit.bor and bit.bxor then
+    RNG.bit_and = function(_, ...) return bit.band(...) end
+    RNG.bit_or = function(_, ...) return bit.bor(...) end
+    RNG.bit_xor = function(_, ...) return bit.bxor(...) end
+end
+
 function RNG:random(a,b)
     return math.random(a,b)
 end
