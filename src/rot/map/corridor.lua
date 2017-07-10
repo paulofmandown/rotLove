@@ -9,14 +9,12 @@ local Corridor = ROT.Map.Feature:extend("Corridor")
 -- @tparam int startY y-position of first floospace in corridor
 -- @tparam int endX x-position of last floospace in corridor
 -- @tparam int endY y-position of last floospace in corridor
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Corridor:init(startX, startY, endX, endY, rng)
+function Corridor:init(startX, startY, endX, endY)
 	self._startX       =startX
 	self._startY       =startY
 	self._endX         =endX
 	self._endY         =endY
 	self._endsWithAWall=true
-    self._rng = rng or ROT.RNG
 end
 
 --- Create random with position.
@@ -32,7 +30,7 @@ function Corridor:createRandomAt(x, y, dx, dy, options, rng)
 	local min   =options.corridorLength[1]
 	local max   =options.corridorLength[2]
 	local length=math.floor(rng:random(min, max))
-	return Corridor:new(x, y, x+dx*length, y+dy*length)
+	return Corridor:new(x, y, x+dx*length, y+dy*length):setRNG(rng)
 end
 
 --- Write various information about this corridor to the console.

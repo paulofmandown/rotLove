@@ -21,13 +21,11 @@ end
   -- @tparam int options.cellHeight Number of cells to create on the vertical (number of rooms vertically)
   -- @tparam int options.roomWidth Room min and max width
   -- @tparam int options.roomHeight Room min and max height
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Rogue:init(width, height, options, rng)
+function Rogue:init(width, height, options)
     Rogue.super.init(self, width, height)
     self._doors={}
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
-    self._rng = rng or ROT.RNG
 
     if not self._options.roomWidth then
         self._options.roomWidth=calculateRoomSize(width, self._options.cellWidth)

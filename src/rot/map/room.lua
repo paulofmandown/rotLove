@@ -11,8 +11,7 @@ local Room = ROT.Map.Feature:extend("Room")
 -- @tparam int y2 Bottom wall
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Room:init(x1, y1, x2, y2, doorX, doorY, rng)
+function Room:init(x1, y1, x2, y2, doorX, doorY)
 	self._x1   =x1
 	self._x2   =x2
 	self._y1   =y1
@@ -21,7 +20,6 @@ function Room:init(x1, y1, x2, y2, doorX, doorY, rng)
 	if doorX then
 		self._doors[doorX..','..doorY] = 1
 	end
-    self._rng = rng or ROT.RNG
 end
 
 --- Create Random with position.
@@ -32,30 +30,32 @@ end
 -- @tparam table options Options
   -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
   -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
-function Room:createRandomAt(x, y, dx, dy, options)
+-- @tparam[opt] userData rng A user defined object with a .random(self, min, max) method
+function Room:createRandomAt(x, y, dx, dy, options, rng)
+    rng = rng or self._rng
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
-	local width=min+math.floor(self._rng:random(min, max))
+	local width=min+math.floor(rng:random(min, max))
 
 	min   =options.roomHeight[1]
 	max   =options.roomHeight[2]
-	local height=min+math.floor(self._rng:random(min,max))
+	local height=min+math.floor(rng:random(min,max))
 
 	if dx==1 then
-		local y2=y-math.floor(self._rng:random()*height)
-		return Room:new(x+1, y2, x+width, y2+height-1, x, y)
+		local y2=y-math.floor(rng:random()*height)
+		return Room:new(x+1, y2, x+width, y2+height-1, x, y):setRNG(rng)
 	end
 	if dx==-1 then
-		local y2=y-math.floor(self._rng:random()*height)
-		return Room:new(x-width, y2, x-1, y2+height-1, x, y)
+		local y2=y-math.floor(rng:random()*height)
+		return Room:new(x-width, y2, x-1, y2+height-1, x, y):setRNG(rng)
 	end
 	if dy==1 then
-		local x2=x-math.floor(self._rng:random()*width)
-		return Room:new(x2, y+1, x2+width-1, y+height, x, y)
+		local x2=x-math.floor(rng:random()*width)
+		return Room:new(x2, y+1, x2+width-1, y+height, x, y):setRNG(rng)
 	end
 	if dy==-1 then
-		local x2=x-math.floor(self._rng:random()*width)
-		return Room:new(x2, y-height, x2+width-1, y-1, x, y)
+		local x2=x-math.floor(rng:random()*width)
+		return Room:new(x2, y-height, x2+width-1, y-1, x, y):setRNG(rng)
 	end
 end
 
@@ -65,21 +65,23 @@ end
 -- @tparam table options Options
   -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
   -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
-function Room:createRandomCenter(cx, cy, options)
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+function Room:createRandomCenter(cx, cy, options, rng)
+    rng = rng or self._rng
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
-	local width=min+math.floor(self._rng:random()*(max-min+1))
+	local width=min+math.floor(rng:random()*(max-min+1))
 
 	min   =options.roomHeight[1]
 	max   =options.roomHeight[2]
-	local height=min+math.floor(self._rng:random()*(max-min+1))
+	local height=min+math.floor(rng:random()*(max-min+1))
 
-	local x1=cx-math.floor(self._rng:random()*width)
-	local y1=cy-math.floor(self._rng:random()*height)
+	local x1=cx-math.floor(rng:random()*width)
+	local y1=cy-math.floor(rng:random()*height)
 	local x2=x1+width-1
 	local y2=y1+height-1
 
-	return Room:new(x1, y1, x2, y2)
+	return Room:new(x1, y1, x2, y2):setRNG(rng)
 end
 
 --- Create random with no position.
@@ -88,23 +90,25 @@ end
 -- @tparam table options Options
   -- @tparam table options.roomWidth minimum/maximum width for room {min,max}
   -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
-function Room:createRandom(availWidth, availHeight, options)
+-- @tparam[opt] userData rng A user defined object with a .random(min, max) method
+function Room:createRandom(availWidth, availHeight, options, rng)
+    rng = rng or self._rng
 	local min  =options.roomWidth[1]
 	local max  =options.roomWidth[2]
-	local width=math.floor(self._rng:random(min, max))
+	local width=math.floor(rng:random(min, max))
 
 	min=options.roomHeight[1]
 	max=options.roomHeight[2]
-	local height=math.floor(self._rng:random(min, max))
+	local height=math.floor(rng:random(min, max))
 
 	local left=availWidth-width
 	local top =availHeight-height
 
-	local x1=math.floor(self._rng:random()*left)
-	local y1=math.floor(self._rng:random()*top)
+	local x1=math.floor(rng:random()*left)
+	local y1=math.floor(rng:random()*top)
 	local x2=x1+width
 	local y2=y1+height
-	return Room:new(x1, y1, x2, y2)
+	return Room:new(x1, y1, x2, y2):setRNG(rng)
 end
 
 --- Place a door.

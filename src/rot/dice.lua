@@ -8,9 +8,8 @@ local Dice = ROT.Class:extend("Dice", {minimum=1}) -- class default lowest possi
 --- Constructor that creates a new dice instance
 -- @tparam ?int|string dice_notation Can be either a dice string, or int
 -- @tparam[opt] int minimum Sets dice instance roll's minimum result boundaries
--- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @treturn dice
-function Dice:init(dice_notation, minimum, rng)
+function Dice:init(dice_notation, minimum)
   -- If dice_notation is a number, we must convert it into the proper dice string format
   if type(dice_notation) ==  'number' then dice_notation = '1d'..dice_notation end
 
@@ -33,8 +32,6 @@ function Dice:init(dice_notation, minimum, rng)
     self.sets = tonumber(string.match(dice_notation, '[x](%d+)')) or 1
 
     self.minimum = minimum
-
-    self._rng = rng or ROT.RNG
 end
 
 --- Sets dice minimum result boundaries (if nil, no minimum result)
@@ -131,7 +128,7 @@ end
 --
 --
 function Dice.roll(self, minimum, rng)
-  if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum, rng) end
+  if type(self) ~= 'table' then self = ROT.Dice:new(self, minimum):setRNG(rng) end
   local num_dice, dice_faces = self.num, self.faces
   local bonus, rerolls = self.bonus, self.rerolls
   local is_bonus_plural, is_reroll_plural = self.is_bonus_plural, self.is_reroll_plural

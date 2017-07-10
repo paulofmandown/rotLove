@@ -7,12 +7,10 @@ local IceyMaze = ROT.Map:extend("IceyMaze")
 -- Called with ROT.Map.IceyMaze:new(width, height, regularity)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
--- @tparam userdata rng Userdata with a .random(self, min, max) function
 -- @tparam int[opt=0] regularity A value used to determine the 'randomness' of the map, 0= more random
-function IceyMaze:init(width, height, rng, regularity)
+function IceyMaze:init(width, height, regularity)
 	IceyMaze.super.init(self, width, height)
 	self._regularity= regularity and regularity or 0
-    self._rng = rng or ROT.RNG
 end
 
 --- Create.

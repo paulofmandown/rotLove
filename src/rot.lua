@@ -27,12 +27,23 @@ package.loaded[...] = ROT
 
 ROT.Class = Class
 
+ROT.RNG = require (ROTLOVE_PATH .. 'rng')
+
 -- bind a function to a class instance
 function Class:bind (func)
     return function (...) return func(self, ...) end
 end
 
-ROT.RNG              = require (ROTLOVE_PATH .. 'rng')
+-- get/set RNG instance for a class
+-- used by maps, noise, dice, etc.
+Class._rng = ROT.RNG
+function Class:getRNG()
+    return self._rng
+end
+function Class:setRNG(rng)
+    self._rng = rng or ROT.RNG
+    return self
+end
 
 require (ROTLOVE_PATH .. 'newFuncs')
 

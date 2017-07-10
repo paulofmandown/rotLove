@@ -10,8 +10,7 @@ local StringGenerator = ROT.Class:extend("StringGenerator")
     -- @tparam[opt=false] boolean options.words Use word mode
     -- @tparam[opt=3] int options.order Number of letters/words to be used as context
     -- @tparam[opt=0.001] number options.prior A default priority for characters/words
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function StringGenerator:init(options, rng)
+function StringGenerator:init(options)
 	self._options = {words=false,
 					 order=3,
 					 prior=0.001
@@ -30,8 +29,6 @@ function StringGenerator:init(options, rng)
 		table.insert(self._prefix, self._boundary)
 	end
 	self._priorValues[self._boundary]=self._options.prior
-
-    self._rng = rng or ROT.RNG
 end
 
 --- Remove all learned data

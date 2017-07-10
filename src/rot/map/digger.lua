@@ -14,8 +14,7 @@ local Digger=ROT.Map.Dungeon:extend("Digger")
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
   -- @tparam[opt=false] boolean options.nocorridorsmode If true, do not use corridors to generate this map
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Digger:init(width, height, options, rng)
+function Digger:init(width, height, options)
 	Digger.super.init(self, width, height)
 
     self._digCallback = self:bind(self._digCallback)
@@ -43,8 +42,6 @@ function Digger:init(width, height, options, rng)
     end
 	self._featureAttempts=20
 	self._walls={}
-
-    self._rng = rng or ROT.RNG
 end
 
 --- Create.
