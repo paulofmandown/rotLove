@@ -40,7 +40,7 @@ function love.update(dt)
 end
 
 function dothething()
-    mapType=maps[rng:random(1,#maps)]
+    mapType=maps[ROT.RNG:random(1,#maps)]
     rog= ROT.Map[mapType]:new(f:getWidth(), f:getHeight())
     map={}
     for i=1,f:getWidth() do map[i]={} end
@@ -96,11 +96,9 @@ function calbak(x, y, val)
 end
 function dijkCalbak(x,y) return map[x][y]=='.' end
 
-rng=ROT.RNG.Twister:new()
-rng:randomseed()
 function getRandomColor()
-    return { r=math.floor(rng:random(0,255)),
-             g=math.floor(rng:random(0,255)),
-             b=math.floor(rng:random(0,255)),
+    return { r=math.floor(ROT.RNG:random(0,255)),
+             g=math.floor(ROT.RNG:random(0,255)),
+             b=math.floor(ROT.RNG:random(0,255)),
              a=255}
 end

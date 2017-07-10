@@ -31,8 +31,7 @@ function StringGenerator:init(options, rng)
 	end
 	self._priorValues[self._boundary]=self._options.prior
 
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Remove all learned data

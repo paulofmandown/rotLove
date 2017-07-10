@@ -36,8 +36,7 @@ function Uniform:init(width, height, options, rng)
     self._corridorAttempts=20
     self._connected={}
     self._unconnected={}
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Create.

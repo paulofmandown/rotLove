@@ -12,8 +12,7 @@ local IceyMaze = ROT.Map:extend("IceyMaze")
 function IceyMaze:init(width, height, rng, regularity)
 	IceyMaze.super.init(self, width, height)
 	self._regularity= regularity and regularity or 0
-    self._rng       =rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Create.

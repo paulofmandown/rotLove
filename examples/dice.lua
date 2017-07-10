@@ -1,10 +1,9 @@
 ROT=require 'src.rot'
-local f, d_with_rng, lcg
+local f, d_with_rng, rng
 function love.load()
     f=ROT.Display:new(80,24)
-    lcg=ROT.RNG.LCG:new()
-    lcg:randomseed()
-    d_with_rng=ROT.Dice:new('3d6', 1, lcg)
+    rng=ROT.RNG:new()
+    d_with_rng=ROT.Dice:new('3d6', 1, rng)
     d_without_rng=ROT.Dice:new('3d6', 1)
 end
 function love.draw() f:draw() end

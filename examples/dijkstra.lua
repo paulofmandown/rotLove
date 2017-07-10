@@ -9,8 +9,6 @@ function love.load()
     -- should take about a second to do one demo with this
     f=ROT.Display:new(256, 100, .275)
 
-    rng=ROT.RNG.Twister:new()
-    rng:randomseed()
     map=ROT.Map.Uniform(f:getWidth(), f:getHeight(), {dugPercentage=.7})
     doTheThing()
 end
@@ -55,7 +53,8 @@ function passableCallback(x, y) return data[x..','..y]==0 end
 function getRandomFloor(data)
     local key=nil
     while true do
-        key=rng:random(1,f:getWidth())..','..rng:random(1,f:getHeight())
+        key=ROT.RNG:random(1,f:getWidth())..','..
+            ROT.RNG:random(1,f:getHeight())
         if data[key]==0 then
             return key:split(',')
         end

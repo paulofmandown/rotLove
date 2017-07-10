@@ -16,8 +16,7 @@ function BrogueRoom:init(dims, doorX, doorY, rng)
     if doorX then
         self._doors[1] = {doorX, doorY}
     end
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Create room at bottom center with dims 9x10 and 20x4

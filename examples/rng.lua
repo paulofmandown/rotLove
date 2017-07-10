@@ -5,10 +5,7 @@ function love.load()
 end
 
 function doTheThing()
-	local arbitraryNum=math.floor(os.clock())%3
-	local rng=arbitraryNum==0 and ROT.RNG.Twister() or
-			  arbitraryNum==1 and ROT.RNG.LCG() or
-			  arbitraryNum==2 and ROT.RNG.MWC()
+	local rng = ROT.RNG
 
 	f:write(tostring(rng), 1, 1)
 
@@ -35,3 +32,4 @@ function love.update()
 end
 
 function love.keypressed() update=true end
+

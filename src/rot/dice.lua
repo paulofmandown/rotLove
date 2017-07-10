@@ -34,8 +34,7 @@ function Dice:init(dice_notation, minimum, rng)
 
     self.minimum = minimum
 
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Sets dice minimum result boundaries (if nil, no minimum result)

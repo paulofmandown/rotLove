@@ -32,8 +32,7 @@ function Cellular:init(width, height, options, rng)
 	assert(t==8 or t==4, 'topology must be 8 or 4')
 	self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
 
-	self._rng = rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = rng or ROT.RNG
 end
 
 --- Randomize cells.

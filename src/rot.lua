@@ -24,7 +24,6 @@ local ROT = Class:extend('ROT', {
 		  }
 })
 package.loaded[...] = ROT
-require (ROTLOVE_PATH .. 'newFuncs')
 
 ROT.Class = Class
 
@@ -33,19 +32,9 @@ function Class:bind (func)
     return function (...) return func(self, ...) end
 end
 
---[[--------------------------------]]--
--- All RNG 'classes' and functions derived from RandomLua
---[[------------------------------------
-RandomLua v0.3.1
-Pure Lua Pseudo-Random Numbers Generator
-Under the MIT license.
-copyright(c) 2011 linux-man
---]]------------------------------------
 ROT.RNG              = require (ROTLOVE_PATH .. 'rng')
-ROT.RNG.Twister      = require (ROTLOVE_PATH .. 'rng.twister')
-ROT.RNG.LCG          = require (ROTLOVE_PATH .. 'rng.lcg')
-ROT.RNG.MWC          = require (ROTLOVE_PATH .. 'rng.mwc')
---[[--------------------------------]]--
+
+require (ROTLOVE_PATH .. 'newFuncs')
 
 ROT.Dice             = require (ROTLOVE_PATH .. 'dice')
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
