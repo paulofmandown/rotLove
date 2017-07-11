@@ -8,11 +8,8 @@ local EllerMaze = ROT.Map:extend("EllerMaze")
 -- Called with ROT.Map.EllerMaze:new(width, height)
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function EllerMaze:init(width, height, rng)
+function EllerMaze:init(width, height)
 	EllerMaze.super.init(self, width, height)
-    self._rng = rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
 end
 
 --- Create.

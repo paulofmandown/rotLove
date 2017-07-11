@@ -4,11 +4,6 @@
 		-- text display requires love.graphics to be loaded
 		love.window.setMode(800, 600)
         frame=ROT.TextDisplay()
-        rand = math.random(1,3)
-        rng = rand == 1 and ROT.RNG.Twister:new() or
-              rand == 2 and ROT.RNG.LCG:new() or
-              ROT.RNG.MWC:new()
-        rng:randomseed()
     end
     function love.draw()
         frame:draw()
@@ -25,9 +20,9 @@
     end
 
     function getRandomColor()
-        return { r=math.floor(rng:random(0,255)),
-                 g=math.floor(rng:random(0,255)),
-                 b=math.floor(rng:random(0,255)),
+        return { r=math.floor(ROT.RNG:random(0,255)),
+                 g=math.floor(ROT.RNG:random(0,255)),
+                 b=math.floor(ROT.RNG:random(0,255)),
                  a=255}
     end
 --]]

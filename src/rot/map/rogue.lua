@@ -4,6 +4,15 @@
 -- @module ROT.Map.Rogue
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local Rogue=ROT.Map:extend("Rogue")
+
+local function calculateRoomSize(size, cell)
+    local max=math.floor((size/cell)*0.8)
+    local min=math.floor((size/cell)*0.25)
+    min=min<2 and 2 or min
+    max=max<2 and 2 or max
+    return {min, max}
+end
+
 --- Constructor.
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
@@ -12,21 +21,11 @@ local Rogue=ROT.Map:extend("Rogue")
   -- @tparam int options.cellHeight Number of cells to create on the vertical (number of rooms vertically)
   -- @tparam int options.roomWidth Room min and max width
   -- @tparam int options.roomHeight Room min and max height
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Rogue:init(width, height, options, rng)
+function Rogue:init(width, height, options)
     Rogue.super.init(self, width, height)
     self._doors={}
     self._options={cellWidth=math.floor(width*0.0375), cellHeight=math.floor(height*0.125)}
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
-    function calculateRoomSize(size, cell)
-        local max=math.floor((size/cell)*0.8)
-        local min=math.floor((size/cell)*0.25)
-        min=min<2 and 2 or min
-        max=max<2 and 2 or max
-        return {min, max}
-    end
 
     if not self._options.roomWidth then
         self._options.roomWidth=calculateRoomSize(width, self._options.cellWidth)

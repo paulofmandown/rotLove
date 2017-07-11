@@ -1,3 +1,5 @@
+local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
+
 -- asserts the type of 'theTable' is table
 local function isATable(theTable)
     assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")
@@ -23,13 +25,13 @@ end
 function table.random(theTable)
     isATable(theTable)
     if #theTable==0 then return nil end
-    return theTable[math.floor(math.random(#theTable))]
+    return theTable[math.floor(ROT.RNG:random(#theTable))]
 end
 -- returns random valid index, nil if length is 0
 function table.randomi(theTable)
     isATable(theTable)
     if #theTable==0 then return nil end
-    return math.floor(math.random(#theTable))
+    return math.floor(ROT.RNG:random(#theTable))
 end
 -- randomly reorders the elements of the provided table and returns the result
 function table.randomize(theTable)

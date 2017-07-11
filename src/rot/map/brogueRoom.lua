@@ -8,22 +8,20 @@ local BrogueRoom = ROT.Map.Feature:extend("BrogueRoom")
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function BrogueRoom:init(dims, doorX, doorY, rng)
+function BrogueRoom:init(dims, doorX, doorY)
     self._dims =dims
     self._doors={}
     self._walls={}
     if doorX then
         self._doors[1] = {doorX, doorY}
     end
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
 end
 
 --- Create room at bottom center with dims 9x10 and 20x4
 -- @tparam int availWidth Typically the width of the map.
 -- @tparam int availHeight Typically the height of the map
-function BrogueRoom:createEntranceRoom(availWidth, availHeight)
+-- @tparam[opt] userData rng A user defined object with a .random(self, min, max) method
+function BrogueRoom:createEntranceRoom(availWidth, availHeight, rng)
     local dims={}
     dims.w1=9
     dims.h1=10
@@ -35,7 +33,7 @@ function BrogueRoom:createEntranceRoom(availWidth, availHeight)
     dims.x2=math.floor(availWidth/2-dims.w2/2)
     dims.y2=math.floor(availHeight-dims.h2-1)
 
-    return BrogueRoom:new(dims)
+    return BrogueRoom:new(dims):setRNG(rng)
 end
 
 --- Create Random with position.
@@ -48,7 +46,7 @@ end
   -- @tparam table options.roomHeight minimum/maximum height for room {min,max}
 -- @tparam[opt] userData rng A user defined object with a .random(self, min, max) method
 function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
-    rng=rng and rng or math.random
+    rng = rng or self._rng
     local dims={}
 
     local min=options.roomWidth[1]
@@ -130,7 +128,7 @@ function BrogueRoom:createRandomAt(x, y, dx, dy, options, rng)
     --if dims.y2~=dims.y2 then dims.y2=dims.y1 end
     --if dims.x1~=dims.x1 then dims.x1=dims.x2 end
     --if dims.y1~=dims.y1 then dims.y1=dims.y2 end
-    return BrogueRoom:new(dims, x, y)
+    return BrogueRoom:new(dims, x, y):setRNG(rng)
 end
 
 --- Create Random with center position.
@@ -143,7 +141,7 @@ end
   -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
 -- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function BrogueRoom:createRandomCenter(cx, cy, options, rng)
-    rng=rng and rng or math.random
+    rng = rng or self._rng
     local dims={}
     --- Generate Rectangle One dimensions
     local min=options.roomWidth[1]
@@ -171,7 +169,7 @@ function BrogueRoom:createRandomCenter(cx, cy, options, rng)
     if dims.x2~=dims.x2 then dims.x2=dims.x1 end
     if dims.y2~=dims.y2 then dims.y2=dims.y1 end
 
-    return BrogueRoom:new(dims)
+    return BrogueRoom:new(dims):setRNG(rng)
 end
 
 --- Create random with no position.
@@ -184,7 +182,7 @@ end
   -- @tparam table options.crossHeight minimum/maximum height for rectangleTwo {min,max}
 -- @tparam[opt] userData rng A user defined object with a .random(min, max) method
 function BrogueRoom:createRandom(availWidth, availHeight, options, rng)
-    rng=rng and rng or math.random
+    rng = rng or self._rng
     local dims={}
     --- Generate Rectangle One dimensions
     local min=options.roomWidth[1]
@@ -215,7 +213,7 @@ function BrogueRoom:createRandom(availWidth, availHeight, options, rng)
     dims.y2=math.floor(rng:random(dims.y1, (dims.y1+dims.h1)-dims.h2))
     if dims.x2~=dims.x2 then dims.x2=dims.x1 end
     if dims.y2~=dims.y2 then dims.y2=dims.y1 end
-    return BrogueRoom:new(dims)
+    return BrogueRoom:new(dims):setRNG(rng)
 end
 
 --- Use two callbacks to confirm room validity.

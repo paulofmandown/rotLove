@@ -12,8 +12,7 @@ local Cellular = ROT.Map:extend("Cellular")
   -- @tparam int options.topology Topology. Accepted values: 4, 8
   -- @tparam boolean options.connected Set to true to connect open areas on create
   -- @tparam int options.minimumZoneArea Unconnected zones with fewer tiles than this will be turned to wall instead of being connected
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Cellular:init(width, height, options, rng)
+function Cellular:init(width, height, options)
 	assert(ROT, 'must require rot')
 	Cellular.super.init(self, width, height)
 	self._options={
@@ -31,9 +30,6 @@ function Cellular:init(width, height, options, rng)
 	local t=self._options.topology
 	assert(t==8 or t==4, 'topology must be 8 or 4')
 	self._dirs = t==8 and ROT.DIRS.EIGHT or t==4 and ROT.DIRS.FOUR
-
-	self._rng = rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
 end
 
 --- Randomize cells.

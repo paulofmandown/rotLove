@@ -15,8 +15,7 @@ local Brogue=ROT.Map.Dungeon:extend("Brogue")
   -- @tparam[opt={2,5}] table options.crossHeight Room height for rectangle two of cross rooms
   -- @tparam[opt={3,12}] table options.corridorWidth Length of east-west corridors
   -- @tparam[opt={2,5}] table options.corridorHeight Length of north-south corridors
--- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Brogue:init(width, height, options, rng)
+function Brogue:init(width, height, options)
     Brogue.super.init(self, width, height)
     
     self._digCallback = self:bind(self._digCallback)
@@ -46,8 +45,7 @@ function Brogue:init(width, height, options, rng)
     self._maxrooms=99
     self._roomAttempts=600
     self._dirs=ROT.DIRS.FOUR
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
+    self._rng = ROT.RNG
 end
 
 --- Create.

@@ -10,11 +10,9 @@ function actor:getSpeed() return self.speed end
 
 function love.load()
 	f=ROT.Display(80, 24)
-	rng=ROT.RNG.Twister:new()
-    rng:randomseed()
 	s=ROT.Scheduler.Speed:new()
 	for i=1,4 do
-		a=actor:new(rng:random(1,100), i)
+		a=actor:new(ROT.RNG:random(1,100), i)
 		s:add(a, true)
 		f:writeCenter('Added '..i..', with speed: '..a:getSpeed(), i)
 	end

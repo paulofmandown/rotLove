@@ -26,10 +26,9 @@ end
 function placePlayer()
     local key =nil
     local char='#'
-    local rng=ROT.RNG.Twister:new()
-    rng:randomseed()
     while true do
-        key=rng:random(1,f:getWidth())..','..rng:random(1,f:getHeight())
+        key=ROT.RNG:random(1,f:getWidth())..','..
+            ROT.RNG:random(1,f:getHeight())
         if map[key]==0 then
             pos = key:split(',')
             player.x, player.y=tonumber(pos[1]), tonumber(pos[2])

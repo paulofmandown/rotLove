@@ -8,8 +8,6 @@ local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 local Color = ROT.Class:extend("Color")
 
 function Color:init()
-    self._rng = ROT.RNG.Twister:new()
-    self._rng:randomseed()
     self._cached={
 			black= {r=0,g=0,b=0,a=255},
 			navy= {r=0,g=0,b=128,a=255},

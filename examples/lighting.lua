@@ -3,8 +3,6 @@ ROT=require 'src.rot'
 function love.load()
     f=ROT.Display(80, 24)
     colorhandler=ROT.Color:new()
-    rng=ROT.RNG.Twister:new()
-    rng:randomseed()
     maps={
         "Arena",
         "DividedMaze",
@@ -34,7 +32,7 @@ function doTheThing()
     mapData={}
     lightData={}
     -- Map type defaults to random or you can hard-code it here
-    mapType=maps[rng:random(1,#maps)]
+    mapType=maps[ROT.RNG:random(1,#maps)]
     map= ROT.Map[mapType]:new(f:getWidth(), f:getHeight())
     if map.randomize then
         floorValue=1
@@ -84,16 +82,16 @@ function lightingCallback(x, y, color)
 end
 
 function getRandomColor()
-    return { r=math.floor(rng:random(0,125)),
-             g=math.floor(rng:random(0,125)),
-             b=math.floor(rng:random(0,125)),
+    return { r=math.floor(ROT.RNG:random(0,125)),
+             g=math.floor(ROT.RNG:random(0,125)),
+             b=math.floor(ROT.RNG:random(0,125)),
              a=255}
 end
 
 function getRandomFloor()
     local key=nil
     while true do
-        key=rng:random(1,f:getWidth())..','..rng:random(1,f:getHeight())
+        key=ROT.RNG:random(1,f:getWidth())..','..ROT.RNG:random(1,f:getHeight())
         if mapData[key]==floorValue then
             return key:split(',')
         end

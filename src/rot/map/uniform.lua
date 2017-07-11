@@ -14,7 +14,7 @@ local Uniform=ROT.Map.Dungeon:extend("Uniform")
   -- @tparam[opt=0.2] number options.dugPercentage we stop after this percentage of level area has been dug out
   -- @tparam[opt=1000] int options.timeLimit stop after this much time has passed (msec)
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
-function Uniform:init(width, height, options, rng)
+function Uniform:init(width, height, options)
     Uniform.super.init(self, width, height)
     
     self._digCallback = self:bind(self._digCallback)
@@ -36,8 +36,6 @@ function Uniform:init(width, height, options, rng)
     self._corridorAttempts=20
     self._connected={}
     self._unconnected={}
-    self._rng=rng and rng or ROT.RNG.Twister:new()
-    if not rng then self._rng:randomseed() end
 end
 
 --- Create.
