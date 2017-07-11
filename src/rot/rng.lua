@@ -1,23 +1,20 @@
---- The RNG Prototype.
--- The base class that is extended by all rng classes
--- @module ROT.RNG.
+--- The RNG Class.
+-- A Lua port of Johannes Baagøe's Alea
+-- From http://baagoe.com/en/RandomMusings/javascript/
+-- Johannes Baagøe <baagoe@baagoe.com>, 2010
+-- Mirrored at:
+-- https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
+-- @module ROT.RNG
 local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 local RNG = ROT.Class:extend("RNG")
 
--- A Lua port of Johannes Baagøe's Alea
-
--- From http://baagoe.com/en/RandomMusings/javascript/
--- Johannes Baagøe <baagoe@baagoe.com>, 2010
-
--- Mirrored at:
--- https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
 
 local function Mash ()
   local n = 0xefc8249d
 
   local function mash (data)
     data = tostring(data)
-    
+
     for i = 1, data:len() do
       n = n + data:byte(i)
       local h = 0.02519603282416938 * n
@@ -54,7 +51,7 @@ end
 -- @tparam[opt=os.clock()] number s A number to base the rng from
 function RNG:setSeed(seed)
     self.seed = seed or os.time()
-    
+
     local mash = Mash()
     self.s0 = mash(' ')
     self.s1 = mash(' ')
@@ -84,13 +81,13 @@ function RNG:getUniform()
     self.s2 = t - self.c
     return self.s2
 end
-	
+
 function RNG:getUniformInt(lowerBound, upperBound)
     local max = math.max(lowerBound, upperBound)
     local min = math.min(lowerBound, upperBound)
     return math.floor(self:getUniform() * (max - min + 1)) + min
 end
-	
+
 function RNG:getNormal(mean, stddev)
     repeat
         local u = 2*self:getUniform()-1
@@ -101,7 +98,7 @@ function RNG:getNormal(mean, stddev)
     local gauss = u * math.sqrt(-2*math.log(r)/r)
     return (mean or 0) + gauss*(stddev or 1)
 end
-	
+
 function RNG:getPercentage()
     return 1 + math.floor(self:getUniform()*100)
 end
