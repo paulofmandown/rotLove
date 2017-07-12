@@ -2,7 +2,6 @@ ROT=require 'src.rot'
 
 function love.load()
     f=ROT.Display(80, 24)
-    colorhandler=ROT.Color:new()
     maps={
         "Arena",
         "DividedMaze",
@@ -53,18 +52,18 @@ function doTheThing()
         lighting:setLight(tonumber(point[1]),tonumber(point[2]), getRandomColor())
     end
     lighting:compute(lightingCallback)
-    local ambientLight={r=0, g=0, b=0, a=255}
+    local ambientLight={ 0, 0, 0, 255 }
     for k,_ in pairs(mapData) do
         local parts=k:split(',')
         local x    =tonumber(parts[1])
         local y    =tonumber(parts[2])
-        local baseColor=mapData[k]==floorValue and {r=125, g=125, b=125, a=255} or {r=50, g=50, b=50, a=255}
+        local baseColor=mapData[k]==floorValue and { 125, 125, 125, 255 } or { 50, 50, 50, 255 }
         local light=ambientLight
         local char=f:getCharacter(x, y)
         if lightData[k] then
-            light=colorhandler:add(light, lightData[k])
+            light=ROT.Color:add(light, lightData[k])
         end
-        local finalColor=colorhandler:multiply(baseColor, light)
+        local finalColor=ROT.Color:multiply(baseColor, light)
         char=not lightData[k] and ' ' or char~=' ' and char or mapData[x..','..y]~=floorValue and '#' or ' '
 
         f:write(char, x, y, light, finalColor)

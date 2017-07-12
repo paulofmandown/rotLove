@@ -39,13 +39,13 @@ function Display:init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
         self.drawQ=self.graphics.drawq
     end
 
-    self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self.defaultBackgroundColor=dbg and dbg or {r=15,g=15,b=15,a=255}
+    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235, 255 }
+    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15, 255 }
 
-    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
-                                     self.defaultBackgroundColor.g,
-                                     self.defaultBackgroundColor.b,
-                                     self.defaultBackgroundColor.a)
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor[1],
+                                     self.defaultBackgroundColor[2],
+                                     self.defaultBackgroundColor[3],
+                                     self.defaultBackgroundColor[4])
 
     self.canvas=self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
@@ -253,13 +253,13 @@ end
 function Display:_validateForegroundColor(c)
 	c = c and c or self.defaultForegroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-	assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
+	assert(#c > 2, 'Foreground Color must be of type { r, g, b, a }')
 	return c
 end
 function Display:_validateBackgroundColor(c)
 	c = c and c or self.defaultBackgroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-	assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
+	assert(#c > 2, 'Background Color must be of type { r, g, b, a }')
 	return c
 end
 function Display:_validateHeight(y, h)
@@ -270,7 +270,7 @@ function Display:_validateHeight(y, h)
 end
 function Display:_setColor(c)
 	c = c and c or self.defaultForegroundColor
-	love.graphics.setColor(c.r, c.g, c.b, c.a)
+	love.graphics.setColor(c[1], c[2], c[3], c[4])
 end
 function Display:_clamp(n)
     return n<0 and 0 or n>255 and 255 or n

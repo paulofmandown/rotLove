@@ -20,9 +20,9 @@
     end
 
     function getRandomColor()
-        return { r=math.floor(ROT.RNG:random(0,255)),
-                 g=math.floor(ROT.RNG:random(0,255)),
-                 b=math.floor(ROT.RNG:random(0,255)),
-                 a=255}
+        return { math.floor(ROT.RNG:random(0,255)),
+                 math.floor(ROT.RNG:random(0,255)),
+                 math.floor(ROT.RNG:random(0,255)),
+                 255}
     end
 --]]
