@@ -1,0 +1,8 @@
+Run tests with Busted from the project root like this:
+
+    busted --helper tests/helper.lua tests/spec/*.lua
+
+Busted is available in LuaRocks:
+
+    luarocks install busted
+
