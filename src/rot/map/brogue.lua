@@ -72,10 +72,10 @@ function Brogue:create(callback, firstFloorBehavior)
                 callback(x,y,self._map[x][y])
             end
         end
-    end
-    local d=self._doors
-    for i=1,#d do
-        callback(d[i][1], d[i][2], 2)
+        local d=self._doors
+        for i=1,#d do
+            callback(d[i][1], d[i][2], 2)
+        end
     end
     return self
 end
@@ -194,6 +194,7 @@ function Brogue:_buildRoom(forceNoCorridor)
 
                 if room:isValid(self._isWallCallback, self._canBeDugCallback) then
                     corridor:create(self._digCallback)
+                    table.insert(self._corridors, corridor)
                     room:create(self._digCallback)
                     self:_insertWalls(room._walls)
                     self._map[p[1]][p[2]]=0
