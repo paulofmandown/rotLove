@@ -50,6 +50,7 @@ end
 -- seed the rng
 -- @tparam[opt=os.clock()] number s A number to base the rng from
 function RNG:setSeed(seed)
+    self.c = 1
     self.seed = seed or os.time()
 
     local mash = Mash()
