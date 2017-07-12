@@ -26,6 +26,14 @@ function Scheduler:add(item, repeating)
 	return self
 end
 
+--- Get scheduled time.
+-- Get the time the given item is scheduled for
+-- @tparam any item
+-- @treturn number time
+function Scheduler:getTimeOf(item)
+	return self._queue:getEventTime(item)
+end
+
 --- Clear.
 -- Remove all items from scheduler
 -- @treturn ROT.Scheduler self
