@@ -56,6 +56,17 @@ function EventQueue:get()
 	return table.remove(self._events, 1)
 end
 
+
+--- Get event time.
+-- Get the time associated with the given event
+-- @tparam any event 
+-- @treturn number time
+function EventQueue:getEventTime(event)
+	local index=table.indexOf(self._events, event)
+	if index==0 then return false end
+	return self._eventTimes[index]
+end
+
 --- Remove.
 -- Find and remove an event from the queue
 -- @tparam any event The previously added event to be removed
