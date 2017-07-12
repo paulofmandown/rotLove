@@ -8,7 +8,7 @@ function generateNoise()
             red  =math.floor(val>0 and val or 0)
             green=math.floor(val<0 and -val or 0)
 
-            f:write(' ', i, j, nil, {r=red, g=green, b=0, a=255})
+            f:write(' ', i, j, nil, { red, green, 0, 255 })
         end
     end
 end

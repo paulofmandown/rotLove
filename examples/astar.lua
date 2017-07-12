@@ -37,14 +37,14 @@ function doTheThing()
     start=os.clock()
     astar:compute(p3[1], p3[2], astarCallback)
 
-    f:write('S', tonumber(p1[1]), tonumber(p1[2]), nil, {r=0, g=0, b=255, a=255})
-    f:write('E', tonumber(p2[1]), tonumber(p2[2]), nil, {r=0, g=0, b=255, a=255})
-    f:write('E', tonumber(p3[1]), tonumber(p3[2]), nil, {r=0, g=0, b=255, a=255})
+    f:write('S', tonumber(p1[1]), tonumber(p1[2]), nil, { 0, 0, 255, 255 })
+    f:write('E', tonumber(p2[1]), tonumber(p2[2]), nil, { 0, 0, 255, 255 })
+    f:write('E', tonumber(p3[1]), tonumber(p3[2]), nil, { 0, 0, 255, 255 })
 
 end
 
 function astarCallback(x, y)
-    f:write('.', x, y, nil, {r=136, g=0, b=0, a=255})
+    f:write('.', x, y, nil, { 136, 0, 0, 255 })
 end
 
 function passableCallback(x, y) return data[x..','..y]==0 end

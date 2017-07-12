@@ -1,12 +1,11 @@
 --[[ Rogue ]]
 ROT=require 'src.rot'
 movers={}
-clr=ROT.Color:new()
 colors={}
-table.insert(colors, clr:fromString('blue'))
-table.insert(colors, clr:fromString('red'))
-table.insert(colors, clr:fromString('green'))
-table.insert(colors, clr:fromString('yellow'))
+table.insert(colors, ROT.Color:fromString('blue'))
+table.insert(colors, ROT.Color:fromString('red'))
+table.insert(colors, ROT.Color:fromString('green'))
+table.insert(colors, ROT.Color:fromString('yellow'))
 function love.load()
     f  =ROT.Display()
     maps={
@@ -28,11 +27,11 @@ function love.update(dt)
         for _,mover in pairs(movers) do
             local dir={dijkMap:dirTowardsGoal(mover.x, mover.y)}
             if dir[1] and dir[2] and mover.x and mover.y then
-                f:write(map[mover.x][mover.y], mover.x, mover.y, nil, clr:interpolate(mover.color, mover.oc))
+                f:write(map[mover.x][mover.y], mover.x, mover.y, nil, ROT.Color:interpolate(mover.color, mover.oc))
                 mover.x=mover.x+dir[1]
                 mover.y=mover.y+dir[2]
                 local oc=f:getBackgroundColor(mover.x, mover.y)
-                mover.oc=oc==f:getDefaultBackgroundColor() and clr:fromString('dimgrey') or oc
+                mover.oc=oc==f:getDefaultBackgroundColor() and ROT.Color:fromString('dimgrey') or oc
                 f:write('@', mover.x, mover.y, nil, mover.color)
             end
         end
@@ -84,7 +83,7 @@ function dothething()
         mover.y=mover.y+dir[2]
         local x=mover.x
         local y=mover.y
-        f:write(map[x][y], x, y, nil, {r=125,g=15,b=15,a=255})
+        f:write(map[x][y], x, y, nil, { 125, 15, 15, 255 })
     end--]]
 end
 
@@ -97,8 +96,8 @@ end
 function dijkCalbak(x,y) return map[x][y]=='.' end
 
 function getRandomColor()
-    return { r=math.floor(ROT.RNG:random(0,255)),
-             g=math.floor(ROT.RNG:random(0,255)),
-             b=math.floor(ROT.RNG:random(0,255)),
-             a=255}
+    return { math.floor(ROT.RNG:random(0,255)),
+             math.floor(ROT.RNG:random(0,255)),
+             math.floor(ROT.RNG:random(0,255)),
+             255}
 end
