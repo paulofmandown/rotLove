@@ -39,13 +39,10 @@ function Display:init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
         self.drawQ=self.graphics.drawq
     end
 
-    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235, 255 }
-    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15, 255 }
+    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
+    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }
 
-    self.graphics.setBackgroundColor(self.defaultBackgroundColor[1],
-                                     self.defaultBackgroundColor[2],
-                                     self.defaultBackgroundColor[3],
-                                     self.defaultBackgroundColor[4])
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
     self.canvas=self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
@@ -253,13 +250,13 @@ end
 function Display:_validateForegroundColor(c)
 	c = c and c or self.defaultForegroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-	assert(#c > 2, 'Foreground Color must be of type { r, g, b, a }')
+	assert(#c > 2, 'Foreground Color must have at least 3 components')
 	return c
 end
 function Display:_validateBackgroundColor(c)
 	c = c and c or self.defaultBackgroundColor
     for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-	assert(#c > 2, 'Background Color must be of type { r, g, b, a }')
+	assert(#c > 2, 'Background Color must have at least 3 components')
 	return c
 end
 function Display:_validateHeight(y, h)
@@ -269,8 +266,7 @@ function Display:_validateHeight(y, h)
 	return h
 end
 function Display:_setColor(c)
-	c = c and c or self.defaultForegroundColor
-	love.graphics.setColor(c[1], c[2], c[3], c[4])
+	love.graphics.setColor(c or self.defaultForegroundColor)
 end
 function Display:_clamp(n)
     return n<0 and 0 or n>255 and 255 or n
