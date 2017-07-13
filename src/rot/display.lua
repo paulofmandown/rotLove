@@ -248,15 +248,15 @@ function Display:_validateY(y)
 	return y
 end
 function Display:_validateForegroundColor(c)
-	c = c and c or self.defaultForegroundColor
-    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
+	c = c or self.defaultForegroundColor
 	assert(#c > 2, 'Foreground Color must have at least 3 components')
+    for i = 1, #c do c[i]=self:_clamp(c[i]) end
 	return c
 end
 function Display:_validateBackgroundColor(c)
-	c = c and c or self.defaultBackgroundColor
-    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
+	c = c or self.defaultBackgroundColor
 	assert(#c > 2, 'Background Color must have at least 3 components')
+    for i = 1, #c do c[i]=self:_clamp(c[i]) end
 	return c
 end
 function Display:_validateHeight(y, h)
