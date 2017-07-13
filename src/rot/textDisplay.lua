@@ -28,13 +28,10 @@ function TextDisplay:init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
     local w=love.window or self.graphics
     w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
-    self.defaultForegroundColor=dfg and dfg or {r=235,g=235,b=235,a=255}
-    self.defaultBackgroundColor=dbg and dbg or {r=15,g=15,b=15,a=255}
+    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
+    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }
 
-    self.graphics.setBackgroundColor(self.defaultBackgroundColor.r,
-                                     self.defaultBackgroundColor.g,
-                                     self.defaultBackgroundColor.b,
-                                     self.defaultBackgroundColor.a)
+    self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
     self._canvas=self.graphics.newCanvas(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars)
 
@@ -231,16 +228,16 @@ function TextDisplay:_validateY(y)
     return y
 end
 function TextDisplay:_validateForegroundColor(c)
-    c = c and c or self.defaultForegroundColor
-    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-    assert(c.a and c.r and c.g and c.b, 'Foreground Color must be of type { r = int, g = int, b = int, a = int }')
-    return c
+	c = c or self.defaultForegroundColor
+	assert(#c > 2, 'Foreground Color must have at least 3 components')
+    for i = 1, #c do c[i]=self:_clamp(c[i]) end
+	return c
 end
 function TextDisplay:_validateBackgroundColor(c)
-    c = c and c or self.defaultBackgroundColor
-    for k,_ in pairs(c) do c[k]=self:_clamp(c[k]) end
-    assert(c.a and c.r and c.g and c.b, 'Background Color must be of type { r = int, g = int, b = int, a = int }')
-    return c
+	c = c or self.defaultBackgroundColor
+	assert(#c > 2, 'Background Color must have at least 3 components')
+    for i = 1, #c do c[i]=self:_clamp(c[i]) end
+	return c
 end
 function TextDisplay:_validateHeight(y, h)
     h=h and h or self._heightInChars-y+1
@@ -249,8 +246,7 @@ function TextDisplay:_validateHeight(y, h)
     return h
 end
 function TextDisplay:_setColor(c)
-    c = c and c or self.defaultForegroundColor
-    love.graphics.setColor(c.r, c.g, c.b, c.a)
+    love.graphics.setColor(c or self.defaultForegroundColor)
 end
 function TextDisplay:_clamp(n)
     return n<0 and 0 or n>255 and 255 or n
