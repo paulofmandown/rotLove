@@ -2,10 +2,10 @@
 ROT=require 'src.rot'
 movers={}
 colors={}
-table.insert(colors, ROT.Color:fromString('blue'))
-table.insert(colors, ROT.Color:fromString('red'))
-table.insert(colors, ROT.Color:fromString('green'))
-table.insert(colors, ROT.Color:fromString('yellow'))
+table.insert(colors, ROT.Color.fromString('blue'))
+table.insert(colors, ROT.Color.fromString('red'))
+table.insert(colors, ROT.Color.fromString('green'))
+table.insert(colors, ROT.Color.fromString('yellow'))
 function love.load()
     f  =ROT.Display()
     maps={
@@ -27,11 +27,11 @@ function love.update(dt)
         for _,mover in pairs(movers) do
             local dir={dijkMap:dirTowardsGoal(mover.x, mover.y)}
             if dir[1] and dir[2] and mover.x and mover.y then
-                f:write(map[mover.x][mover.y], mover.x, mover.y, nil, ROT.Color:interpolate(mover.color, mover.oc))
+                f:write(map[mover.x][mover.y], mover.x, mover.y, nil, ROT.Color.interpolate(mover.color, mover.oc))
                 mover.x=mover.x+dir[1]
                 mover.y=mover.y+dir[2]
                 local oc=f:getBackgroundColor(mover.x, mover.y)
-                mover.oc=oc==f:getDefaultBackgroundColor() and ROT.Color:fromString('dimgrey') or oc
+                mover.oc=oc==f:getDefaultBackgroundColor() and ROT.Color.fromString('dimgrey') or oc
                 f:write('@', mover.x, mover.y, nil, mover.color)
             end
         end
