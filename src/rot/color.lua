@@ -7,12 +7,16 @@
 local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 local Color = ROT.Class:extend("Color")
 
+function Color:init(r, g, b, a)
+    self[1], self[2], self[3], self[4] = r or 0, g or 0, b or 0, a
+end
+
 --- Get color from string.
 -- Convert one of several formats of string to what
 -- Color interperets as a color object
 -- @tparam string str Accepted formats 'rgb(0..255, 0..255, 0..255)', '#5fe', '#5FE', '#254eff', 'goldenrod'
-function Color:fromString(str)
-    local cached = self._cached[str]
+function Color.fromString(str)
+    local cached = Color._cached[str]
     if cached then return cached end
     local values = { 0, 0, 0 }
     if str:sub(1,1) == '#' then
@@ -36,7 +40,7 @@ function Color:fromString(str)
             i=i+1
         end
     end
-    self._cached[str] = values
+    Color._cached[str] = values
     return values
 end
 
@@ -61,37 +65,37 @@ end
 -- @tparam table color2 A color table
 -- @tparam table ... More color tables
 -- @treturn table new color
-function Color:add(...) return add({}, ...) end
+function Color.add(...) return add({}, ...) end
 
 --- Add two or more colors. Modifies first color in-place.
 -- @tparam table color1 A color table
 -- @tparam table color2 A color table
 -- @tparam table ... More color tables
 -- @treturn table modified color
-function Color:add_(...) return add(...) end
+function Color.add_(...) return add(...) end
 
 -- Multiply (mix) two or more colors.
 -- @tparam table color1 A color table
 -- @tparam table color2 A color table
 -- @tparam table ... More color tables
 -- @treturn table new color
-function Color:multiply(...) return multiply({}, ...) end
+function Color.multiply(...) return multiply({}, ...) end
 
 -- Multiply (mix) two or more colors. Modifies first color in-place.
 -- @tparam table color1 A color table
 -- @tparam table color2 A color table
 -- @tparam table ... More color tables
 -- @treturn table modified color
-function Color:multiply_(...) return multiply(...) end
+function Color.multiply_(...) return multiply(...) end
 
 --- Interpolate (blend) two colors with a given factor.
 -- @tparam table color1 A color table
 -- @tparam table color2 A color table
 -- @tparam float factor A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
 -- @treturn table resulting color
-function Color:interpolate(color1, color2, factor)
+function Color.interpolate(color1, color2, factor)
     factor = factor or .5
-    local result={}
+    local result = {}
     for i = 1, math.max(#color1, #color2) do
         local a, b = color2[i] or color1[i], color1[i] or color2[i]
         result[i] = math.floor(b + factor*(a-b) + 0.5)
@@ -104,37 +108,38 @@ end
 -- @tparam table color2 A color table
 -- @tparam float factor A number from 0 to 1. <0.5 favors color1, >0.5 favors color2.
 -- @treturn table resulting color
-function Color:interpolateHSL(color1, color2, factor)
+function Color.interpolateHSL(color1, color2, factor)
     factor = factor or .5
-    local result={}
-    local hsl1, hsl2 = self:rgb2hsl(color1), self:rgb2hsl(color2)
+    local result = {}
+    local hsl1, hsl2 = Color.rgb2hsl(color1), Color.rgb2hsl(color2)
     for i = 1, math.max(#hsl1, #hsl2) do
         local a, b = hsl2[i] or hsl1[i], hsl1[i] or hsl2[i]
         result[i] = b + factor*(a-b)
     end
-    return self:hsl2rgb(result)
+    return Color.hsl2rgb(result)
 end
 
 --- Create a new random color based on this one
 -- @tparam table color A color table
 -- @tparam int|table diff One or more numbers to use for a standard deviation
-function Color:randomize(color, diff)
-    local result={}
+function Color.randomize(color, diff, rng)
+    rng = rng or color._rng or ROT.RNG
+    local result = {}
     if type(diff) ~= 'table' then
-        local diff = self._rng:random(0, diff)
+        local diff = rng:random(0, diff)
         for i = 1, #color do
             result[i] = color[i] + diff
         end
     else
         for i = 1, #color do
-            result[i] = color[i] + self._rng:random(0, diff[i])
+            result[i] = color[i] + rng:random(0, diff[i])
         end
     end
     return result
 end
 
 -- Convert rgb color to hsl
-function Color:rgb2hsl(color)
+function Color.rgb2hsl(color)
     local r=color[1]/255
     local g=color[2]/255
     local b=color[3]/255
@@ -169,7 +174,7 @@ local function hue2rgb(p, q, t)
 end
         
 -- Convert hsl color to rgb
-function Color:hsl2rgb(color)
+function Color.hsl2rgb(color)
     local h, s, l = color[1], color[2], color[3]
     local result = {}
     result[4] = color[4] and math.floor(color[4] * 255)
@@ -189,44 +194,32 @@ function Color:hsl2rgb(color)
 end
 
 --- Convert color to RGB string.
--- Get a string that can be fed to Color:fromString()
+-- Get a string that can be fed to Color.fromString()
 -- @tparam table color A color table
-function Color:toRGB(color)
-    return 'rgb('..
-        self:_clamp(color[1])..','..
-        self:_clamp(color[2])..','..
-        self:_clamp(color[3])..')'
+function Color.toRGB(color)
+    return ('rgb(%d,%d,%d)'):format(
+        Color._clamp(color[1]), Color._clamp(color[2]), Color._clamp(color[3]))
 end
 
-local function dec2hex(IN) -- thanks Lostgallifreyan(http://lua-users.org/lists/lua-l/2004-09/msg00054.html)
-    local B,K,OUT,I,D=16,"0123456789abcdef","",0
-    while IN>0 do
-        I=I+1
-        IN,D=math.floor(IN/B),math.mod(IN,B)+1
-        OUT=string.sub(K,D,D)..OUT
-    end
-    return OUT
-end
-    
 --- Convert color to Hex string
--- Get a string that can be fed to Color:fromString()
+-- Get a string that can be fed to Color.fromString()
 -- @tparam table color A color table
-function Color:toHex(color)
-    local parts={}
-    parts[1]=tostring(dec2hex(self:_clamp(color[1]))):lpad('0',2)
-    parts[2]=tostring(dec2hex(self:_clamp(color[2]))):lpad('0',2)
-    parts[3]=tostring(dec2hex(self:_clamp(color[3]))):lpad('0',2)
-    return '#'..table.concat(parts)
+function Color.toHex(color)
+    return ('#%02x%02x%02x'):format(
+        Color._clamp(color[1]), Color._clamp(color[2]), Color._clamp(color[3]))
 end
 
 -- limit a number to 0..255
-function Color:_clamp(n)
+function Color._clamp(n)
     return n<0 and 0 or n>255 and 255 or n
 end
 
+function Color.__add(a, b) return add({}, a, b) end
+function Color.__mul(a, b) return mul({}, a, b) end
+
 --- Color cache
 -- A table of predefined color tables
--- These keys can be passed to Color:fromString()
+-- These keys can be passed to Color.fromString()
 -- @field black { 0, 0, 0 }
 -- @field navy { 0, 0, 128 }
 -- @field darkblue { 0, 0, 139 }
