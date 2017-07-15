@@ -1,11 +1,14 @@
 --- Stores and retrieves events based on time.
 -- @module ROT.EventQueue
 local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
-local EventQueue = ROT.Class:extend("EventQueue", {
-    _time      =0,
-    _events    ={},
-    _eventTimes={}
-})
+local EventQueue = ROT.Class:extend("EventQueue")
+
+function EventQueue:init()
+    self._time = 0
+    self._events = {}
+    self._eventTimes = {}
+end
+
 --- Get Time.
 -- Get time counted since start
 -- @treturn int elapsed time
