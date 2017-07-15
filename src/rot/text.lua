@@ -78,11 +78,8 @@ function Text._breakLines(tokens, maxWidth)
     local lastTokenWithSpace
 
     -- This contraption makes `break` work like `continue`.
-    local done repeat repeat
-        if i > #tokens then done = true; break end
-        --print(i, #tokens)
-        --assert(i < 10)
-        --for k, v in pairs(tokens[#tokens]) do print(k, v) end
+    -- A `break` in the `repeat` loop will continue the outer loop.
+    while i <= #tokens do repeat
         -- take all text tokens, remove space, apply linebreaks
         local token = tokens[i]
         if token.type == Text.TYPE_NEWLINE then -- reset
@@ -128,10 +125,8 @@ function Text._breakLines(tokens, maxWidth)
             end
 
             if index > 0 then -- break at space within this one
-                --print 'index'
                 token.value = Text._breakInsideToken(tokens, i, index, true)
             elseif lastTokenWithSpace then
-                --print 'lastTokenWithSpace'
                 -- is there a previous token where a break can occur?
                 local token = tokens[lastTokenWithSpace]
                 local breakIndex = token.value:find(" [^ ]-$")
@@ -139,7 +134,6 @@ function Text._breakLines(tokens, maxWidth)
                     tokens, lastTokenWithSpace, breakIndex, true)
                 i = lastTokenWithSpace
             else -- force break in this token
-                --print 'force'
                 token.value = Text._breakInsideToken(
                     tokens, i, maxWidth-lineLength+1, false)
             end
@@ -150,7 +144,7 @@ function Text._breakLines(tokens, maxWidth)
         end
         
         i = i + 1 -- advance to next token
-    until false until done
+    until true end
     -- end of "continue contraption"
 
     -- insert fake newline to fix the last text line
@@ -191,9 +185,6 @@ function Text._breakInsideToken(tokens, tokenIndex, breakIndex, removeBreakChar)
             breakIndex + (removeBreakChar and 1 or 0))
     }
     
-    --print('newTextToken', newTextToken.value)
-    
-    -- tokens.splice(tokenIndex+1, 0, newBreakToken, newTextToken)
     table.insert(tokens, tokenIndex + 1, newTextToken)
     table.insert(tokens, tokenIndex + 1, newBreakToken)
     

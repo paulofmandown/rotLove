@@ -61,9 +61,9 @@ function doTheThing()
         local light=ambientLight
         local char=f:getCharacter(x, y)
         if lightData[k] then
-            light=ROT.Color:add(light, lightData[k])
+            light=ROT.Color.add(light, lightData[k])
         end
-        local finalColor=ROT.Color:multiply(baseColor, light)
+        local finalColor=ROT.Color.multiply(baseColor, light)
         char=not lightData[k] and ' ' or char~=' ' and char or mapData[x..','..y]~=floorValue and '#' or ' '
 
         f:write(char, x, y, light, finalColor)

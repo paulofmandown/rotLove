@@ -5,7 +5,6 @@ local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 local Lighting = ROT.Class:extend("Lighting")
 
 --- Constructor.
--- Called with ROT.Color:new()
 -- @tparam function reflectivityCallback Callback to retrieve cell reflectivity must return float(0..1)
   -- @tparam int reflectivityCallback.x x-position of cell
   -- @tparam int reflectivityCallback.y y-position of cell
@@ -20,8 +19,6 @@ function Lighting:init(reflectivityCallback, options)
     self._lights={}
     self._reflectivityCache={}
     self._fovCache={}
-
-    self._colorHandler=ROT.Color:new()
 
     if options then for k,_ in pairs(options) do self._options[k]=options[k] end end
 end
@@ -47,7 +44,7 @@ end
 function Lighting:setLight(x, y, color)
     local key=x..','..y
     if color then
-        self._lights[key]=type(color)=='string' and self._colorHandler:fromString(color) or color
+        self._lights[key]=type(color)=='string' and ROT.Color.fromString(color) or color
     else
         self._lights[key]=nil
     end
@@ -65,8 +62,8 @@ function Lighting:compute(lightingCallback)
 
     for k,_ in pairs(self._lights) do
         local light=self._lights[k]
-        if not emittingCells[k] then emittingCells[k]={r=0,g=0,b=0,a=255} end
-        self._colorHandler:add_(emittingCells[k], light)
+        if not emittingCells[k] then emittingCells[k]={ 0, 0, 0 } end
+        ROT.Color.add_(emittingCells[k], light)
     end
 
     for i=1,self._options.passes do
@@ -146,7 +143,7 @@ function Lighting:_emitLightFromCell(x, y, color, litCells)
     for k,_ in pairs(fov) do
         formFactor=fov[k]
         if not litCells[k] then
-            litCells[k]={r=0,g=0,b=0,a=255}
+            litCells[k]={ 0, 0, 0 }
         end
         for l,_ in pairs(color) do
             if l~='a' then
