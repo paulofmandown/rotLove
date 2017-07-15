@@ -85,6 +85,7 @@ ROT.Path             = require (ROTLOVE_PATH .. 'path')
 ROT.Path.Dijkstra    = require (ROTLOVE_PATH .. 'path.dijkstra')
 ROT.DijkstraMap      = require (ROTLOVE_PATH .. 'dijkstraMap')
 ROT.Path.AStar       = require (ROTLOVE_PATH .. 'path.astar')
+ROT.Text             = require (ROTLOVE_PATH .. 'text')
 
 return ROT
 

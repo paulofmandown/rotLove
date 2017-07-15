@@ -1,0 +1,110 @@
+local ROT = require 'src.rot'
+local expect = require 'tests.expect' (assert)
+
+describe("Text", function()
+    describe("line breaking", function()
+        local A100 = ("A"):rep(100)
+        local B100 = ("B"):rep(100)
+
+        it("should not break when not requested", function()
+            local width, height = ROT.Text.measure(A100)
+            expect(width).toEqual(#A100)
+            expect(height).toEqual(1)
+        end)
+
+        it("should break when max length requested", function()
+            local width, height = ROT.Text.measure(A100, 30)
+            expect(height).toEqual(4)
+        end)
+
+        it("should break at explicit newlines", function()
+            local width, height = ROT.Text.measure("a\nb\nc")
+            expect(height).toEqual(3)
+        end)
+
+        it("should break at explicit newlines AND max length", function()
+            local width, height = ROT.Text.measure(A100 .. B100, 30)
+            expect(height).toEqual(7)
+
+            local width, height = ROT.Text.measure(A100 .. "\n" .. B100, 30)
+            expect(height).toEqual(8)
+        end)
+
+        it("should break at space", function()
+            local width, height = ROT.Text.measure(A100 .. " " .. B100, 30)
+            expect(height).toEqual(8)
+        end)
+
+        it("should not break at nbsp", function()
+            local width, height = ROT.Text.measure(A100 .. '\160' .. B100, 30)
+            expect(height).toEqual(7)
+        end)
+
+        it("should not break when text is short", function()
+            local width, height = ROT.Text.measure("aaa bbb", 7)
+            expect(width).toEqual(7)
+            expect(height).toEqual(1)
+        end)
+
+        it("should adjust resulting width", function()
+            local width, height = ROT.Text.measure("aaa bbb", 6)
+            expect(width).toEqual(3)
+            expect(height).toEqual(2)
+        end)
+
+        it("should adjust resulting width even without breaks", function()
+            local width, height = ROT.Text.measure("aaa ", 6)
+            expect(width).toEqual(3)
+            expect(height).toEqual(1)
+        end)
+
+        it("should remove unnecessary spaces around newlines", function()
+            local width, height = ROT.Text.measure("aaa  \n  bbb")
+            expect(width).toEqual(3)
+            expect(height).toEqual(2)
+        end)
+
+        it("should remove unnecessary spaces at the beginning", function()
+            local width, height = ROT.Text.measure("   aaa    bbb", 3)
+            expect(width).toEqual(3)
+            expect(height).toEqual(2)
+        end)
+
+        it("should remove unnecessary spaces at the end", function()
+            local width, height = ROT.Text.measure("aaa    \nbbb", 3)
+            expect(width).toEqual(3)
+            expect(height).toEqual(2)
+        end)
+    end)
+
+    describe("color formatting", function()
+        it("should not break with formatting part", function()
+            local width, height = ROT.Text.measure("aaa%c{x}bbb")
+            expect(height).toEqual(1)
+        end)
+
+        it("should correctly remove formatting", function()
+            local width, height = ROT.Text.measure("aaa%c{x}bbb")
+            expect(width).toEqual(6)
+        end)
+
+        it("should break independently on formatting - forced break", function()
+            local width, height = ROT.Text.measure("aaa%c{x}bbb", 3)
+            expect(width).toEqual(3)
+            expect(height).toEqual(2)
+        end)
+
+        it("should break independently on formatting - forward break", function()
+            local width, height = ROT.Text.measure("aaa%c{x}b bb", 5)
+            expect(width).toEqual(4)
+            expect(height).toEqual(2)
+        end)
+
+        it("should break independently on formatting - backward break", function()
+            local width, height = ROT.Text.measure("aa a%c{x}bbb", 5)
+            expect(width).toEqual(4)
+            expect(height).toEqual(2)
+        end)
+    end)
+end)
+
