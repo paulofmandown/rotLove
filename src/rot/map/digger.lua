@@ -95,15 +95,12 @@ function Digger:create(callback)
 
     self:_addDoors()
 
-	if callback then
-		for i=1,self._width do
-			for j=1,self._height do
-				callback(i, j, self._map[i][j])
-			end
+	if not callback then return self end
+	for y = 1, self._height do
+	    for x = 1, self._width do
+			callback(x, y, self._map[x][y])
 		end
 	end
-	self._walls={}
-	self._map=nil
 	return self
 end
 

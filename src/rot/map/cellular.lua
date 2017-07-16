@@ -92,7 +92,8 @@ function Cellular:create(callback)
             end
         end
     end
-	return changed
+    self.changed = changed
+	return self
 end
 
 function Cellular:_getNeighbors(cx, cy)

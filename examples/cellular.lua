@@ -9,7 +9,7 @@ end
 function love.draw() f:draw() end
 function love.update()
 	love.timer.sleep(.5)
-	if cl:create(calbak) then
+	if cl:create(calbak).changed then
 		f:write('changed @ '..os.clock(), 1, 1)
 	else
 		f:write("didn't change @ "..os.clock(), 1, 1)

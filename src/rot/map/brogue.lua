@@ -66,15 +66,16 @@ function Brogue:create(callback, firstFloorBehavior)
     self:_generateRooms()
     self:_generateLoops()
     self:_closeDiagonalOpenings()
-    if callback then
+    
+    local d=self._doors
+    for i=1,#d do
+        self._map[d[i][1]][d[i][2]] = 2
+    end
+    
+    if not callback then return self end
+    for y=1,self._height do
         for x=1,self._width do
-            for y=1,self._height do
-                callback(x,y,self._map[x][y])
-            end
-        end
-        local d=self._doors
-        for i=1,#d do
-            callback(d[i][1], d[i][2], 2)
+            callback(x,y, self._map[x][y])
         end
     end
     return self
