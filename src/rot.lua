@@ -25,6 +25,18 @@ local ROT = Class:extend('ROT', {
 })
 package.loaded[...] = ROT
 
+-- Concatenating assert function
+-- see http://lua.space/general/assert-usage-caveat
+function ROT.assert(pass, ...)
+    if pass then
+        return pass, ...
+    elseif select('#', ...) > 0 then
+        error(table.concat({...}), 2)
+    else
+        error('assertion failed!', 2)
+    end
+end
+
 ROT.Class = Class
 
 ROT.RNG = require (ROTLOVE_PATH .. 'rng')

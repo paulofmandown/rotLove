@@ -2,12 +2,12 @@ local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 
 -- asserts the type of 'theTable' is table
 local function isATable(theTable)
-    assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got "..type(theTable)..")")
+    ROT.assert(type(theTable)=='table', "bad argument #1 to 'random' (table expected got ",type(theTable),")")
 end
 
 -- returns string of length n consisting of only char c
 local function charNTimes(c, n)
-    assert(#c==1, 'character must be a string of length 1')
+    ROT.assert(#c==1, 'character must be a string of length 1')
     local s=''
     for _=1,n and n or 2 do
         s=s..c
