@@ -51,8 +51,8 @@ function Corridor:isValid(isWallCallback, canBeDugCallback)
 	local dy    =self._endY-sy
 	local length=1+math.max(math.abs(dx), math.abs(dy))
 
-	if dx>0 then dx=dx/math.abs(dx) end
-	if dy>0 then dy=dy/math.abs(dy) end
+	if dx~=0 then dx=dx/math.abs(dx) end
+	if dy~=0 then dy=dy/math.abs(dy) end
 	local nx=dy
 	local ny=-dx
 
@@ -118,8 +118,8 @@ function Corridor:createPriorityWalls(priorityWallCallback)
 	local dx    =self._endX-sx
 	local dy    =self._endY-sy
 
-	if dx>0 then dx=dx/math.abs(dx) end
-	if dy>0 then dy=dy/math.abs(dy) end
+	if dx~=0 then dx=dx/math.abs(dx) end
+	if dy~=0 then dy=dy/math.abs(dy) end
 	local nx=dy
 	local ny=-dx
 
