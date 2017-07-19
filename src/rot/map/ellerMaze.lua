@@ -9,7 +9,7 @@ local EllerMaze = ROT.Map:extend("EllerMaze")
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 function EllerMaze:init(width, height)
-	EllerMaze.super.init(self, width, height)
+    EllerMaze.super.init(self, width, height)
 end
 
 --- Create.
@@ -20,72 +20,72 @@ end
   -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
 -- @treturn ROT.Map.EllerMaze self
 function EllerMaze:create(callback)
-	local map =self:_fillMap(1)
-	local w   =math.ceil((self._width-2)/2)
-	local rand=9/24
-	local L   ={}
-	local R   ={}
+    local map =self:_fillMap(1)
+    local w   =math.ceil((self._width-2)/2)
+    local rand=9/24
+    local L   ={}
+    local R   ={}
 
-	for i=1,w do
-		table.insert(L,i)
-		table.insert(R,i)
-	end
-	table.insert(L,w)
-	local j=2
-	while j<self._height-2 do
-		for i=1,w do
-			local x=2*i
-			local y=j
-			map[x][y]=0
+    for i=1,w do
+        table.insert(L,i)
+        table.insert(R,i)
+    end
+    table.insert(L,w)
+    local j=2
+    while j<self._height-2 do
+        for i=1,w do
+            local x=2*i
+            local y=j
+            map[x][y]=0
 
-			if i~=L[i+1] and self._rng:random()>rand then
-				self:_addToList(i, L, R)
-				map[x+1][y]=0
-			end
+            if i~=L[i+1] and self._rng:random()>rand then
+                self:_addToList(i, L, R)
+                map[x+1][y]=0
+            end
 
-			if i~=L[i] and self._rng:random()>rand then
-				self:_removeFromList(i, L, R)
-			else
-				map[x][y+1]=0
-			end
-		end
-		j=j+2
-	end
-	--j=self._height%2==1 and self._height-2 or self._height-3
-	for i=1,w do
-		local x=2*i
-		local y=j
-		map[x][y]=0
+            if i~=L[i] and self._rng:random()>rand then
+                self:_removeFromList(i, L, R)
+            else
+                map[x][y+1]=0
+            end
+        end
+        j=j+2
+    end
+    --j=self._height%2==1 and self._height-2 or self._height-3
+    for i=1,w do
+        local x=2*i
+        local y=j
+        map[x][y]=0
 
-		if i~=L[i+1] and (i==L[i] or self._rng:random()>rand) then
-			self:_addToList(i, L, R)
-			map[x+1][y]=0
-		end
+        if i~=L[i+1] and (i==L[i] or self._rng:random()>rand) then
+            self:_addToList(i, L, R)
+            map[x+1][y]=0
+        end
 
-		self:_removeFromList(i, L, R)
-	end
-	
-	if not callback then return self end
-	for y = 1, self._height do
-		for x = 1, self._width do
-			callback(x, y, map[x][y])
-		end
-	end
-	return self
+        self:_removeFromList(i, L, R)
+    end
+
+    if not callback then return self end
+    for y = 1, self._height do
+        for x = 1, self._width do
+            callback(x, y, map[x][y])
+        end
+    end
+    return self
 end
 
 function EllerMaze:_removeFromList(i, L, R)
-	R[L[i]]=R[i]
-	L[R[i]]=L[i]
-	R[i]   =i
-	L[i]   =i
+    R[L[i]]=R[i]
+    L[R[i]]=L[i]
+    R[i]   =i
+    L[i]   =i
 end
 
 function EllerMaze:_addToList(i, L, R)
-	R[L[i+1]]=R[i]
-	L[R[i]]  =L[i+1]
-	R[i]     =i+1
-	L[i+1]   =i
+    R[L[i+1]]=R[i]
+    L[R[i]]  =L[i+1]
+    R[i]     =i+1
+    L[i+1]   =i
 end
 
 return EllerMaze

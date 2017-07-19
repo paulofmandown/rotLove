@@ -29,12 +29,12 @@ end
 function Bresenham:compute(cx, cy, r, callback)
     local notvisited={}
     for x=-r,r do
-    	for y=-r,r do
-    		notvisited[ROT.Point(cx+x, cy+y):hashCode()]={cx+x, cy+y}
-		end
-	end
+        for y=-r,r do
+            notvisited[ROT.Point(cx+x, cy+y):hashCode()]={cx+x, cy+y}
+        end
+    end
 
-	callback(cx,cy,1,1)
+    callback(cx,cy,1,1)
     notvisited[ROT.Point(cx, cy):hashCode()]=nil
 
     local thePoints=self:_getCircle(cx, cy, r+3)
@@ -86,9 +86,9 @@ end
   -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:computeThorough(cx, cy, r, callback)
     local visited={}
-	callback(cx,cy,r)
+    callback(cx,cy,r)
     visited[ROT.Point(cx, cy):hashCode()]=0
-	for x=-r,r do for y=-r,r do
+    for x=-r,r do for y=-r,r do
         local line=ROT.Line(cx,cy,x+cx, y+cy):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
@@ -117,8 +117,8 @@ end
   -- @tparam int callback.r The cell's distance from center of FOV
   -- @tparam number callback.visibility The cell's visibility rating (from 0-1). How well can you see this cell?
 function Bresenham:computeQuick(cx, cy, r, callback)
-	local visited={}
-	callback(cx,cy,1, 1)
+    local visited={}
+    callback(cx,cy,1, 1)
     visited[ROT.Point(cx, cy):hashCode()]=0
 
     local thePoints=self:_getCircle(cx, cy, r+3)

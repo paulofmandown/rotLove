@@ -8,9 +8,9 @@ local Dungeon = ROT.Map:extend("Dungeon")
 -- @tparam int width Width in cells of the map
 -- @tparam int height Height in cells of the map
 function Dungeon:init(width, height)
-	Dungeon.super.init(self, width, height)
-	self._rooms    ={}
-	self._corridors={}
+    Dungeon.super.init(self, width, height)
+    self._rooms    ={}
+    self._corridors={}
 end
 
 --- Get rooms

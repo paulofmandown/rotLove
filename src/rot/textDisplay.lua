@@ -228,16 +228,16 @@ function TextDisplay:_validateY(y)
     return y
 end
 function TextDisplay:_validateForegroundColor(c)
-	c = c or self.defaultForegroundColor
-	ROT.assert(#c > 2, 'Foreground Color must have at least 3 components')
+    c = c or self.defaultForegroundColor
+    ROT.assert(#c > 2, 'Foreground Color must have at least 3 components')
     for i = 1, #c do c[i]=self:_clamp(c[i]) end
-	return c
+    return c
 end
 function TextDisplay:_validateBackgroundColor(c)
-	c = c or self.defaultBackgroundColor
-	ROT.assert(#c > 2, 'Background Color must have at least 3 components')
+    c = c or self.defaultBackgroundColor
+    ROT.assert(#c > 2, 'Background Color must have at least 3 components')
     for i = 1, #c do c[i]=self:_clamp(c[i]) end
-	return c
+    return c
 end
 function TextDisplay:_validateHeight(y, h)
     h=h and h or self._heightInChars-y+1

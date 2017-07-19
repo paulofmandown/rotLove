@@ -9,18 +9,18 @@ local Speed= ROT.Scheduler:extend("Speed")
 -- @tparam number time Initial time offset, defaults to 1/item:getSpeed()
 -- @treturn ROT.Scheduler.Speed self
 function Speed:add(item, repeating, time)
-	self._queue:add(item, time or (1/item:getSpeed()))
-	return Speed.super.add(self, item, repeating)
+    self._queue:add(item, time or (1/item:getSpeed()))
+    return Speed.super.add(self, item, repeating)
 end
 
 --- Next.
 -- Get the next item from the scheduler and advance the appropriate amount time
 -- @treturn item|nil The item previously added by .add() or nil if none are queued
 function Speed:next()
-	if self._current and table.indexOf(self._repeat, self._current)~=0 then
-		self._queue:add(self._current, 1/self._current:getSpeed())
-	end
-	return Speed.super.next(self)
+    if self._current and table.indexOf(self._repeat, self._current)~=0 then
+        self._queue:add(self._current, 1/self._current:getSpeed())
+    end
+    return Speed.super.next(self)
 end
 
 return Speed

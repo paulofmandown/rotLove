@@ -27,7 +27,7 @@ end
 function love.keypressed() update=true end
 
 function doTheThing()
-	f:clear()
+    f:clear()
     mapData={}
     lightData={}
     -- Map type defaults to random or you can hard-code it here

@@ -55,11 +55,11 @@ function Rogue:create(callback)
     self:_createRooms()
     self:_createCorridors()
     if not callback then return self end
-	for y = 1, self._height do
-		for x = 1, self._width do
-			callback(x, y, self.map[x][y])
-		end
-	end
+    for y = 1, self._height do
+        for x = 1, self._width do
+            callback(x, y, self.map[x][y])
+        end
+    end
     return self
 end
 

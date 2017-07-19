@@ -22,7 +22,7 @@ weapon = weapon % 2       --(3d4+1^+1)x3
 -- To string operations returns a dice notation string
 print(weapon)             --(3d4+2^+1)x3
 
--- Concat operations is a tricky concept to explain. Concating the dice with the following strings 
+-- Concat operations is a tricky concept to explain. Concating the dice with the following strings
 -- '++', '--', '^^', '+', '-', '^' or a combination of both disables or enables plurality of bonus/rerolls
 -- if a double operation sign is used, then the effect will be MULTIPLIED TO ALL dice
 -- if a single operation sign is used, then the effect will apply as normal
@@ -36,13 +36,13 @@ print(weapon:roll())       -- 1 + 1 + (1+2)  RESULT=5
 -- Enable plurality for bonus
 weapon = weapon .. '++'    -- 3d1++2
 
--- Calculation is much different now! 
+-- Calculation is much different now!
 print(weapon:roll())       -- (1+2) + (1+2) + (1+2)  RESULT=9
 
 -- Reset back to normal
 weapon = weapon .. '+'     --Plurality is now disabled for bonus
 
--- Alternatively instead of '++' and '+' you may opt to use '--' and '-' instead.  
+-- Alternatively instead of '++' and '+' you may opt to use '--' and '-' instead.
 -- Both signs enable/disable plurality for bonus
 
 -- Another new weapon to demonstrate plurality for rerolls
