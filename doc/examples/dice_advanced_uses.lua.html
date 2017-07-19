@@ -55,6 +55,8 @@
   <li><a href="../examples/dijkstra.lua.html">dijkstra.lua</a></li>
   <li><a href="../examples/dijkstramap.lua.html">dijkstramap.lua</a></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
+  <li><a href="../examples/drawtextdisplay.lua.html">drawtextdisplay.lua</a></li>
+  <li><a href="../examples/drawtexttextdisplay.lua.html">drawtexttextdisplay.lua</a></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
   <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
@@ -104,6 +106,7 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+  <li><a href="../modules/ROT.Text.html">ROT.Text</a></li>
   <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
 </ul>
 
@@ -120,63 +123,63 @@ dice = <span class="global">require</span>(<span class="string">'dice'</span>)
 </span><span class="comment">-- although there are endless creative possiblities
 </span>
 <span class="comment">-- DUAL WIELDING --
-</span>	l_hand_weap, r_hand_weap = dice:new(<span class="string">'1d6'</span>), dice:new(<span class="string">'2d4'</span>)
-	attacks = {l_hand_weap:roll(), r_hand_weap:roll()}
+</span>    l_hand_weap, r_hand_weap = dice:new(<span class="string">'1d6'</span>), dice:new(<span class="string">'2d4'</span>)
+    attacks = {l_hand_weap:roll(), r_hand_weap:roll()}
 
-	<span class="keyword">for</span> _, attack <span class="keyword">in</span> <span class="global">ipairs</span>(attacks) <span class="keyword">do</span>
-	  <span class="comment">-- apply armor protection
-</span>	  <span class="comment">-- take damage
-</span>	  <span class="comment">-- ...
-</span>	<span class="keyword">end</span>
+    <span class="keyword">for</span> _, attack <span class="keyword">in</span> <span class="global">ipairs</span>(attacks) <span class="keyword">do</span>
+      <span class="comment">-- apply armor protection
+</span>      <span class="comment">-- take damage
+</span>      <span class="comment">-- ...
+</span>    <span class="keyword">end</span>
 
 <span class="comment">-- STATUS EFFECTS --
-</span>	sleep_duration = dice.roll(<span class="string">'1d100+50'</span>)
-	confusion_duration = dice.roll(<span class="string">'1d10'</span>)
-	poison_damage = dice.roll(<span class="string">'1d3'</span>)
+</span>    sleep_duration = dice.roll(<span class="string">'1d100+50'</span>)
+    confusion_duration = dice.roll(<span class="string">'1d10'</span>)
+    poison_damage = dice.roll(<span class="string">'1d3'</span>)
 
 <span class="comment">-- CURSED/BLESSED ITEMS --
-</span>	basic_weapon = dice:new(<span class="string">'1d4'</span>)
+</span>    basic_weapon = dice:new(<span class="string">'1d4'</span>)
 
-	<span class="keyword">if</span> basic_weapon:isCursed() <span class="keyword">then</span>       <span class="comment">-- Add a reroll that removes the highest number
-</span>		basic_weapon = basic_weapon ^ -<span class="number">1</span>
-	<span class="keyword">elseif</span> basic_weapon:isBlessed() <span class="keyword">then</span>  <span class="comment">-- Add a reroll that removes the lowest number
-</span>		basic_weapon = basic_weapon ^ <span class="number">1</span>
-	<span class="keyword">end</span>
+    <span class="keyword">if</span> basic_weapon:isCursed() <span class="keyword">then</span>       <span class="comment">-- Add a reroll that removes the highest number
+</span>        basic_weapon = basic_weapon ^ -<span class="number">1</span>
+    <span class="keyword">elseif</span> basic_weapon:isBlessed() <span class="keyword">then</span>  <span class="comment">-- Add a reroll that removes the lowest number
+</span>        basic_weapon = basic_weapon ^ <span class="number">1</span>
+    <span class="keyword">end</span>
 
 <span class="comment">-- SKILL MASTERY --
-</span>	<span class="keyword">if</span> player:hasMasteredSkill() <span class="keyword">then</span>
-		<span class="comment">-- apply a positive reroll when doing something
-</span>	<span class="keyword">end</span>
+</span>    <span class="keyword">if</span> player:hasMasteredSkill() <span class="keyword">then</span>
+        <span class="comment">-- apply a positive reroll when doing something
+</span>    <span class="keyword">end</span>
 
 <span class="comment">-- AIMING AND TO-HIT --
-</span>	weapon_to_hit = dice:new(<span class="string">'1d20'</span>)
+</span>    weapon_to_hit = dice:new(<span class="string">'1d20'</span>)
 
-	<span class="keyword">if</span> weapon_to_hit:roll() &gt; enemy_def <span class="keyword">then</span>
-		<span class="comment">-- attack is successful
-</span>		<span class="comment">-- apply damage
-</span>	<span class="keyword">end</span>
+    <span class="keyword">if</span> weapon_to_hit:roll() &gt; enemy_def <span class="keyword">then</span>
+        <span class="comment">-- attack is successful
+</span>        <span class="comment">-- apply damage
+</span>    <span class="keyword">end</span>
 
 <span class="comment">-- BURSTFIRE --
-</span>	gattling_gun = dice:new(<span class="string">'(1d5)x6'</span>)
+</span>    gattling_gun = dice:new(<span class="string">'(1d5)x6'</span>)
 
-	<span class="keyword">for</span> _, damage <span class="keyword">in</span> <span class="global">ipairs</span>( {gattling_gun:roll()} ) <span class="keyword">do</span>
-		<span class="keyword">if</span> to_hit:roll() &gt; enemy_dodge <span class="keyword">then</span>
-			<span class="comment">-- attack succeeds
-</span>			<span class="comment">-- apply protections
-</span>			<span class="comment">-- apply damage
-</span>		<span class="keyword">else</span>
-			<span class="comment">-- missed
-</span>			<span class="comment">-- skip damage calculations
-</span>			<span class="comment">-- include miss message
-</span>		<span class="keyword">end</span>
-	<span class="keyword">end</span></pre>
+    <span class="keyword">for</span> _, damage <span class="keyword">in</span> <span class="global">ipairs</span>( {gattling_gun:roll()} ) <span class="keyword">do</span>
+        <span class="keyword">if</span> to_hit:roll() &gt; enemy_dodge <span class="keyword">then</span>
+            <span class="comment">-- attack succeeds
+</span>            <span class="comment">-- apply protections
+</span>            <span class="comment">-- apply damage
+</span>        <span class="keyword">else</span>
+            <span class="comment">-- missed
+</span>            <span class="comment">-- skip damage calculations
+</span>            <span class="comment">-- include miss message
+</span>        <span class="keyword">end</span>
+    <span class="keyword">end</span></pre>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2017-07-10 19:47:38 </i>
+<i style="float:right;">Last updated 2017-07-19 18:43:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

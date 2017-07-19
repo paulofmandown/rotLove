@@ -55,6 +55,8 @@
   <li><a href="../examples/dijkstra.lua.html">dijkstra.lua</a></li>
   <li><a href="../examples/dijkstramap.lua.html">dijkstramap.lua</a></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
+  <li><a href="../examples/drawtextdisplay.lua.html">drawtextdisplay.lua</a></li>
+  <li><a href="../examples/drawtexttextdisplay.lua.html">drawtexttextdisplay.lua</a></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
   <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
@@ -104,6 +106,7 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+  <li><a href="../modules/ROT.Text.html">ROT.Text</a></li>
   <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
 </ul>
 
@@ -117,7 +120,6 @@ ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
 
 <span class="keyword">function</span> love.<span class="global">load</span>()
     f=ROT.Display(<span class="number">80</span>, <span class="number">24</span>)
-    colorhandler=ROT.Color:new()
     maps={
         <span class="string">"Arena"</span>,
         <span class="string">"DividedMaze"</span>,
@@ -143,7 +145,7 @@ update=<span class="keyword">false</span>
 <span class="keyword">function</span> love.keypressed() update=<span class="keyword">true</span> <span class="keyword">end</span>
 
 <span class="keyword">function</span> doTheThing()
-	f:clear()
+    f:clear()
     mapData={}
     lightData={}
     <span class="comment">-- Map type defaults to random or you can hard-code it here
@@ -168,18 +170,18 @@ update=<span class="keyword">false</span>
         lighting:setLight(<span class="global">tonumber</span>(point[<span class="number">1</span>]),<span class="global">tonumber</span>(point[<span class="number">2</span>]), getRandomColor())
     <span class="keyword">end</span>
     lighting:compute(lightingCallback)
-    <span class="keyword">local</span> ambientLight={r=<span class="number">0</span>, g=<span class="number">0</span>, b=<span class="number">0</span>, a=<span class="number">255</span>}
+    <span class="keyword">local</span> ambientLight={ <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span> }
     <span class="keyword">for</span> k,_ <span class="keyword">in</span> <span class="global">pairs</span>(mapData) <span class="keyword">do</span>
         <span class="keyword">local</span> parts=k:split(<span class="string">','</span>)
         <span class="keyword">local</span> x    =<span class="global">tonumber</span>(parts[<span class="number">1</span>])
         <span class="keyword">local</span> y    =<span class="global">tonumber</span>(parts[<span class="number">2</span>])
-        <span class="keyword">local</span> baseColor=mapData[k]==floorValue <span class="keyword">and</span> {r=<span class="number">125</span>, g=<span class="number">125</span>, b=<span class="number">125</span>, a=<span class="number">255</span>} <span class="keyword">or</span> {r=<span class="number">50</span>, g=<span class="number">50</span>, b=<span class="number">50</span>, a=<span class="number">255</span>}
+        <span class="keyword">local</span> baseColor=mapData[k]==floorValue <span class="keyword">and</span> { <span class="number">125</span>, <span class="number">125</span>, <span class="number">125</span>, <span class="number">255</span> } <span class="keyword">or</span> { <span class="number">50</span>, <span class="number">50</span>, <span class="number">50</span>, <span class="number">255</span> }
         <span class="keyword">local</span> light=ambientLight
         <span class="keyword">local</span> char=f:getCharacter(x, y)
         <span class="keyword">if</span> lightData[k] <span class="keyword">then</span>
-            light=colorhandler:add(light, lightData[k])
+            light=ROT.Color.add(light, lightData[k])
         <span class="keyword">end</span>
-        <span class="keyword">local</span> finalColor=colorhandler:multiply(baseColor, light)
+        <span class="keyword">local</span> finalColor=ROT.Color.multiply(baseColor, light)
         char=<span class="keyword">not</span> lightData[k] <span class="keyword">and</span> <span class="string">' '</span> <span class="keyword">or</span> char~=<span class="string">' '</span> <span class="keyword">and</span> char <span class="keyword">or</span> mapData[x..<span class="string">','</span>..y]~=floorValue <span class="keyword">and</span> <span class="string">'#'</span> <span class="keyword">or</span> <span class="string">' '</span>
 
         f:write(char, x, y, light, finalColor)
@@ -231,7 +233,7 @@ update=<span class="keyword">false</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2017-07-10 19:47:38 </i>
+<i style="float:right;">Last updated 2017-07-19 18:43:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

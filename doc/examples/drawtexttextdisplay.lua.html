@@ -56,7 +56,7 @@
   <li><a href="../examples/dijkstramap.lua.html">dijkstramap.lua</a></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
   <li><a href="../examples/drawtextdisplay.lua.html">drawtextdisplay.lua</a></li>
-  <li><a href="../examples/drawtexttextdisplay.lua.html">drawtexttextdisplay.lua</a></li>
+  <li><strong>drawtexttextdisplay.lua</strong></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
   <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
@@ -67,7 +67,7 @@
   <li><a href="../examples/rng.lua.html">rng.lua</a></li>
   <li><a href="../examples/rogue.lua.html">rogue.lua</a></li>
   <li><a href="../examples/simple.lua.html">simple.lua</a></li>
-  <li><strong>simplex.lua</strong></li>
+  <li><a href="../examples/simplex.lua.html">simplex.lua</a></li>
   <li><a href="../examples/speed.lua.html">speed.lua</a></li>
   <li><a href="../examples/stringgen.lua.html">stringgen.lua</a></li>
   <li><a href="../examples/textdisplay.lua.html">textdisplay.lua</a></li>
@@ -114,37 +114,16 @@
 
 <div id="content">
 
-    <h2>simplex.lua</h2>
+    <h2>drawtexttextdisplay.lua</h2>
 <pre>
-<span class="comment">--[[ Simplex Noise ]]</span><span class="comment">--
+<span class="comment">--[[ Event Queue ]]</span><span class="comment">--
 </span>ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
-<span class="keyword">function</span> generateNoise()
-    sim=ROT.Noise.Simplex()
-    <span class="keyword">for</span> j=<span class="number">1</span>,f:getHeight() <span class="keyword">do</span>
-        <span class="keyword">for</span> i=<span class="number">1</span>,f:getWidth() <span class="keyword">do</span>
-            <span class="keyword">local</span> val=sim:get(i/<span class="number">20</span>, j/<span class="number">20</span>)*<span class="number">255</span>
-            red  =<span class="global">math</span>.floor(val&gt;<span class="number">0</span> <span class="keyword">and</span> val <span class="keyword">or</span> <span class="number">0</span>)
-            green=<span class="global">math</span>.floor(val&lt;<span class="number">0</span> <span class="keyword">and</span> -val <span class="keyword">or</span> <span class="number">0</span>)
-
-            f:write(<span class="string">' '</span>, i, j, <span class="keyword">nil</span>, { red, green, <span class="number">0</span>, <span class="number">255</span> })
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
 <span class="keyword">function</span> love.<span class="global">load</span>()
-    f  =ROT.Display(<span class="number">256</span>, <span class="number">100</span>)
-    generateNoise()
+    f=ROT.Display(<span class="number">80</span>,<span class="number">24</span>)
+    f:drawText(<span class="number">30</span>, <span class="number">11</span>, <span class="string">"%c{brown}Everything is all right%c{}, just relax."</span>)
 <span class="keyword">end</span>
-update=<span class="keyword">false</span>
-<span class="keyword">function</span> love.update()
-    <span class="keyword">if</span> update <span class="keyword">then</span>
-        update=<span class="keyword">false</span>
-        generateNoise()
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
-<span class="keyword">function</span> love.keypressed(key) update=<span class="keyword">true</span> <span class="keyword">end</span>
-<span class="keyword">function</span> love.draw()
-    f:draw()
-<span class="keyword">end</span></pre>
+<span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span>
+<span class="comment">--]]</span></pre>
 
 
 </div> <!-- id="content" -->
