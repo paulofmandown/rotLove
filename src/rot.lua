@@ -2,26 +2,26 @@ local ROTLOVE_PATH = (...) .. '.'
 local Class = require (ROTLOVE_PATH .. 'class')
 
 local ROT = Class:extend('ROT', {
-	DEFAULT_WIDTH =80,
-	DEFAULT_HEIGHT=24,
+    DEFAULT_WIDTH =80,
+    DEFAULT_HEIGHT=24,
 
-	DIRS= {FOUR={
-				{ 0,-1},
-				{ 1, 0},
-				{ 0, 1},
-				{-1, 0}
-		  	   },
-		   EIGHT={
-		   		{ 0,-1},
-		   		{ 1,-1},
-				{ 1, 0},
-				{ 1, 1},
-				{ 0, 1},
-				{-1, 1},
-				{-1, 0},
-				{-1,-1}
-		       }
-		  }
+    DIRS= {FOUR={
+                { 0,-1},
+                { 1, 0},
+                { 0, 1},
+                {-1, 0}
+               },
+           EIGHT={
+                { 0,-1},
+                { 1,-1},
+                { 1, 0},
+                { 1, 1},
+                { 0, 1},
+                {-1, 1},
+                {-1, 0},
+                {-1,-1}
+               }
+          }
 })
 package.loaded[...] = ROT
 

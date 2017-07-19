@@ -16,11 +16,11 @@ local Uniform=ROT.Map.Dungeon:extend("Uniform")
 -- @tparam userdata rng Userdata with a .random(self, min, max) function
 function Uniform:init(width, height, options)
     Uniform.super.init(self, width, height)
-    
+
     self._digCallback = self:bind(self._digCallback)
     self._canBeDugCallback = self:bind(self._canBeDugCallback)
     self._isWallCallback = self:bind(self._isWallCallback)
-    
+
     self._options={
                     roomWidth={4,9},
                     roomHeight={4,6},
@@ -59,11 +59,11 @@ function Uniform:create(callback)
     end
 
     if not callback then return self end
-	for y = 1, self._height do
-		for x = 1, self._width do
-			callback(x, y, self._map[x][y])
-		end
-	end
+    for y = 1, self._height do
+        for x = 1, self._width do
+            callback(x, y, self._map[x][y])
+        end
+    end
     return self
 end
 

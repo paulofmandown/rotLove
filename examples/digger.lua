@@ -10,9 +10,9 @@ end
 function love.draw() f:draw() end
 function calbak(x, y, val) f:write(val==1 and '#' or '.', x, y) end
 function love.update()
-	if update then
+    if update then
         update=false
-    	dgr:create(calbak)
+        dgr:create(calbak)
         local rooms=dgr:getDoors()
         for k,v in pairs(rooms) do
             f:write('+', v.x, v.y)

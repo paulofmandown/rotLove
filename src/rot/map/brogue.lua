@@ -17,11 +17,11 @@ local Brogue=ROT.Map.Dungeon:extend("Brogue")
   -- @tparam[opt={2,5}] table options.corridorHeight Length of north-south corridors
 function Brogue:init(width, height, options)
     Brogue.super.init(self, width, height)
-    
+
     self._digCallback = self:bind(self._digCallback)
     self._canBeDugCallback = self:bind(self._canBeDugCallback)
     self._isWallCallback = self:bind(self._isWallCallback)
-    
+
     self._options={
                     roomWidth={4,20},
                     roomHeight={3,7},
@@ -66,12 +66,12 @@ function Brogue:create(callback, firstFloorBehavior)
     self:_generateRooms()
     self:_generateLoops()
     self:_closeDiagonalOpenings()
-    
+
     local d=self._doors
     for i=1,#d do
         self._map[d[i][1]][d[i][2]] = 2
     end
-    
+
     if not callback then return self end
     for y=1,self._height do
         for x=1,self._width do

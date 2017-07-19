@@ -14,7 +14,7 @@ end
 
 if not BaseClass then
     BaseClass = {}
-    
+
     function BaseClass:new (...)
         local t = setmetatable({}, self)
         t:init(...)
@@ -27,7 +27,7 @@ if not BaseClass then
         t.super = self
         return setmetatable(t, { __call = self.new, __index = self })
     end
-    
+
     function BaseClass:init ()
     end
 end

@@ -1,4 +1,4 @@
--- Here is a list of weapons that I have made for some of my games and how they have been 
+-- Here is a list of weapons that I have made for some of my games and how they have been
 -- used with the dice module
 
 
@@ -11,7 +11,7 @@ weapon = {}
 -- weapon.accuracy =    To-hit chance
 -- weapon.durability =  Chance for condition to degrade after use (higher number results in longer use)
 
---[[ 
+--[[
 --- BRUTE ---
 -----  This weapon group uses large dice face numbers that excel against armored opponets
 -----  High amount of durability since attacking with dull melee weapons
@@ -73,14 +73,14 @@ weapon.katanna.durability = 4
 -----  Medium durability
 -----  High accuracy
 
------  Condition Modifiers -----  
+-----  Condition Modifiers -----
 -----  accuracy = accuracy - 2  (ruined)
 -----  accuracy = accuracy - 1  (worn)
 -----  accuracy = accuracy      (average)
 -----  accuracy = accuracy + 1  (pristine)
 
 -----  Notice this isn't affecting the damage, but merely the accuracy!
------  Also we can conclude that whenever a ranged weapon is fired, it uses 
+-----  Also we can conclude that whenever a ranged weapon is fired, it uses
 -----  up durability regardless of hit or miss, whereas a melee weapon does
 -----  not use durability on a miss
 --]]
@@ -117,7 +117,7 @@ weapon.rifle.durability = 8
 -----  Low accuracy
 -----  Unpredictable damage, usually high
 
------  Condition Modifiers -----  
+-----  Condition Modifiers -----
 -----  dice = dice * -2  (ruined)
 -----  dice = dice * -1  (worn)
 -----  dice = dice       (average)

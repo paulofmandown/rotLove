@@ -10,7 +10,7 @@ test_dice = test_dice / -100 -- Attempt to make the dice faces a negative number
 test_dice = test_dice * -10  -- Annnnd negative number of dice
 test_dice = test_dice % -1   -- Annnnnnnnd 0 dice sets
 
--- Instead of the dice module crashing, these three fields have a boundry of math.max(value, 1) 
+-- Instead of the dice module crashing, these three fields have a boundry of math.max(value, 1)
 -- So that even if the numbers go into negative, the dice will still roll properly
 
 print(test_dice)              -- 1d1

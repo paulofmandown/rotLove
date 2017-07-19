@@ -43,6 +43,6 @@ Examples
 rotLove has a number of demo projects in `examples/` that you can use to
 get a feel for each API. To see a demo in action, run
 ```shell
-	love . my-demo
+    love . my-demo
 ```
 from your shell.

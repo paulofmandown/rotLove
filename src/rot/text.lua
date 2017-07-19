@@ -65,7 +65,7 @@ function Text.tokenize(str, maxWidth)
             value = part
         }
     end
-    
+
     return (Text._breakLines(result, maxWidth))
 end
 
@@ -98,10 +98,10 @@ function Text._breakLines(tokens, maxWidth)
 
         -- forced newline? insert two new tokens after this one
         local index = token.value:find("\n")
-        if index then 
+        if index then
             token.value = Text._breakInsideToken(tokens, i, index, true)
 
-            -- if there are spaces at the end, we must remove them 
+            -- if there are spaces at the end, we must remove them
             -- (we do not want the line too long)
             token.value = token.value:gsub(" +$", "")
         end
@@ -142,7 +142,7 @@ function Text._breakLines(tokens, maxWidth)
             lineLength = lineLength + #token.value
             if token.value:find(" ") then lastTokenWithSpace = i end
         end
-        
+
         i = i + 1 -- advance to next token
     until true end
     -- end of "continue contraption"
@@ -165,7 +165,7 @@ function Text._breakLines(tokens, maxWidth)
     end
 
     tokens[#tokens] = nil -- remove fake token
-    
+
     return tokens
 end
 
@@ -184,10 +184,10 @@ function Text._breakInsideToken(tokens, tokenIndex, breakIndex, removeBreakChar)
         value = tokens[tokenIndex].value:sub(
             breakIndex + (removeBreakChar and 1 or 0))
     }
-    
+
     table.insert(tokens, tokenIndex + 1, newTextToken)
     table.insert(tokens, tokenIndex + 1, newBreakToken)
-    
+
     return tokens[tokenIndex].value:sub(1, breakIndex - 1)
 end
 

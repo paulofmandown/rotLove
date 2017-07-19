@@ -1,8 +1,8 @@
 --[[ Display, RNG ]]--
     ROT=require 'src.rot'
     function love.load()
-		-- text display requires love.graphics to be loaded
-		love.window.setMode(800, 600)
+        -- text display requires love.graphics to be loaded
+        love.window.setMode(800, 600)
         frame=ROT.TextDisplay()
     end
     function love.draw()
