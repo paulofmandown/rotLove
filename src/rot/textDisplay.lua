@@ -265,7 +265,7 @@ function TextDisplay:drawText(x, y, text, maxWidth)
     local cx = x
     local cy = y
     local lines = 1
-    if not maxWidth then maxWidth = this.widthInChars-x end
+    if not maxWidth then maxWidth = self.widthInChars-x end
 
     local tokens = ROT.Text.tokenize(text, maxWidth)
 
