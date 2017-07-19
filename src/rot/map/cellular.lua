@@ -13,7 +13,6 @@ local Cellular = ROT.Map:extend("Cellular")
   -- @tparam boolean options.connected Set to true to connect open areas on create
   -- @tparam int options.minimumZoneArea Unconnected zones with fewer tiles than this will be turned to wall instead of being connected
 function Cellular:init(width, height, options)
-	assert(ROT, 'must require rot')
 	Cellular.super.init(self, width, height)
 	self._options={
 					born    ={5,6,7,8},
@@ -92,7 +91,8 @@ function Cellular:create(callback)
             end
         end
     end
-	return changed
+    self.changed = changed
+	return self
 end
 
 function Cellular:_getNeighbors(cx, cy)

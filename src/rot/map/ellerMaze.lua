@@ -64,9 +64,11 @@ function EllerMaze:create(callback)
 
 		self:_removeFromList(i, L, R)
 	end
-	for i=1,self._width do
-		for j=1,self._height do
-			callback(i, j, map[i][j])
+	
+	if not callback then return self end
+	for y = 1, self._height do
+		for x = 1, self._width do
+			callback(x, y, map[x][y])
 		end
 	end
 	return self

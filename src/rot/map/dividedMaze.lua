@@ -32,12 +32,12 @@ function DividedMaze:create(callback)
 	end
 	self._stack = { {2,2,w-1,h-1} }
 	self:_process()
-	for i=1,w do
-		for j=1,h do
-			callback(i,j,self._map[i][j])
+	if not callback then return self end
+	for y = 1, h do
+		for x = 1, w do
+			callback(x, y, self._map[x][y])
 		end
 	end
-	self._map=nil
 	return self
 end
 

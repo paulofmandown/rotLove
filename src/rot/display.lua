@@ -200,7 +200,7 @@ end
 -- @tparam[opt] table fg The color used to write the provided string
 -- @tparam[opt] table bg the color used to fill in the string's background
 function Display:write(s, x, y, fg, bg)
-	assert(s, "Display:write() must have string as param")
+	ROT.assert(s, "Display:write() must have string as param")
 	x = self:_validateX(x, s)
 	y = self:_validateY(y, s)
 	fg= self:_validateForegroundColor(fg)
@@ -216,8 +216,8 @@ end
 -- @tparam[opt] table fg The color used to write the provided string
 -- @tparam[opt] table bg the color used to fill in the string's background
 function Display:writeCenter(s, y, fg, bg)
-	assert(s, "Display:writeCenter() must have string as param")
-	assert(#s<self.widthInChars, "Length of "..s.." is greater than screen width")
+	ROT.assert(s, "Display:writeCenter() must have string as param")
+	ROT.assert(#s<self.widthInChars, "Length of ",s," is greater than screen width")
 	y = y and y or math.floor((self:getHeightInChars() - 1) / 2)
 	y = self:_validateY(y, s)
 	fg= self:_validateForegroundColor(fg)
@@ -238,31 +238,31 @@ end
 
 function Display:_validateX(x, s)
 	x = x and x or 1
-	assert(x>0 and x<=self.widthInChars, "X value must be between 0 and "..self.widthInChars)
-	assert((x+#s)-1<=self.widthInChars, "X value plus length of String must be between 0 and "..self.widthInChars)
+	ROT.assert(x>0 and x<=self.widthInChars, "X value must be between 0 and ",self.widthInChars)
+	ROT.assert((x+#s)-1<=self.widthInChars, "X value plus length of String must be between 0 and ",self.widthInChars)
 	return x
 end
 function Display:_validateY(y)
 	y = y and y or 1
-	assert(y>0 and y<=self.heightInChars, "Y value must be between 0 and "..self.heightInChars)
+	ROT.assert(y>0 and y<=self.heightInChars, "Y value must be between 0 and ",self.heightInChars)
 	return y
 end
 function Display:_validateForegroundColor(c)
 	c = c or self.defaultForegroundColor
-	assert(#c > 2, 'Foreground Color must have at least 3 components')
+	ROT.assert(#c > 2, 'Foreground Color must have at least 3 components')
     for i = 1, #c do c[i]=self:_clamp(c[i]) end
 	return c
 end
 function Display:_validateBackgroundColor(c)
 	c = c or self.defaultBackgroundColor
-	assert(#c > 2, 'Background Color must have at least 3 components')
+	ROT.assert(#c > 2, 'Background Color must have at least 3 components')
     for i = 1, #c do c[i]=self:_clamp(c[i]) end
 	return c
 end
 function Display:_validateHeight(y, h)
 	h=h and h or self.heightInChars-y+1
-	assert(h>0, "Height must be greater than 0. Height provided: "..h)
-	assert(y+h-1<=self.heightInChars, "Height + y value must be less than screen height. y, height: "..y..', '..h)
+	ROT.assert(h>0, "Height must be greater than 0. Height provided: ",h)
+	ROT.assert(y+h-1<=self.heightInChars, "Height + y value must be less than screen height. y, height: ",y,', ',h)
 	return h
 end
 function Display:_setColor(c)

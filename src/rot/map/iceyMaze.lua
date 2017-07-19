@@ -62,13 +62,13 @@ function IceyMaze:create(callback)
 			until blocked
 		end
 	until done+1>=w*h/4
-
-	for i=1,self._width do
-		for j=1,self._height do
-			callback(i, j, map[i][j])
+	
+	if not callback then return self end
+	for y = 1, self._height do
+		for x = 1, self._width do
+			callback(x, y, map[x][y])
 		end
 	end
-	self._map=nil
 	return self
 end
 
