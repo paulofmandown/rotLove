@@ -55,6 +55,8 @@
   <li><a href="../examples/dijkstra.lua.html">dijkstra.lua</a></li>
   <li><a href="../examples/dijkstramap.lua.html">dijkstramap.lua</a></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
+  <li><a href="../examples/drawtextdisplay.lua.html">drawtextdisplay.lua</a></li>
+  <li><a href="../examples/drawtexttextdisplay.lua.html">drawtexttextdisplay.lua</a></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
   <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
@@ -104,6 +106,7 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+  <li><a href="../modules/ROT.Text.html">ROT.Text</a></li>
   <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
 </ul>
 
@@ -115,31 +118,30 @@
 <pre>
 ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
 <span class="keyword">function</span> love.<span class="global">load</span>()
-    colorHandler=ROT.Color:new()
     f=ROT.Display()
     <span class="keyword">local</span> s=<span class="string">''</span>
     <span class="keyword">for</span> i=<span class="number">1</span>,<span class="number">80</span> <span class="keyword">do</span> s=s..<span class="string">' '</span> <span class="keyword">end</span>
 
-    grey=colorHandler:fromString(<span class="string">'grey'</span>)
+    grey=ROT.Color.fromString(<span class="string">'grey'</span>)
 
-    c1=colorHandler:fromString(<span class="string">'rgb(10, 128, 230)'</span>)
-    c2=colorHandler:fromString(<span class="string">'#faa'</span>)
-    c3=colorHandler:fromString(<span class="string">'#83fcc4'</span>)
-    c4=colorHandler:fromString(<span class="string">'goldenrod'</span>)
-    c5={r=<span class="number">51</span>,g=<span class="number">102</span>,b=<span class="number">51</span>,a=<span class="number">255</span>}
-    c6=colorHandler:add({r=<span class="number">10</span>,g=<span class="number">128</span>,b=<span class="number">230</span>,a=<span class="number">255</span>}, {{r=<span class="number">200</span>,g=<span class="number">10</span>,b=<span class="number">15</span>,a=<span class="number">255</span>},{r=<span class="number">30</span>,g=<span class="number">30</span>,b=<span class="number">100</span>,a=<span class="number">255</span>}})
-    c7=colorHandler:multiply(colorHandler:fromString(<span class="string">'goldenrod'</span>),
-                             {colorHandler:fromString(<span class="string">'lightcyan'</span>),
-                              colorHandler:fromString(<span class="string">'lightcoral'</span>)})
-    c8=colorHandler:interpolate({r=<span class="number">200</span>,g=<span class="number">10</span>,b=<span class="number">15</span>,a=<span class="number">255</span>},{r=<span class="number">30</span>,g=<span class="number">30</span>,b=<span class="number">100</span>,a=<span class="number">255</span>})
-    c9=colorHandler:interpolateHSL({r=<span class="number">200</span>,g=<span class="number">10</span>,b=<span class="number">15</span>,a=<span class="number">255</span>},{r=<span class="number">30</span>,g=<span class="number">30</span>,b=<span class="number">100</span>,a=<span class="number">255</span>})
+    c1=ROT.Color.fromString(<span class="string">'rgb(10, 128, 230)'</span>)
+    c2=ROT.Color.fromString(<span class="string">'#faa'</span>)
+    c3=ROT.Color.fromString(<span class="string">'#83fcc4'</span>)
+    c4=ROT.Color.fromString(<span class="string">'goldenrod'</span>)
+    c5={ <span class="number">51</span>, <span class="number">102</span>, <span class="number">51</span>, <span class="number">255</span> }
+    c6=ROT.Color.add({ <span class="number">10</span>, <span class="number">128</span>, <span class="number">230</span>, <span class="number">255</span> }, { <span class="number">200</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">255</span> }, { <span class="number">30</span>, <span class="number">30</span>, <span class="number">100</span>, <span class="number">255</span> })
+    c7=ROT.Color.multiply(ROT.Color.fromString(<span class="string">'goldenrod'</span>),
+                             ROT.Color.fromString(<span class="string">'lightcyan'</span>),
+                              ROT.Color.fromString(<span class="string">'lightcoral'</span>))
+    c8=ROT.Color.interpolate({ <span class="number">200</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">255</span> },{ <span class="number">30</span>, <span class="number">30</span>, <span class="number">100</span>, <span class="number">255</span> })
+    c9=ROT.Color.interpolateHSL({ <span class="number">200</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">255</span> },{ <span class="number">30</span>, <span class="number">30</span>, <span class="number">100</span>, <span class="number">255</span> })
 
-    c10=colorHandler:randomize(colorHandler:fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
-    c11=colorHandler:randomize(colorHandler:fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
-    c12=colorHandler:randomize(colorHandler:fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
-    c13=colorHandler:randomize(colorHandler:fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
+    c10=ROT.Color.randomize(ROT.Color.fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
+    c11=ROT.Color.randomize(ROT.Color.fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
+    c12=ROT.Color.randomize(ROT.Color.fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
+    c13=ROT.Color.randomize(ROT.Color.fromString(<span class="string">'silver'</span>), {<span class="number">30</span>,<span class="number">10</span>,<span class="number">20</span>})
 
-    c14=colorHandler:fromString(<span class="string">'silver'</span>)
+    c14=ROT.Color.fromString(<span class="string">'silver'</span>)
 
     f:write(s, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">nil</span>, c1)
     f:write(s, <span class="number">1</span>, <span class="number">2</span>, <span class="keyword">nil</span>, c2)
@@ -167,18 +169,18 @@ ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
     f:write(s, <span class="number">1</span>,<span class="number">24</span>, <span class="keyword">nil</span>, c14)
 
     <span class="comment">-- generating a color object from a string
-</span>    f:writeCenter(<span class="string">"colorHandler:fromString('rgb(10, 128, 230)')"</span>, <span class="number">1</span>, <span class="keyword">nil</span>, c1)
-    f:writeCenter(<span class="string">"colorHandler:fromString('#faa')"</span>, <span class="number">2</span>, grey, c2)
-    f:writeCenter(<span class="string">"colorHandler:fromString('#83fcc4')"</span>, <span class="number">3</span>, grey, c3)
-    f:writeCenter(<span class="string">"colorHandler:fromString('goldenrod')"</span>, <span class="number">4</span>, grey, c4)
+</span>    f:writeCenter(<span class="string">"ROT.Color.fromString('rgb(10, 128, 230)')"</span>, <span class="number">1</span>, <span class="keyword">nil</span>, c1)
+    f:writeCenter(<span class="string">"ROT.Color.fromString('#faa')"</span>, <span class="number">2</span>, grey, c2)
+    f:writeCenter(<span class="string">"ROT.Color.fromString('#83fcc4')"</span>, <span class="number">3</span>, grey, c3)
+    f:writeCenter(<span class="string">"ROT.Color.fromString('goldenrod')"</span>, <span class="number">4</span>, grey, c4)
 
     <span class="comment">-- Converting a color object to a string
-</span>    f:writeCenter(<span class="string">"colorHandler:toRGB({r=10, g=128, b=230, a=255})=="</span>..colorHandler:toRGB({r=<span class="number">10</span>, g=<span class="number">128</span>, b=<span class="number">230</span>}), <span class="number">5</span>, <span class="keyword">nil</span>, c1)
-    f:writeCenter(<span class="string">"colorHandler:toHex({r=10, g=128, b=230, a=255})=="</span>..colorHandler:toHex({r=<span class="number">10</span>, g=<span class="number">128</span>, b=<span class="number">230</span>}), <span class="number">6</span>, <span class="keyword">nil</span>, c1)
+</span>    f:writeCenter(<span class="string">"ROT.Color.toRGB({ 10, 128, 230, 255 })=="</span>..ROT.Color.toRGB({ <span class="number">10</span>, <span class="number">128</span>, <span class="number">230</span> }), <span class="number">5</span>, <span class="keyword">nil</span>, c1)
+    f:writeCenter(<span class="string">"ROT.Color.toHex({ 10, 128, 230, 255 })=="</span>..ROT.Color.toHex({ <span class="number">10</span>, <span class="number">128</span>, <span class="number">230</span> }), <span class="number">6</span>, <span class="keyword">nil</span>, c1)
 
     <span class="comment">-- converting a color from rgb to hsl
-</span>    f:writeCenter(<span class="string">"colorHandler:rgb2hsl({r=51, g=102, b=51, a=255})"</span>, <span class="number">7</span>, <span class="keyword">nil</span>, c5)
-    <span class="keyword">local</span> tbl=colorHandler:rgb2hsl({r=<span class="number">51</span>, g=<span class="number">102</span>, b=<span class="number">51</span>, a=<span class="number">255</span>})
+</span>    f:writeCenter(<span class="string">"ROT.Color.rgb2hsl({ 51, 102, 51, 255 })"</span>, <span class="number">7</span>, <span class="keyword">nil</span>, c5)
+    <span class="keyword">local</span> tbl=ROT.Color.rgb2hsl({ <span class="number">51</span>, <span class="number">102</span>, <span class="number">51</span>, <span class="number">255</span> })
     <span class="keyword">local</span> s=<span class="string">"{"</span>
     <span class="keyword">for</span> k,_ <span class="keyword">in</span> <span class="global">pairs</span>(tbl) <span class="keyword">do</span>
         s=s..k..<span class="string">"="</span>..tbl[k]..<span class="string">", "</span>
@@ -187,8 +189,8 @@ ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
     f:writeCenter(s, <span class="number">8</span>, <span class="keyword">nil</span>, c5)
 
     <span class="comment">-- and back!
-</span>    f:writeCenter(<span class="string">"colorHandler:hsl2rgb({h=.333, s=.333, l=.3})"</span>, <span class="number">9</span>, <span class="keyword">nil</span>, c5)
-    <span class="keyword">local</span> tbl=colorHandler:hsl2rgb({h=.<span class="number">333</span>, s=.<span class="number">333</span>, l=.<span class="number">3</span>})
+</span>    f:writeCenter(<span class="string">"ROT.Color.hsl2rgb({ .333, .333, .3 })"</span>, <span class="number">9</span>, <span class="keyword">nil</span>, c5)
+    <span class="keyword">local</span> tbl=ROT.Color.hsl2rgb({ .<span class="number">333</span>, .<span class="number">333</span>, .<span class="number">3</span> })
     <span class="keyword">local</span> s=<span class="string">"{"</span>
     <span class="keyword">for</span> k,_ <span class="keyword">in</span> <span class="global">pairs</span>(tbl) <span class="keyword">do</span>
         s=s..k..<span class="string">"="</span>..tbl[k]..<span class="string">", "</span>
@@ -199,28 +201,28 @@ ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
     <span class="comment">-- Adding two or more colors
 </span>        <span class="comment">-- arg1 is the base color
 </span>        <span class="comment">-- arg2 is either a second color or a table of colors (This also applies to multiply)
-</span>    f:write(<span class="string">"add({r=10,g=128,b=230,a=255}, {{r=200,g=10,b=15,a=255},{r=30,g=30,b=100,a=255}})"</span>, <span class="number">1</span>, <span class="number">11</span>, <span class="keyword">nil</span>, c6)
-    <span class="keyword">local</span> s=colorHandler:toRGB(c6)
+</span>    f:write(<span class="string">"add({ 10, 128, 230, 255 }, { 200, 10, 15, 255 }, { 30, 30, 100, 255 })"</span>, <span class="number">1</span>, <span class="number">11</span>, <span class="keyword">nil</span>, c6)
+    <span class="keyword">local</span> s=ROT.Color.toRGB(c6)
     f:writeCenter(s, <span class="number">12</span>, <span class="keyword">nil</span>, c6)
 
     <span class="comment">-- Multiplying two or more colors
-</span>    f:write(<span class="string">"colorHandler:multiply(colorHandler:fromString('goldenrod'),"</span>, <span class="number">1</span>, <span class="number">13</span>, <span class="keyword">nil</span>, c7)
-    f:write(<span class="string">"                     {colorHandler:fromString('lightcyan'),"</span>, <span class="number">1</span>, <span class="number">14</span>, <span class="keyword">nil</span>, c7)
-    f:write(<span class="string">"                      colorHandler:fromString('lightcoral')})"</span>, <span class="number">1</span>, <span class="number">15</span>, <span class="keyword">nil</span>, c7)
+</span>    f:write(<span class="string">"ROT.Color.multiply(ROT.Color.fromString('goldenrod'),"</span>, <span class="number">1</span>, <span class="number">13</span>, <span class="keyword">nil</span>, c7)
+    f:write(<span class="string">"                     {ROT.Color.fromString('lightcyan'),"</span>, <span class="number">1</span>, <span class="number">14</span>, <span class="keyword">nil</span>, c7)
+    f:write(<span class="string">"                      ROT.Color.fromString('lightcoral')})"</span>, <span class="number">1</span>, <span class="number">15</span>, <span class="keyword">nil</span>, c7)
 
     <span class="comment">-- Interpolate 2 colors
-</span>    f:write(<span class="string">"colorHandler:interpolate({r=200,g=10,b=15,a=255},{r=30,g=30,b=100,a=255})"</span>, <span class="number">1</span>, <span class="number">16</span>, <span class="keyword">nil</span>, c8)
+</span>    f:write(<span class="string">"ROT.Color.interpolate({ 200, 10, 15, 255 },{ 30, 30, 100, 255 })"</span>, <span class="number">1</span>, <span class="number">16</span>, <span class="keyword">nil</span>, c8)
 
     <span class="comment">-- Interpolate 2 colors in HSL mode
-</span>    f:write(<span class="string">"colorHandler:interpolateHSL({r=200,g=10,b=15,a=255},{r=30,g=30,b=100,a=255})"</span>, <span class="number">1</span>, <span class="number">17</span>, <span class="keyword">nil</span>, c9)
+</span>    f:write(<span class="string">"ROT.Color.interpolateHSL({ 200, 10, 15, 255 },{ 30, 30, 100, 255 })"</span>, <span class="number">1</span>, <span class="number">17</span>, <span class="keyword">nil</span>, c9)
 
     <span class="comment">-- Randomize Color from a reference and standard deviation
-</span>    f:writeCenter(<span class="string">"colorHandler:randomize(colorHandler:fromString('silver'), {30,10,20})"</span>, <span class="number">18</span>, <span class="keyword">nil</span>, c10)
-    f:writeCenter(<span class="string">"colorHandler:randomize(colorHandler:fromString('silver'), {30,10,20})"</span>, <span class="number">19</span>, <span class="keyword">nil</span>, c11)
-    f:writeCenter(<span class="string">"colorHandler:randomize(colorHandler:fromString('silver'), {30,10,20})"</span>, <span class="number">20</span>, <span class="keyword">nil</span>, c12)
-    f:writeCenter(<span class="string">"colorHandler:randomize(colorHandler:fromString('silver'), {30,10,20})"</span>, <span class="number">21</span>, <span class="keyword">nil</span>, c13)
+</span>    f:writeCenter(<span class="string">"ROT.Color.randomize(ROT.Color.fromString('silver'), {30,10,20})"</span>, <span class="number">18</span>, <span class="keyword">nil</span>, c10)
+    f:writeCenter(<span class="string">"ROT.Color.randomize(ROT.Color.fromString('silver'), {30,10,20})"</span>, <span class="number">19</span>, <span class="keyword">nil</span>, c11)
+    f:writeCenter(<span class="string">"ROT.Color.randomize(ROT.Color.fromString('silver'), {30,10,20})"</span>, <span class="number">20</span>, <span class="keyword">nil</span>, c12)
+    f:writeCenter(<span class="string">"ROT.Color.randomize(ROT.Color.fromString('silver'), {30,10,20})"</span>, <span class="number">21</span>, <span class="keyword">nil</span>, c13)
 
-    f:writeCenter(<span class="string">"colorHandler:fromString('silver')"</span>, <span class="number">23</span>, <span class="keyword">nil</span>, c14)
+    f:writeCenter(<span class="string">"ROT.Color.fromString('silver')"</span>, <span class="number">23</span>, <span class="keyword">nil</span>, c14)
 
 <span class="keyword">end</span>
 <span class="keyword">function</span> love.draw() f:draw() <span class="keyword">end</span></pre>
@@ -230,7 +232,7 @@ ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2017-07-10 19:47:38 </i>
+<i style="float:right;">Last updated 2017-07-19 18:43:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -64,12 +64,12 @@
   <li><a href="../modules/ROT.Path.AStar.html">ROT.Path.AStar</a></li>
   <li><a href="../modules/ROT.Path.Dijkstra.html">ROT.Path.Dijkstra</a></li>
   <li><a href="../modules/ROT.RNG.html">ROT.RNG</a></li>
-  <li><strong>ROT.Scheduler</strong></li>
+  <li><a href="../modules/ROT.Scheduler.html">ROT.Scheduler</a></li>
   <li><a href="../modules/ROT.Scheduler.Action.html">ROT.Scheduler.Action</a></li>
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
-  <li><a href="../modules/ROT.Text.html">ROT.Text</a></li>
+  <li><strong>ROT.Text</strong></li>
   <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
 </ul>
 <h2>Examples</h2>
@@ -118,36 +118,24 @@
 
 <div id="content">
 
-<h1>Module <code>ROT.Scheduler</code></h1>
-<p>The Scheduler Prototype</p>
+<h1>Module <code>ROT.Text</code></h1>
+<p>Text tokenization and breaking routines.</p>
 <p></p>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#getTime">getTime ()</a></td>
-	<td class="summary">Get Time.</td>
+	<td class="name" nowrap><a href="#measure">measure (str, maxWidth)</a></td>
+	<td class="summary">Measure size of a resulting text block.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#add">add (item, repeating)</a></td>
-	<td class="summary">Add.</td>
+	<td class="name" nowrap><a href="#tokenize">tokenize (str, maxWidth)</a></td>
+	<td class="summary">Convert string to a series of a formatting commands.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#getTimeOf">getTimeOf (item)</a></td>
-	<td class="summary">Get scheduled time.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#clear">clear ()</a></td>
-	<td class="summary">Clear.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#remove">remove (item)</a></td>
-	<td class="summary">Remove.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#next">next ()</a></td>
-	<td class="summary">Next.</td>
+	<td class="name" nowrap><a href="#_breakInsideToken">_breakInsideToken (tokens, tokenIndex, breakIndex, removeBreakChar)</a></td>
+	<td class="summary">Create new tokens and insert them into the stream</td>
 	</tr>
 </table>
 
@@ -159,150 +147,84 @@
 
     <dl class="function">
     <dt>
-    <a name = "getTime"></a>
-    <strong>getTime ()</strong>
+    <a name = "measure"></a>
+    <strong>measure (str, maxWidth)</strong>
     </dt>
     <dd>
-    Get Time.
- Get time counted since start
+    Measure size of a resulting text block.
 
 
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">str</span>
 
-    <h3>Returns:</h3>
-    <ol>
+        </li>
+        <li><span class="parameter">maxWidth</span>
 
-           <span class="types"><span class="type">int</span></span>
-        elapsed time
-    </ol>
+        </li>
+    </ul>
+
 
 
 
 
 </dd>
     <dt>
-    <a name = "add"></a>
-    <strong>add (item, repeating)</strong>
+    <a name = "tokenize"></a>
+    <strong>tokenize (str, maxWidth)</strong>
     </dt>
     <dd>
-    Add.
- Add an item to the schedule
+    Convert string to a series of a formatting commands.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">item</span>
-            <span class="types"><span class="type">any</span></span>
+        <li><span class="parameter">str</span>
 
         </li>
-        <li><span class="parameter">repeating</span>
+        <li><span class="parameter">maxWidth</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "_breakInsideToken"></a>
+    <strong>_breakInsideToken (tokens, tokenIndex, breakIndex, removeBreakChar)</strong>
+    </dt>
+    <dd>
+    Create new tokens and insert them into the stream
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">tokens</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+        <li><span class="parameter">tokenIndex</span>
+            <span class="types"><span class="type">number</span></span>
+         Token being processed
+        </li>
+        <li><span class="parameter">breakIndex</span>
+            <span class="types"><span class="type">number</span></span>
+         Index within current token's value
+        </li>
+        <li><span class="parameter">removeBreakChar</span>
             <span class="types"><span class="type">boolean</span></span>
-         If true, this item will be rescheduled once it is returned by .next()
+         Do we want to remove the breaking character?
         </li>
     </ul>
 
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><span class="type">ROT.Scheduler</span></span>
-        self
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "getTimeOf"></a>
-    <strong>getTimeOf (item)</strong>
-    </dt>
-    <dd>
-    Get scheduled time.
- Get the time the given item is scheduled for
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">item</span>
-            <span class="types"><span class="type">any</span></span>
-
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">number</span></span>
-        time
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "clear"></a>
-    <strong>clear ()</strong>
-    </dt>
-    <dd>
-    Clear.
- Remove all items from scheduler
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">ROT.Scheduler</span></span>
-        self
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "remove"></a>
-    <strong>remove (item)</strong>
-    </dt>
-    <dd>
-    Remove.
- Find and remove an item from the scheduler
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">item</span>
-            <span class="types"><span class="type">any</span></span>
-         The previously added item to be removed
-        </li>
-    </ul>
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">boolean</span></span>
-        true if an item was removed from the scheduler
-    </ol>
-
-
-
-
-</dd>
-    <dt>
-    <a name = "next"></a>
-    <strong>next ()</strong>
-    </dt>
-    <dd>
-    Next.
- Get the next event from the scheduler and advance the appropriate amount time
-
-
-
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><span class="type">event</span> or <span class="type">nil</span></span>
-        The event previously added by .add() or nil if none are queued
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        remaining unbroken token value
     </ol>
 
 

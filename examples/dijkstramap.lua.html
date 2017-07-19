@@ -55,6 +55,8 @@
   <li><a href="../examples/dijkstra.lua.html">dijkstra.lua</a></li>
   <li><strong>dijkstramap.lua</strong></li>
   <li><a href="../examples/dividedmaze.lua.html">dividedmaze.lua</a></li>
+  <li><a href="../examples/drawtextdisplay.lua.html">drawtextdisplay.lua</a></li>
+  <li><a href="../examples/drawtexttextdisplay.lua.html">drawtexttextdisplay.lua</a></li>
   <li><a href="../examples/ellermaze.lua.html">ellermaze.lua</a></li>
   <li><a href="../examples/engine.lua.html">engine.lua</a></li>
   <li><a href="../examples/event.lua.html">event.lua</a></li>
@@ -104,6 +106,7 @@
   <li><a href="../modules/ROT.Scheduler.Simple.html">ROT.Scheduler.Simple</a></li>
   <li><a href="../modules/ROT.Scheduler.Speed.html">ROT.Scheduler.Speed</a></li>
   <li><a href="../modules/ROT.StringGenerator.html">ROT.StringGenerator</a></li>
+  <li><a href="../modules/ROT.Text.html">ROT.Text</a></li>
   <li><a href="../modules/ROT.TextDisplay.html">ROT.TextDisplay</a></li>
 </ul>
 
@@ -116,12 +119,11 @@
 <span class="comment">--[[ Rogue ]]</span>
 ROT=<span class="global">require</span> <span class="string">'src.rot'</span>
 movers={}
-clr=ROT.Color:new()
 colors={}
-<span class="global">table</span>.insert(colors, clr:fromString(<span class="string">'blue'</span>))
-<span class="global">table</span>.insert(colors, clr:fromString(<span class="string">'red'</span>))
-<span class="global">table</span>.insert(colors, clr:fromString(<span class="string">'green'</span>))
-<span class="global">table</span>.insert(colors, clr:fromString(<span class="string">'yellow'</span>))
+<span class="global">table</span>.insert(colors, ROT.Color.fromString(<span class="string">'blue'</span>))
+<span class="global">table</span>.insert(colors, ROT.Color.fromString(<span class="string">'red'</span>))
+<span class="global">table</span>.insert(colors, ROT.Color.fromString(<span class="string">'green'</span>))
+<span class="global">table</span>.insert(colors, ROT.Color.fromString(<span class="string">'yellow'</span>))
 <span class="keyword">function</span> love.<span class="global">load</span>()
     f  =ROT.Display()
     maps={
@@ -143,11 +145,11 @@ tbf=<span class="number">1</span>/<span class="number">30</span>
         <span class="keyword">for</span> _,mover <span class="keyword">in</span> <span class="global">pairs</span>(movers) <span class="keyword">do</span>
             <span class="keyword">local</span> dir={dijkMap:dirTowardsGoal(mover.x, mover.y)}
             <span class="keyword">if</span> dir[<span class="number">1</span>] <span class="keyword">and</span> dir[<span class="number">2</span>] <span class="keyword">and</span> mover.x <span class="keyword">and</span> mover.y <span class="keyword">then</span>
-                f:write(map[mover.x][mover.y], mover.x, mover.y, <span class="keyword">nil</span>, clr:interpolate(mover.color, mover.oc))
+                f:write(map[mover.x][mover.y], mover.x, mover.y, <span class="keyword">nil</span>, ROT.Color.interpolate(mover.color, mover.oc))
                 mover.x=mover.x+dir[<span class="number">1</span>]
                 mover.y=mover.y+dir[<span class="number">2</span>]
                 <span class="keyword">local</span> oc=f:getBackgroundColor(mover.x, mover.y)
-                mover.oc=oc==f:getDefaultBackgroundColor() <span class="keyword">and</span> clr:fromString(<span class="string">'dimgrey'</span>) <span class="keyword">or</span> oc
+                mover.oc=oc==f:getDefaultBackgroundColor() <span class="keyword">and</span> ROT.Color.fromString(<span class="string">'dimgrey'</span>) <span class="keyword">or</span> oc
                 f:write(<span class="string">'@'</span>, mover.x, mover.y, <span class="keyword">nil</span>, mover.color)
             <span class="keyword">end</span>
         <span class="keyword">end</span>
@@ -199,7 +201,7 @@ tbf=<span class="number">1</span>/<span class="number">30</span>
         mover.y=mover.y+dir[2]
         local x=mover.x
         local y=mover.y
-        f:write(map[x][y], x, y, nil, {r=125,g=15,b=15,a=255})
+        f:write(map[x][y], x, y, nil, { 125, 15, 15, 255 })
     end--]]</span>
 <span class="keyword">end</span>
 
@@ -212,10 +214,10 @@ tbf=<span class="number">1</span>/<span class="number">30</span>
 <span class="keyword">function</span> dijkCalbak(x,y) <span class="keyword">return</span> map[x][y]==<span class="string">'.'</span> <span class="keyword">end</span>
 
 <span class="keyword">function</span> getRandomColor()
-    <span class="keyword">return</span> { r=<span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
-             g=<span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
-             b=<span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
-             a=<span class="number">255</span>}
+    <span class="keyword">return</span> { <span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
+             <span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
+             <span class="global">math</span>.floor(ROT.RNG:random(<span class="number">0</span>,<span class="number">255</span>)),
+             <span class="number">255</span>}
 <span class="keyword">end</span></pre>
 
 
@@ -223,7 +225,7 @@ tbf=<span class="number">1</span>/<span class="number">30</span>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2017-07-10 19:47:38 </i>
+<i style="float:right;">Last updated 2017-07-19 18:43:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
