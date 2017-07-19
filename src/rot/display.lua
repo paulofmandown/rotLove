@@ -271,4 +271,71 @@ end
 function Display:_clamp(n)
     return n<0 and 0 or n>255 and 255 or n
 end
+
+--- Draw text.
+-- Draws a text at given position. Optionally wraps at a maximum length.
+-- @tparam number x
+-- @tparam number y
+-- @tparam string text May contain color/background format specifiers, %c{name}/%b{name}, both optional. %c{}/%b{} resets to default.
+-- @tparam number maxWidth wrap at what width (optional)?
+-- @treturn number lines drawn
+function Display:drawText(x, y, text, maxWidth)
+	local fg
+	local bg
+	local cx = x
+	local cy = y
+	local lines = 1
+	if not maxWidth then maxWidth = this.widthInChars-x end
+
+	local tokens = ROT.Text.tokenize(text, maxWidth)
+
+	while #tokens > 0 do -- interpret tokenized opcode stream
+		local token = table.remove(tokens, 1)
+		if token.type == ROT.Text.TYPE_TEXT then
+			local isSpace, isPrevSpace, isFullWidth, isPrevFullWidth
+			for i = 1, #token.value do
+				local cc = token.value:byte(i)
+				local c = token.value:sub(i, i)
+				-- TODO: chars will never be full-width without special handling
+				-- TODO: ... so the next 15 lines or so do some pointless stuff
+				-- Assign to `true` when the current char is full-width.
+				isFullWidth = (cc > 0xff00 and cc < 0xff61)
+					or (cc > 0xffdc and cc < 0xffe8)
+					or cc > 0xffee
+				-- Current char is space, whatever full-width or half-width both are OK.
+				isSpace = c:byte() == 0x20 or c:byte() == 0x3000
+				-- The previous char is full-width and
+				-- current char is nether half-width nor a space.
+				if isPrevFullWidth and not isFullWidth and not isSpace then
+					cx = cx + 1 -- add an extra position
+				end
+				-- The current char is full-width and
+				-- the previous char is not a space.
+				if isFullWidth and not isPrevSpace then
+					cx = cx + 1 -- add an extra position
+				end
+	            fg = (fg == '' or not fg) and self.defaultForegroundColor
+	                or type(fg) == 'string' and ROT.Color.fromString(fg) or fg
+	            bg = (bg == '' or not bg) and self.defaultBackgroundColor
+	                or type(bg) == 'string' and ROT.Color.fromString(bg) or bg
+				self:_writeValidatedString(c, cx, cy, fg, bg)
+				cx = cx + 1
+				isPrevSpace = isSpace
+				isPrevFullWidth = isFullWidth
+			end
+		elseif token.type == ROT.Text.TYPE_FG then
+			fg = token.value or nil
+		elseif token.type == ROT.Text.TYPE_BG then
+			bg = token.value or nil
+		elseif token.type == ROT.Text.TYPE_NEWLINE then
+			cx = x
+			cy = cy + 1
+			lines = lines + 1
+		end
+	end
+
+	return lines
+end
+
+
 return Display
