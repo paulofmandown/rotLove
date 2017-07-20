@@ -13,10 +13,13 @@ function love.update()
     if update then
         update=false
         dgr:create(calbak)
-        local rooms=dgr:getDoors()
-        for k,v in pairs(rooms) do
+        local doors=dgr:getDoors()
+        for k,v in pairs(doors) do
             f:write('+', v.x, v.y)
         end
     end
 end
-function love.keypressed(key) update=true end
+function love.keypressed(key)
+    ROT.RNG:setSeed(key)
+    update=true
+end

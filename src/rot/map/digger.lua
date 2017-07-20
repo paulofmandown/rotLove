@@ -70,9 +70,8 @@ function Digger:create(callback)
         local wall=self:_findWall()
         if not wall then break end
 
-        local parts=wall:split(',')
-        local x    =tonumber(parts[1])
-        local y    =tonumber(parts[2])
+        local x    = wall.x
+        local y    = wall.y
         local dir  =self:_getDiggingDirection(x, y)
         if dir then
             local featureAttempts=0
@@ -85,8 +84,9 @@ function Digger:create(callback)
                 end
             until featureAttempts>=self._featureAttempts
             priorityWalls=0
-            for k,_ in pairs(self._walls) do
-                if self._walls[k] > 1 then
+            for i = 1, #self._walls do
+                local wall = self._walls[i]
+                if wall.value > 1 then
                     priorityWalls=priorityWalls+1
                 end
             end
@@ -109,7 +109,7 @@ function Digger:_digCallback(x, y, value)
         self._map[x][y]=0
         self._dug=self._dug+1
     else
-        self._walls[x..','..y]=1
+        self:setWall(x, y, 1)
     end
 end
 
@@ -124,7 +124,7 @@ function Digger:_canBeDugCallback(x, y)
 end
 
 function Digger:_priorityWallCallback(x, y)
-    self._walls[x..','..y]=2
+    self:setWall(x, y, 2)
 end
 
 function Digger:_firstRoom()
@@ -138,15 +138,16 @@ end
 function Digger:_findWall()
     local prio1={}
     local prio2={}
-    for k,_ in pairs(self._walls) do
-        if self._walls[k]>1 then table.insert(prio2, k)
-        else table.insert(prio1, k) end
+    for i = 1, #self._walls do
+        local wall = self._walls[i]
+        if wall.value > 1 then prio2[#prio2 + 1] = wall
+        else prio1[#prio1 + 1] = wall end
     end
     local arr=#prio2>0 and prio2 or prio1
     if #arr<1 then return nil end
-    local id=table.random(arr)
-    self._walls[id]=nil
-    return id
+    local wall = table.random(arr)
+    self:setWall(wall.x, wall.y, nil)
+    return wall
 end
 
 function Digger:_tryFeature(x, y, dx, dy)
@@ -175,10 +176,10 @@ function Digger:_removeSurroundingWalls(cx, cy)
         local delta=deltas[i]
         local x    =cx+delta[1]
         local y    =cy+delta[2]
-        self._walls[x..','..y]=nil
+        self:setWall(x, y, nil)
         x=2*delta[1]
         y=2*delta[2]
-        self._walls[x..','..y]=nil
+        self:setWall(x, y, nil)
     end
 end
 
