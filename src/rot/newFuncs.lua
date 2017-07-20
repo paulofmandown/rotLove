@@ -15,11 +15,6 @@ local function charNTimes(c, n)
     return s
 end
 
--- io.write(arg..'\n')
-local function write(str)
-    io.write(str..'\n')
-end
-
 -- New Table Functions
 -- returns random table element, nil if length is 0
 function table.random(theTable)
