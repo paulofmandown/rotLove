@@ -160,7 +160,6 @@ end
 
 --- Write various information about this room to the console.
 function Room:debug()
-    local command    = write and write or io.write
     local door='doors'
     for k,_ in pairs(self._doors) do door=door..'; '..k end
     local debugString= 'room    : '..(self._x1 and self._x1 or 'not available')
@@ -168,7 +167,7 @@ function Room:debug()
                               ..','..(self._x2 and self._x2 or 'not available')
                               ..','..(self._y2 and self._y2 or 'not available')
                               ..','..door
-    command(debugString)
+    io.write(debugString);io.flush()
 end
 
 --- Use two callbacks to confirm room validity.

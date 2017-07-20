@@ -306,12 +306,11 @@ function BrogueRoom:getTop()    return math.min(self._dims.y1, self._dims.y2) en
 function BrogueRoom:getBottom() return math.max(self._dims.y1+self._dims.h1, self._dims.y2+self._dims.h2) end
 
 function BrogueRoom:debug()
-    local cmd=write and write or io.write
     local str=''
     for k,v in pairs(self._dims) do
         str=str..k..'='..v..','
     end
-    cmd(str)
+    io.write(str);io.flush()
 end
 
 function BrogueRoom:addDoor(x, y)

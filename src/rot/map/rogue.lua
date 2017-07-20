@@ -162,7 +162,9 @@ function Rogue:_connectUnconnectedRooms()
                     end
                 until #dirs<1
                 if validRoom then table.insert(room.connections, {otherRoom.cellx, otherRoom.celly})
-                else write('-- Unable to connect room.') end
+                else
+                    io.write('-- Unable to connect room.'); io.flush()
+                end
             end
         end
     end

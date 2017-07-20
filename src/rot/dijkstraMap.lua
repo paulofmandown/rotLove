@@ -156,7 +156,7 @@ function DijkstraMap:writeMapToConsole(returnString)
         for x=1,self._dimensions.w do
             s=s..self._map[x][y]..','
         end
-        write(s)
+        io.write(s); io.flush()
         if returnString then ls=ls..s..'\n' end
     end
     if returnString then return ls end

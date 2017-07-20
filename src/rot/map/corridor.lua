@@ -35,9 +35,8 @@ end
 
 --- Write various information about this corridor to the console.
 function Corridor:debug()
-    local command    = write and write or io.write
     local debugString= 'corridor: '..self._startX..','..self._startY..','..self._endX..','..self._endY
-    command(debugString)
+    io.write(debugString);io.flush()
 end
 
 --- Use two callbacks to confirm corridor validity.
