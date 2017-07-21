@@ -40,7 +40,7 @@ function Dungeon:getCorridors() return self._corridors end
 function Dungeon:_getDetail(name, x, y)
     local t = self[name]
     for i = 1, #t do
-        if t[i].x == x and t[i].y == y then return t, i end
+        if t[i].x == x and t[i].y == y then return t[i], i end
     end
 end
 
