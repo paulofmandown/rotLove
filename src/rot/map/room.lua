@@ -35,26 +35,26 @@ function Room:createRandomAt(x, y, dx, dy, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=min+math.floor(rng:random(min, max))
+    local width=rng:getUniformInt(min, max)
 
     min   =options.roomHeight[1]
     max   =options.roomHeight[2]
-    local height=min+math.floor(rng:random(min,max))
+    local height=rng:getUniformInt(min, max)
 
     if dx==1 then
-        local y2=y-math.floor(rng:random()*height)
+        local y2=y-math.floor(rng:getUniform()*height)
         return Room:new(x+1, y2, x+width, y2+height-1, x, y):setRNG(rng)
     end
     if dx==-1 then
-        local y2=y-math.floor(rng:random()*height)
+        local y2=y-math.floor(rng:getUniform()*height)
         return Room:new(x-width, y2, x-1, y2+height-1, x, y):setRNG(rng)
     end
     if dy==1 then
-        local x2=x-math.floor(rng:random()*width)
+        local x2=x-math.floor(rng:getUniform()*width)
         return Room:new(x2, y+1, x2+width-1, y+height, x, y):setRNG(rng)
     end
     if dy==-1 then
-        local x2=x-math.floor(rng:random()*width)
+        local x2=x-math.floor(rng:getUniform()*width)
         return Room:new(x2, y-height, x2+width-1, y-1, x, y):setRNG(rng)
     end
 end
@@ -70,11 +70,11 @@ function Room:createRandomCenter(cx, cy, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=min+math.floor(rng:random()*(max-min+1))
+    local width=rng:getUniformInt(min, max)
 
     min   =options.roomHeight[1]
     max   =options.roomHeight[2]
-    local height=min+math.floor(rng:random()*(max-min+1))
+    local height=rng:getUniformInt(min, max)
 
     local x1=cx-math.floor(rng:random()*width)
     local y1=cy-math.floor(rng:random()*height)
@@ -95,11 +95,11 @@ function Room:createRandom(availWidth, availHeight, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=math.floor(rng:random(min, max))
+    local width=rng:getUniformInt(min, max)
 
     min=options.roomHeight[1]
     max=options.roomHeight[2]
-    local height=math.floor(rng:random(min, max))
+    local height=rng:getUniformInt(min, max)
 
     local left=availWidth-width
     local top =availHeight-height
