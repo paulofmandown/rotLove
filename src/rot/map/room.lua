@@ -17,8 +17,8 @@ function Room:init(x1, y1, x2, y2, doorX, doorY)
     self._y1   =y1
     self._y2   =y2
     self._doors= {}
-    if doorX then
-        self._doors[doorX..','..doorY] = 1
+    if doorX and doorY then
+        self:addDoor(doorX, doorY)
     end
 end
 
@@ -35,26 +35,26 @@ function Room:createRandomAt(x, y, dx, dy, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=min+math.floor(rng:random(min, max))
+    local width=rng:getUniformInt(min, max)
 
     min   =options.roomHeight[1]
     max   =options.roomHeight[2]
-    local height=min+math.floor(rng:random(min,max))
+    local height=rng:getUniformInt(min, max)
 
     if dx==1 then
-        local y2=y-math.floor(rng:random()*height)
+        local y2=y-math.floor(rng:getUniform()*height)
         return Room:new(x+1, y2, x+width, y2+height-1, x, y):setRNG(rng)
     end
     if dx==-1 then
-        local y2=y-math.floor(rng:random()*height)
+        local y2=y-math.floor(rng:getUniform()*height)
         return Room:new(x-width, y2, x-1, y2+height-1, x, y):setRNG(rng)
     end
     if dy==1 then
-        local x2=x-math.floor(rng:random()*width)
+        local x2=x-math.floor(rng:getUniform()*width)
         return Room:new(x2, y+1, x2+width-1, y+height, x, y):setRNG(rng)
     end
     if dy==-1 then
-        local x2=x-math.floor(rng:random()*width)
+        local x2=x-math.floor(rng:getUniform()*width)
         return Room:new(x2, y-height, x2+width-1, y-1, x, y):setRNG(rng)
     end
 end
@@ -70,11 +70,11 @@ function Room:createRandomCenter(cx, cy, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=min+math.floor(rng:random()*(max-min+1))
+    local width=rng:getUniformInt(min, max)
 
     min   =options.roomHeight[1]
     max   =options.roomHeight[2]
-    local height=min+math.floor(rng:random()*(max-min+1))
+    local height=rng:getUniformInt(min, max)
 
     local x1=cx-math.floor(rng:random()*width)
     local y1=cy-math.floor(rng:random()*height)
@@ -95,11 +95,11 @@ function Room:createRandom(availWidth, availHeight, options, rng)
     rng = rng or self._rng
     local min  =options.roomWidth[1]
     local max  =options.roomWidth[2]
-    local width=math.floor(rng:random(min, max))
+    local width=rng:getUniformInt(min, max)
 
     min=options.roomHeight[1]
     max=options.roomHeight[2]
-    local height=math.floor(rng:random(min, max))
+    local height=rng:getUniformInt(min, max)
 
     local left=availWidth-width
     local top =availHeight-height
@@ -111,21 +111,29 @@ function Room:createRandom(availWidth, availHeight, options, rng)
     return Room:new(x1, y1, x2, y2):setRNG(rng)
 end
 
+function Room:_hasDoor(x, y)
+    for i = 1, #self._doors do
+        if self._doors[i].x == x and self._doors[i].y == y then
+            return true
+        end
+    end
+end
+
 --- Place a door.
 -- adds an element to this rooms _doors table
 -- @tparam int x the x-position of the door
 -- @tparam int y the y-position of the door
 function Room:addDoor(x, y)
-    self._doors[x..','..y]=1
+    if self:_hasDoor(x, y) then return end
+    self._doors[#self._doors + 1] = { x = x, y = y }
 end
 
 --- Get all doors.
 -- Runs the provided callback on all doors for this room
 -- @tparam function callback A function with two parameters (x, y) representing the position of the door.
 function Room:getDoors(callback)
-    for k,_ in pairs(self._doors) do
-        local parts=k:split(',')
-        callback(tonumber(parts[1]), tonumber(parts[2]))
+    for i = 1, #self._doors do
+        callback(self._doors[i].x, self._doors[i].y)
     end
 end
 
@@ -161,7 +169,9 @@ end
 --- Write various information about this room to the console.
 function Room:debug()
     local door='doors'
-    for k,_ in pairs(self._doors) do door=door..'; '..k end
+    for _, pos in ipairs(self._doors) do
+        door=door ..'; ' .. pos.x .. ',' .. pos.y
+    end
     local debugString= 'room    : '..(self._x1 and self._x1 or 'not available')
                               ..','..(self._y1 and self._y1 or 'not available')
                               ..','..(self._x2 and self._x2 or 'not available')
@@ -202,7 +212,7 @@ function Room:create(digCallback)
     local value=0
     for x=left,right do
         for y=top,bottom do
-            if self._doors[x..','..y] then
+            if self:_hasDoor(x, y) then
                 value=2
             elseif x==left or x==right or y==top or y==bottom then
                 value=1
@@ -217,8 +227,8 @@ end
 --- Get center cell of room
 -- @treturn table {x-position, y-position}
 function Room:getCenter()
-    return {math.round((self._x1+self._x2)/2),
-            math.round((self._y1+self._y2)/2)}
+    return {math.ceil((self._x1+self._x2)/2),
+            math.ceil((self._y1+self._y2)/2)}
 end
 
 --- Get Left most floor space.

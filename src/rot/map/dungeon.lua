@@ -23,10 +23,9 @@ function Dungeon:getRooms() return self._rooms end
 -- @treturn table A table {{x=int, y=int},...} for doors.
 function Dungeon:getDoors()
     local result={}
-    for _,v in pairs(self._rooms) do
-        for l in pairs(v._doors) do
-            local s=l:split(',')
-            table.insert(result, {x=tonumber(s[1]), y=tonumber(s[2])})
+    for _, room in ipairs(self._rooms) do
+        for _, door in ipairs(room._doors) do
+            result[#result + 1] = door
         end
     end
     return result
