@@ -2,6 +2,7 @@ local ROT = require 'src.rot'
 local expect = require 'tests.expect' (assert)
 
 ROT.FOV.PreciseShadowcasting = ROT.FOV.Precise
+ROT.FOV.RecursiveShadowcasting = ROT.FOV.Recursive
 
 local function xit () end
 local function xdescribe () end
@@ -130,16 +131,19 @@ describe("FOV", function()
         return result, center
     end
 
-    local checkResult = function(fov, center, result)
+    local checkResult = function(fov, center, result, radius)
         local used = {}
         local callback = function(x, y, dist)
             expect(result[y]:sub(x, x)).toEqual(".")
             used[x..","..y] = 1
         end
 
-        fov:compute(center[1], center[2], 2, callback)
+        fov:compute(center[1], center[2], radius or 2, callback)
+        -- io.write '\n'
         for j = 1, #result do
+            -- io.write '\n'
             for i = 1, #result[j] do
+                -- io.write(used[i..","..j] or 'x')
                 if (result[j]:sub(i, i) == ".") then
                     expect(used[i..","..j]).NOT.toBeUndefined()
                 end
@@ -172,8 +176,11 @@ describe("FOV", function()
         end
 
         fov:compute180(center[1], center[2], 2, dir, callback)
+        -- io.write '\n'
         for j = 1, #result do
+            -- io.write '\n'
             for i = 1, #result[j] do
+                -- io.write(used[i..","..j] or 'x')
                 if (result[j]:sub(i, i) == ".") then
                     expect(used[i..","..j]).NOT.toBeUndefined()
                 end
@@ -230,7 +237,7 @@ describe("FOV", function()
         end)
     end)
 
-    xdescribe("Recursive Shadowcasting", function()
+    describe("Recursive Shadowcasting", function()
         describe("8-topology", function()
             describe("360-degree view", function ()
                 it("should compute visible ring0 in 360 degrees", function()
@@ -248,47 +255,63 @@ describe("FOV", function()
                 it("should compute visible ring0 180 degrees facing north", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult180Degrees(fov, 0, center, RESULT_MAP8_RING0_180_NORTH)
+                    checkResult180Degrees(fov, 1, center, RESULT_MAP8_RING0_180_NORTH)
                 end)
                 it("should compute visible ring0 180 degrees facing south", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult180Degrees(fov, 4, center, RESULT_MAP8_RING0_180_SOUTH)
+                    checkResult180Degrees(fov, 5, center, RESULT_MAP8_RING0_180_SOUTH)
                 end)
                 it("should compute visible ring0 180 degrees facing east", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult180Degrees(fov, 2, center, RESULT_MAP8_RING0_180_EAST)
+                    checkResult180Degrees(fov, 3, center, RESULT_MAP8_RING0_180_EAST)
                 end)
                 it("should compute visible ring0 180 degrees facing west", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult180Degrees(fov, 6, center, RESULT_MAP8_RING0_180_WEST)
+                    checkResult180Degrees(fov, 7, center, RESULT_MAP8_RING0_180_WEST)
                 end)
             end)
             describe("90-degree view", function ()
                 it("should compute visible ring0 90 degrees facing north", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult90Degrees(fov, 0, center, RESULT_MAP8_RING0_90_NORTH)
+                    checkResult90Degrees(fov, 1, center, RESULT_MAP8_RING0_90_NORTH)
                 end)
                 it("should compute visible ring0 90 degrees facing south", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult90Degrees(fov, 4, center, RESULT_MAP8_RING0_90_SOUTH)
+                    checkResult90Degrees(fov, 5, center, RESULT_MAP8_RING0_90_SOUTH)
                 end)
                 it("should compute visible ring0 90 degrees facing east", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult90Degrees(fov, 2, center, RESULT_MAP8_RING0_90_EAST)
+                    checkResult90Degrees(fov, 3, center, RESULT_MAP8_RING0_90_EAST)
                 end)
                 it("should compute visible ring0 90 degrees facing west", function()
                     local lightPasses, center = buildLightCallback(MAP8_RING0)
                     local fov = ROT.FOV.RecursiveShadowcasting(lightPasses, {topology=8})
-                    checkResult90Degrees(fov, 6, center, RESULT_MAP8_RING0_90_WEST)
+                    checkResult90Degrees(fov, 7, center, RESULT_MAP8_RING0_90_WEST)
                 end)
             end)
         end)
     end)
+    
+    describe("Bresenham", function()
+        describe("8-topology", function()
+            it("should compute visible ring0", function()
+                local lightPasses, center = buildLightCallback(MAP8_RING0)
+                local fov = ROT.FOV.Bresenham(lightPasses, {topology=8})
+                checkResult(fov, center, RESULT_MAP8_RING0, 3)
+            end)
+            it("should compute visible ring1", function()
+                local lightPasses, center = buildLightCallback(MAP8_RING1)
+                local fov = ROT.FOV.Bresenham(lightPasses, {topology=8})
+                checkResult(fov, center, RESULT_MAP8_RING1, 3)
+            end)
+        end)
+    end)
+    
 end)
 
