@@ -232,12 +232,12 @@ describe("Path", function()
 
 
     describe("DijkstraMap", function()
-        
+    
         local function stringify (dm)
             local t = {}
-            for y=1,dm._dimensions.h do
-                for x=1,dm._dimensions.w do
-                    t[#t + 1] = tostring(dm._map[x][y]):sub(1,1)
+            for y=1,5 do
+                for x=1,8 do
+                    t[#t + 1] = tostring(dm._map[x] and dm._map[x][y] or 'x'):sub(1,1)
                 end
                 t[#t + 1] = '\n'
             end
@@ -246,93 +246,140 @@ describe("Path", function()
             return result
         end
         
-        local function makePath (dm, topology)
-            PATH = { toString = toString }
-            local x, y = Z[1], Z[2]
-            local dx, dy = dm:dirTowardsGoal(x, y, topology)
-            if dx then
-                table.insert(PATH, 1, y) table.insert(PATH, 1, x)
-            end
-            while dx do
-                x, y = x + dx, y + dy
-                table.insert(PATH, 1, y) table.insert(PATH, 1, x)
-                dx, dy = dm:dirTowardsGoal(x, y, topology)
-            end
-        end
-        
-        local dm = ROT.DijkstraMap(A[1], A[2], 8, 5, PASSABLE_CALLBACK_48)
-        local PATH_A8 = inc { 0, 1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
-        local PATH_A4 = inc { 0, 1, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
-
-        it("should compute correct map A", function()
-            dm:compute()
-            expect(stringify(dm)).toEqual [[
-11234567
-0iii4iii
-112i5iii
-2iii6iii
-33456789
+        describe("8-topology", function()
+            local PATH_A = inc { 0, 1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local PATH_B = inc { 2, 2, 1, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local dm = ROT.Path.DijkstraMap(Z[1], Z[2], PASSABLE_CALLBACK_48, {topology=8})
+            
+            it("should compute correct map", function()
+                dm:compute()
+                expect(stringify(dm)).toEqual [[
+76544456
+6iii3iii
+556i2ixx
+4iii1iii
+43210123
 ]]
-        end)
-        
-        it("should compute correct path A, 8-topology", function()
-            makePath(dm, 8)
-            expect(PATH:toString()).toEqual(PATH_A8:toString())
-        end)
-        
-        it("should compute correct path A, 4-topology", function()
-            makePath(dm, 4)
-            expect(PATH:toString()).toEqual(PATH_A4:toString())
-        end)
-        
-        local dm = ROT.DijkstraMap(B[1], B[2], 8, 5, PASSABLE_CALLBACK_48)
-        local PATH_B8 = inc { 2, 2, 1, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
-        local PATH_B4 = inc { 2, 2, 1, 2, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
+            end)
+            
+            it("should compute correct path A", function()
+                dm:compute(A[1], A[2], PATH_CALLBACK)
+                expect(PATH:toString()).toEqual(PATH_A:toString())
+            end)
 
-        it("should compute correct map B", function()
-            dm:compute()
-            expect(stringify(dm)).toEqual [[
-33456789
-2iii6iii
-210i7iii
-2iii6iii
-33456789
+            it("should compute correct path B", function()
+                dm:compute(B[1], B[2], PATH_CALLBACK)
+                expect(PATH:toString()).toEqual(PATH_B:toString())
+            end)
+
+            it("should survive non-existant path X", function()
+                dm:compute(X[1], X[2], PATH_CALLBACK)
+                expect(#PATH).toEqual(0)
+            end)
+            
+            -- maps created with 8-topology can be traversed with 4-topology
+            local PATH_A = inc { 0, 1, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local PATH_B = inc { 2, 2, 1, 2, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
+            
+            it("should compute correct path A in 4-topology", function()
+                dm:compute(A[1], A[2], PATH_CALLBACK, 4)
+                expect(PATH:toString()).toEqual(PATH_A:toString())
+            end)
+
+            it("should compute correct path B in 4-topology", function()
+                dm:compute(B[1], B[2], PATH_CALLBACK, 4)
+                expect(PATH:toString()).toEqual(PATH_B:toString())
+            end)
+
+            it("should survive non-existant path X in 4-topology", function()
+                dm:compute(X[1], X[2], PATH_CALLBACK, 4)
+                expect(#PATH).toEqual(0)
+            end)
+
+        end) -- 8-topology
+
+        describe("4-topology", function()
+            local PATH_A = inc { 0, 1, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local PATH_B = inc { 2, 2, 1, 2, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local dm = ROT.Path.DijkstraMap(Z[1], Z[2], PASSABLE_CALLBACK_48, {topology=4})
+        
+            it("should compute correct map", function()
+                dm:compute()
+                expect(stringify(dm)).toEqual [[
+87654567
+7iii3iii
+678i2ixx
+5iii1iii
+43210123
 ]]
-        end)
-        
-        it("should compute correct path B, 8-topology", function()
-            makePath(dm, 8)
-            expect(PATH:toString()).toEqual(PATH_B8:toString())
-        end)
-        
-        it("should compute correct path B, 4-topology", function()
-            makePath(dm, 4)
-            expect(PATH:toString()).toEqual(PATH_B4:toString())
-        end)
-        
-        local dm = ROT.DijkstraMap(X[1], X[2], 8, 5, PASSABLE_CALLBACK_48)
+            end)
+            
+            it("should compute correct path A", function()
+                dm:compute(A[1], A[2], PATH_CALLBACK)
+                expect(PATH:toString()).toEqual(PATH_A:toString())
+            end)
 
-        it("should compute correct map X", function()
-            dm:compute()
-            expect(stringify(dm)).toEqual [[
-iiiiiiii
-iiiiiiii
-iiiiii0i
-iiiiiiii
-iiiiiiii
+            it("should compute correct path B", function()
+                dm:compute(B[1], B[2], PATH_CALLBACK)
+                expect(PATH:toString()).toEqual(PATH_B:toString())
+            end)
+
+            it("should survive non-existant path X", function()
+                dm:compute(X[1], X[2], PATH_CALLBACK)
+                expect(#PATH).toEqual(0)
+            end)
+            
+            -- maps created with 4-topology can be traversed with 8-topology
+            local PATH_A = inc { 0, 1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
+            local PATH_B = inc { 2, 2, 1, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4 }
+            
+            it("should compute correct path A in 8-topology", function()
+                dm:compute(A[1], A[2], PATH_CALLBACK, 8)
+                expect(PATH:toString()).toEqual(PATH_A:toString())
+            end)
+
+            it("should compute correct path B in 8-topology", function()
+                dm:compute(B[1], B[2], PATH_CALLBACK, 8)
+                expect(PATH:toString()).toEqual(PATH_B:toString())
+            end)
+
+            it("should survive non-existant path X in 8-topology", function()
+                dm:compute(X[1], X[2], PATH_CALLBACK, 8)
+                expect(#PATH).toEqual(0)
+            end)
+            
+        end) -- 4-topology
+
+        describe("multiple goals", function()
+            
+            local dm = ROT.Path.DijkstraMap(Z[1], Z[2], PASSABLE_CALLBACK_48, {topology=8})
+            
+            it("should compute correct map with 2 goals", function()
+                dm:addGoal(A[1], A[2])
+                dm:compute()
+                expect(stringify(dm)).toEqual [[
+11234456
+0iii3iii
+112i2ixx
+2iii1iii
+33210123
 ]]
-        end)
+            end)
+            
+            it("should compute correct map with 3 goals", function()
+                dm:addGoal(B[1], B[2])
+                dm:compute()
+                expect(stringify(dm)).toEqual [[
+11234456
+0iii3iii
+110i2ixx
+2iii1iii
+33210123
+]]
+            end)
+            
+        end) -- multiple goals
         
-        it("should survive non-existant path X, 8-topology", function()
-            makePath(dm, 8)
-            expect(#PATH).toEqual(0)
-        end)
-        
-        it("should survive non-existant path X, 4-topology", function()
-            makePath(dm, 4)
-            expect(#PATH).toEqual(0)
-        end)
-
     end) -- DijkstraMap
     
 end) -- path
