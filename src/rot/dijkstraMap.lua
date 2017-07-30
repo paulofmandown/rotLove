@@ -35,10 +35,20 @@ end
 
 --- Establish values for all cells in map.
 -- call after ROT.DijkstraMap:new(goalX, goalY, mapWidth, mapHeight, passableCallback)
-function DijkstraMap:compute()
+function DijkstraMap:compute(callback)
     if #self._goals<1 then return
-    elseif #self._goals==1 then return self:_singleGoalCompute()
-    else return self:_manyGoalCompute() end
+    elseif #self._goals==1 then
+        self:_singleGoalCompute()
+    else
+        self:_manyGoalCompute()
+    end
+    if callback then
+        for y=1,self._dimensions.h do
+            for x=1,self._dimensions.w do
+                callback(x, y, self._map[x][y])
+            end
+        end
+    end
 end
 
 function DijkstraMap:_manyGoalCompute()
@@ -113,7 +123,7 @@ function DijkstraMap:_singleGoalCompute()
             for _,d in pairs(ds) do
                 local x=t[1]+d[1]
                 local y=t[2]+d[2]
-                if self._passableCallback(x,y) and self._map[x][y]>val then
+                if self._passableCallback(x,y) and self._map[x] and self._map[x][y]>val then
                     self._map[x][y]=val
                     table.insert(pq,{x,y})
                 end
@@ -185,21 +195,24 @@ function DijkstraMap:getMap() return self._map end
   -- @treturn int goal.x x-value of goal cell
 function DijkstraMap:getGoals() return self._goals end
 
+
 --- Get the direction of the goal from a given position
 -- @tparam int x x-value of current position
 -- @tparam int y y-value of current position
+-- @tparam int topology optional, defaults to 8, should be 8 or 4.
 -- @treturn int xDir X-Direction towards goal. Either -1, 0, or 1
 -- @treturn int yDir Y-Direction towards goal. Either -1, 0, or 1
-function DijkstraMap:dirTowardsGoal(x, y)
+function DijkstraMap:dirTowardsGoal(x, y, topology)
     local low=self._map[x][y]
-    if low==0 then return nil end
+    if low==0 or low==math.huge then return nil end
     local dir=nil
-    for _,v in pairs(self._dirs) do
+    for i = 1, topology or 8 do
+        v = self._dirs[i]
         local tx=(x+v[1])
         local ty=(y+v[2])
         if tx>0 and tx<=self._dimensions.w and ty>0 and ty<=self._dimensions.h then
             local val=self._map[tx][ty]
-            if val<low then
+            if i < 5 and val <= low or val < low then
                 low=val
                 dir=v
             end
@@ -207,7 +220,6 @@ function DijkstraMap:dirTowardsGoal(x, y)
     end
 
     if dir then return dir[1],dir[2] end
-    return nil
 end
 
 --- Run a callback function on every cell in the map
