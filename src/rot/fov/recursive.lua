@@ -54,9 +54,9 @@ end
   -- @tparam boolean callback.visibility Indicates if the cell is seen
 function Recursive:compute180(x, y, R, dir, callback)
     callback(x, y, 0, true)
-    local prev=(dir-1+8)%8
-    local nPre=(dir-2+8)%8
-    local next=(dir+ 9 )%8
+    local prev=((dir-2+8)%8)+1
+    local nPre=((dir-3+8)%8)+1
+    local next=((dir  +8)%8)+1
 
     self:_renderOctant(x, y, self._octants[nPre], R, callback)
     self:_renderOctant(x, y, self._octants[prev], R, callback)
@@ -76,7 +76,7 @@ end
   -- @tparam boolean callback.visibility Indicates if the cell is seen
 function Recursive:compute90(x, y, R, dir, callback)
     callback(x, y, 0, true)
-    local prev=(dir-1+8)%8
+    local prev=((dir-2+8)%8)+1
 
     self:_renderOctant(x, y, self._octants[dir ], R, callback)
     self:_renderOctant(x, y, self._octants[prev], R, callback)

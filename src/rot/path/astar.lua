@@ -54,19 +54,21 @@ function AStar:compute(fromX, fromY, callback)
 end
 
 function AStar:_add(x, y, prev)
+    local h = self:_distance(x, y)
     local obj={}
     obj.x   =x
     obj.y   =y
     obj.prev=prev
     obj.g   =prev and prev.g+1 or 0
-    obj.h   =self:_distance(x, y)
+    obj.h   =h
     self._done[x][y]=obj
 
     local f=obj.g+obj.h
 
     for i=1,#self._todo do
         local item=self._todo[i]
-        if f<item.g+item.h then
+        local itemF = item.g + item.h;
+        if f < itemF or (f == itemF and h < item.h) then
             table.insert(self._todo, i, obj)
             return
         end
