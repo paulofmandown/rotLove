@@ -175,7 +175,9 @@ function DijkstraMap:_rebuild(callback)
 
     while #self._nextCells > 0 do
         for i = #self._nextCells, 1, -1 do
-            local cell = table.remove(self._nextCells, i)
+            local cell = self._nextCells[i]
+            self._nextCells[i] = self._nextCells[#self._nextCells]
+            self._nextCells[#self._nextCells] = nil
             self:_visitAdjacent(cell.x, cell.y)
         end
     end
