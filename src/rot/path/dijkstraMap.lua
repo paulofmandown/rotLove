@@ -39,9 +39,9 @@ end
 -- @tparam function callback A function with x and y parameters that will be run on every cell in the map
 function DijkstraMap:create(callback)
     self:_rebuild()
-    for i = 1, #self._allCells do
-        local c = self._allCells[i]
-        callback(c.x, c.y, self._map[c.x][c.y])
+    for i = 1, #self._allCells, 2 do
+        local x, y = self._allCells[i], self._allCells[i + 1]
+        callback(x, y, self._map[x][y])
     end
 end
 
@@ -57,10 +57,18 @@ end
 -- @tparam int y the y-value of the new goal cell
 function DijkstraMap:addGoal(x, y)
     if not self:_getGoalIndex(x, y) then
-        self._goals[#self._goals + 1] = { x = x, y = y }
+        local n = #self._goals
+        self._goals[n + 1], self._goals[n + 2] = x, y
         self._dirty = true
     end
     return self
+end
+
+local function removePair(t, i)
+    local n, x, y = #t, t[i], t[i + 1]
+    t[i], t[i + 1] = t[n - 1], t[n]
+    t[n - 1], t[n] = nil, nil
+    return x, y
 end
 
 --- Remove a goal.
@@ -69,8 +77,8 @@ end
 function DijkstraMap:removeGoal(x, y)
     local i = self:_getGoalIndex(x, y)
     if i then
+        removePair(self._goals, i)
         self._dirty = true
-        table.remove(self._goals, i)
     end
     return self
 end
@@ -124,24 +132,23 @@ function DijkstraMap:debug(returnString)
 end
 
 function DijkstraMap:_getGoalIndex(x, y)
-    for i = 1, #self._goals do
-        if self._goals[i].x == x and self._goals[i].y == y then
+    for i = 1, #self._goals, 2 do
+        if self._goals[i] == x and self._goals[i + 1] == y then
             return i
         end
     end
 end
 
 function DijkstraMap:_addCell(x, y, value)
-    local t = { x = x, y = y }
     if not self._map[x] then self._map[x] = {} end
+    local nc, ac = #self._nextCells, #self._allCells
+    self._nextCells[nc + 1], self._nextCells[nc + 2] = x, y
+    self._allCells[ac + 1], self._allCells[ac + 2] = x, y
     self._map[x][y] = value
-    self._nextCells[#self._nextCells + 1] = t
-    self._allCells[#self._allCells + 1] = t
     return value
 end
 
 function DijkstraMap:_visitAdjacent(x, y)
-    
     if not self._passableCallback(x, y) then return end
     
     local low = math.huge
@@ -161,7 +168,6 @@ function DijkstraMap:_visitAdjacent(x, y)
 end
 
 function DijkstraMap:_rebuild(callback)
-
     if not self._dirty then return end
     self._dirty = false
 
@@ -169,21 +175,17 @@ function DijkstraMap:_rebuild(callback)
     self._allCells = {}
     self._map = {}
 
-    for i = 1, #self._goals do
-        self:_addCell(self._goals[i].x, self._goals[i].y, 0)
+    for i = 1, #self._goals, 2 do
+        self:_addCell(self._goals[i], self._goals[i + 1], 0)
     end
 
     while #self._nextCells > 0 do
-        for i = #self._nextCells, 1, -1 do
-            local cell = self._nextCells[i]
-            self._nextCells[i] = self._nextCells[#self._nextCells]
-            self._nextCells[#self._nextCells] = nil
-            self:_visitAdjacent(cell.x, cell.y)
+        for i = #self._nextCells - 1, 1, -2 do
+            local x, y = removePair(self._nextCells, i)
+            self:_visitAdjacent(x, y)
         end
     end
 end
 
-
-
-
 return DijkstraMap
+
