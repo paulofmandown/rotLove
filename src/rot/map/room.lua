@@ -3,6 +3,9 @@
 -- @module ROT.Map.Room
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local Room = ROT.Map.Feature:extend("Room")
+
+local PointSet = ROT.Type.PointSet
+
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -16,7 +19,7 @@ function Room:init(x1, y1, x2, y2, doorX, doorY)
     self._x2   =x2
     self._y1   =y1
     self._y2   =y2
-    self._doors= {}
+    self._doors= PointSet()
     if doorX and doorY then
         self:addDoor(doorX, doorY)
     end
@@ -111,36 +114,27 @@ function Room:createRandom(availWidth, availHeight, options, rng)
     return Room:new(x1, y1, x2, y2):setRNG(rng)
 end
 
-function Room:_hasDoor(x, y)
-    for i = 1, #self._doors do
-        if self._doors[i].x == x and self._doors[i].y == y then
-            return true
-        end
-    end
-end
-
 --- Place a door.
 -- adds an element to this rooms _doors table
 -- @tparam int x the x-position of the door
 -- @tparam int y the y-position of the door
 function Room:addDoor(x, y)
-    if self:_hasDoor(x, y) then return end
-    self._doors[#self._doors + 1] = { x = x, y = y }
+    self._doors:push(x, y)
 end
 
 --- Get all doors.
 -- Runs the provided callback on all doors for this room
 -- @tparam function callback A function with two parameters (x, y) representing the position of the door.
 function Room:getDoors(callback)
-    for i = 1, #self._doors do
-        callback(self._doors[i].x, self._doors[i].y)
+    for _, x, y in self._doors:each() do
+        callback(x, y)
     end
 end
 
 --- Reset the room's _doors table.
 -- @treturn ROT.Map.Room self
 function Room:clearDoors()
-    self._doors={}
+    self._doors = PointSet()
     return self
 end
 
@@ -169,8 +163,8 @@ end
 --- Write various information about this room to the console.
 function Room:debug()
     local door='doors'
-    for _, pos in ipairs(self._doors) do
-        door=door ..'; ' .. pos.x .. ',' .. pos.y
+    for _, x, y in self._doors:each() do
+        door=door ..'; ' .. x .. ',' .. y
     end
     local debugString= 'room    : '..(self._x1 and self._x1 or 'not available')
                               ..','..(self._y1 and self._y1 or 'not available')
@@ -212,7 +206,7 @@ function Room:create(digCallback)
     local value=0
     for x=left,right do
         for y=top,bottom do
-            if self:_hasDoor(x, y) then
+            if self._doors:find(x, y) then
                 value=2
             elseif x==left or x==right or y==top or y==bottom then
                 value=1

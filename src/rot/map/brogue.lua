@@ -4,6 +4,8 @@
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local Brogue=ROT.Map.Dungeon:extend("Brogue")
 
+local PointSet = ROT.Type.PointSet
+
 --- Constructor.
 -- Called with ROT.Map.Brogue:new(). A note: Brogue's map is 79x29. Consider using those dimensions for Display if you're looking to build a brogue-like.
 -- @tparam int width Width in cells of the map
@@ -37,9 +39,9 @@ function Brogue:init(width, height, options)
         for k,v in pairs(options) do self._options[k]=v end
     end
 
-    self._walls={}
+    self._walls=PointSet():setRNG(self._rng)
     self._rooms={}
-    self._doors={}
+    self._doors=PointSet()
     self._loops=30
     self._loopAttempts=300
     self._maxrooms=99
@@ -59,18 +61,13 @@ end
 function Brogue:create(callback, firstFloorBehavior)
     self._map=self:_fillMap(1)
     self._rooms={}
-    self._doors={}
-    self._walls={}
+    self._doors=PointSet()
+    self._walls=PointSet():setRNG(self._rng)
 
     self:_buildFirstRoom(firstFloorBehavior)
     self:_generateRooms()
     self:_generateLoops()
     self:_closeDiagonalOpenings()
-
-    local d=self._doors
-    for i=1,#d do
-        self._map[d[i][1]][d[i][2]] = 2
-    end
 
     if not callback then return self end
     for y=1,self._height do
@@ -112,13 +109,13 @@ function Brogue:_buildCave()
     local map=cl._map
     local id=2
     local largest=2
-    local bestBlob={0,{}}
+    local bestBlob = { size = 0, walls = PointSet() }
 
     for x=1,self._width do
         for y=1,self._height do
             if map[x][y]==1 then
                 local blobData=self:_fillBlob(x,y,map, id)
-                if blobData[1]>bestBlob[1] then
+                if blobData.size > bestBlob.size then
                     largest=id
                     bestBlob=blobData
                 end
@@ -127,8 +124,10 @@ function Brogue:_buildCave()
         end
     end
 
-    for i=1,#bestBlob[2] do table.insert(self._walls, bestBlob[2][i]) end
-
+    for _, x, y in bestBlob.walls:each() do
+        self._walls:push(x, y)
+    end
+    
     for x=2,self._width-1 do
         for y=2,self._height-1 do
             if map[x][y]==largest then
@@ -142,27 +141,28 @@ end
 
 function Brogue:_fillBlob(x,y,map, id)
     map[x][y]=id
-    local todo={{x,y}}
+    local todo=PointSet()
     local dirs=ROT.DIRS.EIGHT
     local size=1
-    local walls={}
+    local walls=PointSet()
+    todo:push(x, y)
     repeat
-        local pos=table.remove(todo, 1)
+        local px, py = todo:pluck(1)
         for i=1,#dirs do
-            local rx=pos[1]+dirs[i][1]
-            local ry=pos[2]+dirs[i][2]
+            local rx=px+dirs[i][1]
+            local ry=py+dirs[i][2]
             if rx<1 or rx>self._width or ry<1 or ry>self._height then
 
             elseif map[rx][ry]==1 then
                 map[rx][ry]=id
-                table.insert(todo,{ rx, ry })
+                todo:push(rx, ry)
                 size=size+1
             elseif map[rx][ry]==0 then
-                table.insert(walls, {rx,ry})
+                walls:push(rx, ry)
             end
         end
     until #todo==0
-    return {size, walls}
+    return { size = size, walls = walls }
 end
 
 function Brogue:_generateRooms()
@@ -177,16 +177,17 @@ end
 
 function Brogue:_buildRoom(forceNoCorridor)
     --local p=table.remove(self._walls,self._rng:random(1,#self._walls))
-    local p=self._walls[self._rng:random(1,#self._walls)]
-    if not p then return false end
-    local d=self:_getDiggingDirection(p[1], p[2])
+    -- local p=self._walls[self._rng:random(1,#self._walls)]
+    local x, y = self._walls:getRandom()
+    if not x then return false end
+    local d=self:_getDiggingDirection(x, y)
     if d then
         if self._rng:random()<self._options.corridorChance and not forceNoCorridor then
             local cd
             if d[1]~=0 then cd=self._options.corridorWidth
             else cd=self._options.corridorHeight
             end
-            local corridor=ROT.Map.Corridor:createRandomAt(p[1]+d[1],p[2]+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
+            local corridor=ROT.Map.Corridor:createRandomAt(x+d[1],y+d[2],d[1],d[2],{corridorLength=cd}, self._rng)
             if corridor:isValid(self._isWallCallback, self._canBeDugCallback) then
                 local dx=corridor._endX
                 local dy=corridor._endY
@@ -198,17 +199,17 @@ function Brogue:_buildRoom(forceNoCorridor)
                     table.insert(self._corridors, corridor)
                     room:create(self._digCallback)
                     self:_insertWalls(room._walls)
-                    self._map[p[1]][p[2]]=0
+                    self._map[x][y]=0
                     self._map[dx][dy]=0
                     return true
                 end
             end
         else
-            local room=ROT.Map.BrogueRoom:createRandomAt(p[1],p[2],d[1],d[2], self._options, self._rng)
+            local room=ROT.Map.BrogueRoom:createRandomAt(x,y,d[1],d[2], self._options, self._rng)
             if room:isValid(self._isWallCallback, self._canBeDugCallback) then
                 room:create(self._digCallback)
                 self:_insertWalls(room._walls)
-                table.insert(self._doors, room._doors[1])
+                self._doors:push(room._doors:peek(1))
                 return true
             end
         end
@@ -236,8 +237,8 @@ function Brogue:_getDiggingDirection(cx, cy)
 end
 
 function Brogue:_insertWalls(wt)
-    for _,v in pairs(wt) do
-        table.insert(self._walls, v)
+    for _, x, y in wt:each() do
+        self._walls:push(x, y)
     end
 end
 
@@ -255,12 +256,13 @@ function Brogue:_generateLoops()
     end
     for _=1,300 do
         if #self._walls<1 then return end
-        local w=table.remove(self._walls, self._rng:random(1,#self._walls))
+        local wx, wy = self._walls:getRandom()
+        self._walls:prune(wx, wy)
         for j=1,2 do
-            local x=w[1] +dirs[j][1]
-            local y=w[2] +dirs[j][2]
-            local x2=w[1]+dirs[j+2][1]
-            local y2=w[2]+dirs[j+2][2]
+            local x=wx +dirs[j][1]
+            local y=wy +dirs[j][2]
+            local x2=wx+dirs[j+2][1]
+            local y2=wy+dirs[j+2][2]
             if x>1 and x2>1 and y>1 and y2>1 and
                 x<wd and x2<wd and y<hi and y2<hi and
                 m[x][y]==0 and m[x2][y2]==0
@@ -268,7 +270,7 @@ function Brogue:_generateLoops()
                 local path=ROT.Path.AStar(x,y,pass)
                 path:compute(x2, y2, cb)
                 if count>20 then
-                    m[w[1]][w[2]]=2
+                    m[wx][wy]=2
                 end
                 count=0
             end

@@ -21,11 +21,16 @@ function Dungeon:getRooms() return self._rooms end
 --- Get doors
 -- Get a table of doors on the map
 -- @treturn table A table {{x=int, y=int},...} for doors.
+
+-- FIXME: This could be problematic; it accesses an internal member of another
+-- class (room._doors). Will break if underlying implementation changes.
+-- Should probably take a callback instead like Room:getDoors().
+
 function Dungeon:getDoors()
     local result={}
     for _, room in ipairs(self._rooms) do
-        for _, door in ipairs(room._doors) do
-            result[#result + 1] = door
+        for _, x, y in room._doors:each() do
+            result[#result + 1] = { x = x, y = y }
         end
     end
     return result

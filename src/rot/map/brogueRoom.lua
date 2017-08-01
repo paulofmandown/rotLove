@@ -3,17 +3,20 @@
 -- @module ROT.Map.BrogueRoom
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local BrogueRoom = ROT.Map.Feature:extend("BrogueRoom")
+
+local PointSet = ROT.Type.PointSet
+
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
 function BrogueRoom:init(dims, doorX, doorY)
-    self._dims =dims
-    self._doors={}
-    self._walls={}
+    self._dims = dims
+    self._doors = PointSet()
+    self._walls = PointSet()
     if doorX then
-        self._doors[1] = {doorX, doorY}
+        self._doors:push(doorX, doorY)
     end
 end
 
@@ -236,7 +239,7 @@ function BrogueRoom:isValid(isWallCallback, canBeDugCallback)
                 if not isWallCallback(x, y) or not canBeDugCallback(x, y) then
                     return false
                 end
-            elseif self:_coordIsWall(x, y) then table.insert(self._walls, {x,y}) end
+            elseif self:_coordIsWall(x, y) then self._walls:push(x, y) end
         end
     end
 
@@ -254,7 +257,7 @@ function BrogueRoom:create(digCallback)
     local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
-            if self._doors[x..','..y] then
+            if self._doors:find(x, y) then
                 value=2
             elseif self:_coordIsFloor(x, y) then
                 value=0
@@ -286,7 +289,7 @@ function BrogueRoom:_coordIsWall(x, y)
 end
 
 function BrogueRoom:clearDoors()
-    self._doors={}
+    self._doors=PointSet()
 end
 
 function BrogueRoom:getCenter()
@@ -314,7 +317,7 @@ function BrogueRoom:debug()
 end
 
 function BrogueRoom:addDoor(x, y)
-    self._doors[x..','..y]=1
+    self._doors:push(x, y)
 end
 
 --- Add all doors based on available walls.

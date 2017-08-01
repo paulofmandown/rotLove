@@ -170,12 +170,9 @@ end
 -- @tparam[opt] table fg The color used to write the provided character
 -- @tparam[opt] table bg the color used to fill in the background of the cleared space
 function Display:clear(c, x, y, w, h, fg, bg)
-    c =c and c or ' '
-    w =w and w or self.widthInChars
-    local s=''
-    for _=1,w do
-        s=s..c
-    end
+    c = c or ' '
+    w = w or self.widthInChars
+    local s = c:rep(self.widthInChars)
     x =self:_validateX(x, s)
     y =self:_validateY(y)
     h =self:_validateHeight(y, h)
