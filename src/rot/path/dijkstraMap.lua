@@ -100,7 +100,7 @@ function DijkstraMap:dirTowardsGoal(x, y, topology)
     if not low or low == 0 or low == math.huge then return end
     local dir=nil
     for i = 1, topology or self._options.topology do
-        local v = self._dirs[i] or ROT.DIRS.EIGHT[(i - 4) * 2]
+        local v = ROT.DIRS.FOUR[i] or ROT.DIRS.EIGHT[(i - 4) * 2]
         local tx=(x+v[1])
         local ty=(y+v[2])
         local val = self._map[tx] and self._map[tx][ty]
