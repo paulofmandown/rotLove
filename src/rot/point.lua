@@ -2,6 +2,7 @@ local ROT = require((...):gsub(('.[^./\\]*'):rep(1) .. '$', ''))
 local Point = ROT.Class:extend("Point")
 
 function Point:init(x, y)
+    self.isPoint = true
     self.x=x
     self.y=y
 end
@@ -17,7 +18,7 @@ end
 function Point:equals(other)
     if self==other                  then return true  end
     if other==nil                   or
-    not other.is_a(Point)           or
+    not other.isPoint               or
     (other.x and other.x ~= self.x) or
     (other.y and other.y ~= self.y) then return false end
     return true
