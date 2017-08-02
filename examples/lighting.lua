@@ -81,10 +81,10 @@ function lightingCallback(x, y, color)
 end
 
 function getRandomColor()
-    return { r=math.floor(ROT.RNG:random(0,125)),
-             g=math.floor(ROT.RNG:random(0,125)),
-             b=math.floor(ROT.RNG:random(0,125)),
-             a=255}
+    return { math.floor(ROT.RNG:random(0,125)),
+             math.floor(ROT.RNG:random(0,125)),
+             math.floor(ROT.RNG:random(0,125)),
+             255}
 end
 
 function getRandomFloor()

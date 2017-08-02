@@ -118,7 +118,7 @@ function Lighting:_computeEmitters(litCells, doneCells)
                 local intensity=0
                 for l,_ in pairs(color) do
                     if l~='a' then
-                        local part=math.round(color[l]*reflectivity)
+                        local part=math.floor(color[l]*reflectivity)
                         emission[l]=part
                         intensity=intensity+part
                     end
@@ -145,9 +145,9 @@ function Lighting:_emitLightFromCell(x, y, color, litCells)
         if not litCells[k] then
             litCells[k]={ 0, 0, 0 }
         end
-        for l,_ in pairs(color) do
-            if l~='a' then
-                litCells[k][l]=litCells[k][l]+math.round(color[l]*formFactor)
+        for l, c in ipairs(color) do
+            if l < 4 then
+                litCells[k][l]=litCells[k][l]+math.floor(c*formFactor)
             end
         end
     end
