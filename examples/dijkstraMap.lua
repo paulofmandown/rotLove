@@ -61,7 +61,7 @@ function dothething()
         local y=math.random(1,f:getHeight())
 
         if map[x][y]=='.' then
-            dijkMap=ROT.DijkstraMap:new(x,y,f:getWidth(),f:getHeight(),dijkCalbak)
+            dijkMap=ROT.Path.DijkstraMap(x,y,dijkCalbak)
             break
         end
     end
