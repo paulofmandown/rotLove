@@ -41,13 +41,11 @@ function Brogue:init(width, height, options)
 
     self._walls=PointSet():setRNG(self._rng)
     self._rooms={}
-    self._doors=PointSet()
     self._loops=30
     self._loopAttempts=300
     self._maxrooms=99
     self._roomAttempts=600
     self._dirs=ROT.DIRS.FOUR
-    self._rng = ROT.RNG
 end
 
 --- Create.
@@ -61,13 +59,13 @@ end
 function Brogue:create(callback, firstFloorBehavior)
     self._map=self:_fillMap(1)
     self._rooms={}
-    self._doors=PointSet()
     self._walls=PointSet():setRNG(self._rng)
 
     self:_buildFirstRoom(firstFloorBehavior)
     self:_generateRooms()
     self:_generateLoops()
     self:_closeDiagonalOpenings()
+    self:_addDoors()
 
     if not callback then return self end
     for y=1,self._height do
@@ -198,6 +196,7 @@ function Brogue:_buildRoom(forceNoCorridor)
                     corridor:create(self._digCallback)
                     table.insert(self._corridors, corridor)
                     room:create(self._digCallback)
+                    table.insert(self._rooms, room)
                     self:_insertWalls(room._walls)
                     self._map[x][y]=0
                     self._map[dx][dy]=0
@@ -208,8 +207,8 @@ function Brogue:_buildRoom(forceNoCorridor)
             local room=ROT.Map.BrogueRoom:createRandomAt(x,y,d[1],d[2], self._options, self._rng)
             if room:isValid(self._isWallCallback, self._canBeDugCallback) then
                 room:create(self._digCallback)
+                table.insert(self._rooms, room)
                 self:_insertWalls(room._walls)
-                self._doors:push(room._doors:peek(1))
                 return true
             end
         end
@@ -237,9 +236,7 @@ function Brogue:_getDiggingDirection(cx, cy)
 end
 
 function Brogue:_insertWalls(wt)
-    for _, x, y in wt:each() do
-        self._walls:push(x, y)
-    end
+    for _, x, y in wt:each() do self._walls:push(x, y) end
 end
 
 function Brogue:_generateLoops()
@@ -258,6 +255,7 @@ function Brogue:_generateLoops()
         if #self._walls<1 then return end
         local wx, wy = self._walls:getRandom()
         self._walls:prune(wx, wy)
+        
         for j=1,2 do
             local x=wx +dirs[j][1]
             local y=wy +dirs[j][2]
@@ -270,22 +268,20 @@ function Brogue:_generateLoops()
                 local path=ROT.Path.AStar(x,y,pass)
                 path:compute(x2, y2, cb)
                 if count>20 then
-                    m[wx][wy]=2
+                    m[wx][wy]= 0 -- 2
                 end
                 count=0
             end
         end
+        
     end
 end
 
 function Brogue:_closeDiagonalOpenings()
 end
 
-function Brogue:_getDoors() return self._doors end
-function Brogue:getDoors() return self._doors end
-
 function Brogue:_digCallback(x, y, value)
-    self._map[x][y]=value
+    self._map[x][y] = value == 2 and 0 or value
 end
 
 function Brogue:_isWallCallback(x, y)
@@ -302,6 +298,14 @@ function Brogue:_canBeDugCallback(x, y)
         if self._map[x+drs[i][1]][y+drs[i][2]]==0 then return false end
     end
     return true
+end
+
+function Brogue:_addDoors()
+    for i=1,#self._rooms do
+        local room=self._rooms[i]
+        room:clearDoors()
+        room:addDoors(self._isWallCallback)
+    end
 end
 
 return Brogue

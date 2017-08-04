@@ -184,6 +184,7 @@ function Digger:_removeSurroundingWalls(cx, cy)
 end
 
 function Digger:_getDiggingDirection(cx, cy)
+    if cx<2 or cy<2 or cx>self._width-1 or cy>self._height-1 then return nil end
     local deltas=ROT.DIRS.FOUR
     local result=nil
 
@@ -191,13 +192,12 @@ function Digger:_getDiggingDirection(cx, cy)
         local delta=deltas[i]
         local x    =cx+delta[1]
         local y    =cy+delta[2]
-        if x<1 or y<1 or x>self._width or y>self._height then return nil end
         if self._map[x][y]==0 then
-            if result and #result>0 then return nil end
+            if result then return nil end
             result=delta
         end
     end
-    if not result or #result<1 then return nil end
+    if not result then return nil end
 
     return {-result[1], -result[2]}
 end

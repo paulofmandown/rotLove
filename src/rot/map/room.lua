@@ -138,21 +138,40 @@ function Room:clearDoors()
     return self
 end
 
+function Room:_checkHorizontalEdge(isWallCallback, x, y)
+    local top = self:getTop() - 1
+    local bottom = self:getBottom() + 1
+    return y == top or y == bottom
+        and not isWallCallback(x, y + 1)
+        and not isWallCallback(x, y - 1)
+end
+
+function Room:_checkVerticalEdge(isWallCallback, x, y)
+    local left = self:getLeft() - 1
+    local right = self:getRight() + 1
+    return x == left or x == right
+        and not isWallCallback(x + 1, y)
+        and not isWallCallback(x - 1, y)
+end
+
+function Room:_checkEdge(isWallCallback, x, y)
+    local v = self:_checkVerticalEdge(isWallCallback, x, y)
+    local h = self:_checkHorizontalEdge(isWallCallback, x, y)
+    return (v or h) -- and not (v and h)
+end
+
 --- Add all doors based on available walls.
 -- @tparam function isWallCallback
 -- @treturn ROT.Map.Room self
 function Room:addDoors(isWallCallback)
-    local left  =self._x1-1
-    local right =self._x2+1
-    local top   =self._y1-1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
-            if x~=left and x~=right and y~=top and y~=bottom then
-            elseif isWallCallback(x,y) then
-            elseif (x==left or x==right) and not isWallCallback(x+1, y) and not isWallCallback(x-1, y) then
-                self:addDoor(x,y)
-            elseif (y==top or y==bottom) and not isWallCallback(x, y+1) and not isWallCallback(x, y-1)  then
+            if isWallCallback(x,y) then
+            elseif self:_checkEdge(isWallCallback, x, y) then
                 self:addDoor(x,y)
             end
         end
@@ -179,10 +198,10 @@ end
 -- @tparam function canBeDugCallback A function with two parameters (x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if room is valid.
 function Room:isValid(isWallCallback, canBeDugCallback)
-    local left  =self._x1-1
-    local right =self._x2+1
-    local top   =self._y1-1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
             if x==left or x==right or y==top or y==bottom then
@@ -199,10 +218,10 @@ end
 -- Function runs a callback to dig the room into a map
 -- @tparam function digCallback The function responsible for digging the room into a map.
 function Room:create(digCallback)
-    local left  =self._x1-1
-    local top   =self._y1-1
-    local right =self._x2+1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local top   =self:getTop()-1
+    local right =self:getRight()+1
+    local bottom=self:getBottom()+1
     local value=0
     for x=left,right do
         for y=top,bottom do
@@ -221,8 +240,8 @@ end
 --- Get center cell of room
 -- @treturn table {x-position, y-position}
 function Room:getCenter()
-    return {math.ceil((self._x1+self._x2)/2),
-            math.ceil((self._y1+self._y2)/2)}
+    return {math.ceil((self:getLeft()+self:getRight())/2),
+            math.ceil((self:getTop()+self:getBottom())/2)}
 end
 
 --- Get Left most floor space.
