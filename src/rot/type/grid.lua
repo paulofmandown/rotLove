@@ -28,7 +28,7 @@ end
 function Grid:setCell(x, y, value)
     if value == nil then return self:removeCell(x, y) end
     local i, j = self._points:push(x, y)
-    local oldValue = i and self._values[i]
+    local oldValue = j and self._values[j]
     self._values[i or j] = value
     return oldValue
 end
