@@ -237,7 +237,7 @@ describe("Path", function()
             local t = {}
             for y=1,5 do
                 for x=1,8 do
-                    t[#t + 1] = tostring(dm._map[x] and dm._map[x][y] or 'x'):sub(1,1)
+                    t[#t + 1] = tostring(dm._map:getCell(x, y) or 'x'):sub(1,1)
                 end
                 t[#t + 1] = '\n'
             end

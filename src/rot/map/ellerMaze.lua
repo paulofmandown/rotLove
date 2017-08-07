@@ -20,7 +20,7 @@ end
   -- @tparam int callback.value A value representing the cell-type. 0==floor, 1==wall
 -- @treturn ROT.Map.EllerMaze self
 function EllerMaze:create(callback)
-    local map =self:_fillMap(1)
+    local map =ROT.Type.Grid()
     local w   =math.ceil((self._width-2)/2)
     local rand=9/24
     local L   ={}
@@ -36,17 +36,17 @@ function EllerMaze:create(callback)
         for i=1,w do
             local x=2*i
             local y=j
-            map[x][y]=0
+            map:setCell(x, y, 0)
 
             if i~=L[i+1] and self._rng:random()>rand then
                 self:_addToList(i, L, R)
-                map[x+1][y]=0
+                map:setCell(x + 1, y, 0)
             end
 
             if i~=L[i] and self._rng:random()>rand then
                 self:_removeFromList(i, L, R)
             else
-                map[x][y+1]=0
+                map:setCell(x, y + 1, 0)
             end
         end
         j=j+2
@@ -55,22 +55,24 @@ function EllerMaze:create(callback)
     for i=1,w do
         local x=2*i
         local y=j
-        map[x][y]=0
+        map:setCell(x, y, 0)
 
         if i~=L[i+1] and (i==L[i] or self._rng:random()>rand) then
             self:_addToList(i, L, R)
-            map[x+1][y]=0
+            map:setCell(x + 1, y, 0)
         end
 
         self:_removeFromList(i, L, R)
     end
 
     if not callback then return self end
+    
     for y = 1, self._height do
         for x = 1, self._width do
-            callback(x, y, map[x][y])
+            callback(x, y, map:getCell(x, y) or 1)
         end
     end
+    
     return self
 end
 

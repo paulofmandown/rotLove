@@ -4,6 +4,78 @@
 -- @module ROT.FOV.Bresenham
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local Bresenham=ROT.FOV:extend("Bresenham")
+
+-- internal Point class
+
+local Point = ROT.Class:extend("Point")
+
+function Point:init(x, y)
+    self.isPoint = true
+    self.x=x
+    self.y=y
+end
+
+function Point:hashCode()
+    local prime =31
+    local result=1
+    result=prime*result+self.x
+    result=prime*result+self.y
+    return result
+end
+
+function Point:equals(other)
+    if self==other                  then return true  end
+    if other==nil                   or
+    not other.isPoint               or
+    (other.x and other.x ~= self.x) or
+    (other.y and other.y ~= self.y) then return false end
+    return true
+end
+
+function Point:adjacentPoints()
+    local points={}
+    local i     =1
+    for ox=-1,1 do for oy=-1,1 do
+        points[i]=Point(self.x+ox,self.y+oy)
+        i=i+1
+    end end
+    return points
+end
+
+-- internal Line class
+
+local Line = ROT.Class:extend("Line")
+
+function Line:init(x1, y1, x2, y2)
+    self.x1=x1
+    self.y1=y1
+    self.x2=x2
+    self.y2=y2
+    self.points={}
+end
+function Line:getPoints()
+    local dx =math.abs(self.x2-self.x1)
+    local dy =math.abs(self.y2-self.y1)
+    local sx =self.x1<self.x2 and 1 or -1
+    local sy =self.y1<self.y2 and 1 or -1
+    local err=dx-dy
+
+    while true do
+        table.insert(self.points, Point(self.x1, self.y1))
+        if self.x1==self.x2 and self.y1==self.y2 then break end
+        local e2=err*2
+        if e2>-dx then
+            err=err-dy
+            self.x1 =self.x1+sx
+        end
+        if e2<dx then
+            err=err+dx
+            self.y1 =self.y1+sy
+        end
+    end
+    return self
+end
+
 --- Constructor.
 -- Called with ROT.FOV.Bresenham:new()
 -- @tparam function lightPassesCallback A function with two parameters (x, y) that returns true if a map cell will allow light to pass through
@@ -30,17 +102,17 @@ function Bresenham:compute(cx, cy, r, callback)
     local notvisited={}
     for x=-r,r do
         for y=-r,r do
-            notvisited[ROT.Point(cx+x, cy+y):hashCode()]={cx+x, cy+y}
+            notvisited[Point(cx+x, cy+y):hashCode()]={cx+x, cy+y}
         end
     end
 
     callback(cx,cy,1,1)
-    notvisited[ROT.Point(cx, cy):hashCode()]=nil
+    notvisited[Point(cx, cy):hashCode()]=nil
 
     local thePoints=self:_getCircle(cx, cy, r+3)
     for _,p in pairs(thePoints) do
         local x,y=p[1],p[2]
-        local line=ROT.Line(cx,cy,x, y):getPoints()
+        local line=Line(cx,cy,x, y):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
@@ -56,7 +128,7 @@ function Bresenham:compute(cx, cy, r, callback)
 
     for _,v in pairs(notvisited) do
         local x,y=v[1],v[2]
-        local line=ROT.Line(cx,cy,x, y):getPoints()
+        local line=Line(cx,cy,x, y):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
@@ -87,9 +159,9 @@ end
 function Bresenham:computeThorough(cx, cy, r, callback)
     local visited={}
     callback(cx,cy,r)
-    visited[ROT.Point(cx, cy):hashCode()]=0
+    visited[Point(cx, cy):hashCode()]=0
     for x=-r,r do for y=-r,r do
-        local line=ROT.Line(cx,cy,x+cx, y+cy):getPoints()
+        local line=Line(cx,cy,x+cx, y+cy):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end
@@ -119,12 +191,12 @@ end
 function Bresenham:computeQuick(cx, cy, r, callback)
     local visited={}
     callback(cx,cy,1, 1)
-    visited[ROT.Point(cx, cy):hashCode()]=0
+    visited[Point(cx, cy):hashCode()]=0
 
     local thePoints=self:_getCircle(cx, cy, r+3)
     for _,p in pairs(thePoints) do
         local x,y=p[1],p[2]
-        local line=ROT.Line(cx,cy,x, y):getPoints()
+        local line=Line(cx,cy,x, y):getPoints()
         for i=2,#line.points do
             local point=line.points[i]
             if self:_oob(cx-point.x, cy-point.y, r) then break end

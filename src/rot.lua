@@ -59,6 +59,10 @@ end
 
 require (ROTLOVE_PATH .. 'newFuncs')
 
+ROT.Type = {} -- collection types tuned for various use cases
+ROT.Type.PointSet    = require (ROTLOVE_PATH .. 'type.pointSet')
+ROT.Type.Grid        = require (ROTLOVE_PATH .. 'type.grid')
+
 ROT.Dice             = require (ROTLOVE_PATH .. 'dice')
 ROT.Display          = require (ROTLOVE_PATH .. 'display')
 ROT.TextDisplay      = require (ROTLOVE_PATH .. 'textDisplay')
@@ -88,8 +92,6 @@ ROT.Noise            = require (ROTLOVE_PATH .. 'noise')
 ROT.Noise.Simplex    = require (ROTLOVE_PATH .. 'noise.simplex')
 ROT.FOV              = require (ROTLOVE_PATH .. 'fov')
 ROT.FOV.Precise      = require (ROTLOVE_PATH .. 'fov.precise')
-ROT.Line             = require (ROTLOVE_PATH .. 'line')
-ROT.Point            = require (ROTLOVE_PATH .. 'point')
 ROT.FOV.Bresenham    = require (ROTLOVE_PATH .. 'fov.bresenham')
 ROT.FOV.Recursive    = require (ROTLOVE_PATH .. 'fov.recursive')
 ROT.Color            = require (ROTLOVE_PATH .. 'color')

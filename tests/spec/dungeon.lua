@@ -6,7 +6,7 @@ describe("Map.Dungeon", function()
 
     local buildDungeonTests = function(name)
         local ctor = ROT.Map[name]
-        ROT.RNG:setSeed(1234)
+        ROT.RNG:setSeed(123456)
         local map = ctor()
         map:create()
         local rooms = map:getRooms()
@@ -17,18 +17,16 @@ describe("Map.Dungeon", function()
                 expect(#rooms).toBeGreaterThan(0)
             end)
 
-            if name ~= "Brogue" then
-                it("all rooms should have at least one door", function()
-                    for i = 1, #rooms do
-                        local room = rooms[i]
-                        local doorCount = 0
-                        room:create(function(x, y, value)
-                            if value == 2 then doorCount = doorCount + 1 end
-                        end)
-                        expect(doorCount).toBeGreaterThan(0)
-                    end
-                end)
-            end
+            it("all rooms should have at least one door", function()
+                for i = 1, #rooms do
+                    local room = rooms[i]
+                    local doorCount = 0
+                    room:create(function(x, y, value)
+                        if value == 2 then doorCount = doorCount + 1 end
+                    end)
+                    expect(doorCount).toBeGreaterThan(0)
+                end
+            end)
 
             it("all rooms should have at least one wall", function()
                 for i = 1, #rooms do

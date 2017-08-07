@@ -2,18 +2,21 @@
 -- Used by ROT.Map.Brogue to create maps with 'cross rooms'
 -- @module ROT.Map.BrogueRoom
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
-local BrogueRoom = ROT.Map.Feature:extend("BrogueRoom")
+local BrogueRoom = ROT.Map.Room:extend("BrogueRoom")
+
+local PointSet = ROT.Type.PointSet
+
 --- Constructor.
 -- creates a new BrogueRoom object with the assigned values
 -- @tparam table dims Represents dimensions and positions of the rooms two rectangles
 -- @tparam[opt] int doorX x-position of door
 -- @tparam[opt] int doorY y-position of door
 function BrogueRoom:init(dims, doorX, doorY)
-    self._dims =dims
-    self._doors={}
-    self._walls={}
+    self._dims = dims
+    self._doors = PointSet()
+    self._walls = PointSet()
     if doorX then
-        self._doors[1] = {doorX, doorY}
+        self._doors:push(doorX, doorY)
     end
 end
 
@@ -236,7 +239,9 @@ function BrogueRoom:isValid(isWallCallback, canBeDugCallback)
                 if not isWallCallback(x, y) or not canBeDugCallback(x, y) then
                     return false
                 end
-            elseif self:_coordIsWall(x, y) then table.insert(self._walls, {x,y}) end
+            elseif self:_coordIsWall(x, y) then
+                self._walls:push(x, y)
+            end
         end
     end
 
@@ -254,7 +259,7 @@ function BrogueRoom:create(digCallback)
     local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
-            if self._doors[x..','..y] then
+            if self._doors:find(x, y) then
                 value=2
             elseif self:_coordIsFloor(x, y) then
                 value=0
@@ -285,21 +290,6 @@ function BrogueRoom:_coordIsWall(x, y)
     return false
 end
 
-function BrogueRoom:clearDoors()
-    self._doors={}
-end
-
-function BrogueRoom:getCenter()
-    local d=self._dims
-    local l=math.min(d.x1, d.x2)
-    local r=math.max(d.x1+d.w1, d.x2+d.w2)
-
-    local t=math.min(d.y1, d.y2)
-    local b=math.max(d.y1+d.h1, d.y2+d.h2)
-
-    return {math.round((l+r)/2), math.round((t+b)/2)}
-end
-
 function BrogueRoom:getLeft()   return math.min(self._dims.x1, self._dims.x2) end
 function BrogueRoom:getRight()  return math.max(self._dims.x1+self._dims.w1, self._dims.x2+self._dims.w2) end
 function BrogueRoom:getTop()    return math.min(self._dims.y1, self._dims.y2) end
@@ -313,26 +303,21 @@ function BrogueRoom:debug()
     io.write(str);io.flush()
 end
 
-function BrogueRoom:addDoor(x, y)
-    self._doors[x..','..y]=1
+function BrogueRoom:_checkHorizontalEdge(isWallCallback, x, y)
+    return self._walls:find(x, y)
+        and self._walls:find(x - 1, y)
+        and self._walls:find(x + 1, y)
+        -- and isWallCallback(x - 1, y)
+        -- and isWallCallback(x + 1, y)
 end
 
---- Add all doors based on available walls.
--- @tparam function isWallCallback
--- @treturn ROT.Map.Room self
-function BrogueRoom:addDoors(isWallCallback)
-    local left  =self:getLeft()
-    local right =self:getRight()
-    local top   =self:getTop()
-    local bottom=self:getBottom()
-    for x=left,right do
-        for y=top,bottom do
-            if x~=left and x~=right and y~=top and y~=bottom then
-            elseif isWallCallback(x,y) then
-            else self:addDoor(x,y) end
-        end
-    end
-    return self
+function BrogueRoom:_checkVerticalEdge(isWallCallback, x, y)
+    return self._walls:find(x, y)
+        and self._walls:find(x, y - 1)
+        and self._walls:find(x, y + 1)
+        -- and isWallCallback(x, y - 1)
+        -- and isWallCallback(x, y + 1)
 end
 
 return BrogueRoom
+

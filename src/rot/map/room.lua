@@ -3,6 +3,9 @@
 -- @module ROT.Map.Room
 local ROT = require((...):gsub(('.[^./\\]*'):rep(2) .. '$', ''))
 local Room = ROT.Map.Feature:extend("Room")
+
+local PointSet = ROT.Type.PointSet
+
 --- Constructor.
 -- creates a new room object with the assigned values
 -- @tparam int x1 Left wall
@@ -16,7 +19,7 @@ function Room:init(x1, y1, x2, y2, doorX, doorY)
     self._x2   =x2
     self._y1   =y1
     self._y2   =y2
-    self._doors= {}
+    self._doors= PointSet()
     if doorX and doorY then
         self:addDoor(doorX, doorY)
     end
@@ -111,54 +114,64 @@ function Room:createRandom(availWidth, availHeight, options, rng)
     return Room:new(x1, y1, x2, y2):setRNG(rng)
 end
 
-function Room:_hasDoor(x, y)
-    for i = 1, #self._doors do
-        if self._doors[i].x == x and self._doors[i].y == y then
-            return true
-        end
-    end
-end
-
 --- Place a door.
 -- adds an element to this rooms _doors table
 -- @tparam int x the x-position of the door
 -- @tparam int y the y-position of the door
 function Room:addDoor(x, y)
-    if self:_hasDoor(x, y) then return end
-    self._doors[#self._doors + 1] = { x = x, y = y }
+    self._doors:push(x, y)
 end
 
 --- Get all doors.
 -- Runs the provided callback on all doors for this room
 -- @tparam function callback A function with two parameters (x, y) representing the position of the door.
 function Room:getDoors(callback)
-    for i = 1, #self._doors do
-        callback(self._doors[i].x, self._doors[i].y)
+    for _, x, y in self._doors:each() do
+        callback(x, y)
     end
 end
 
 --- Reset the room's _doors table.
 -- @treturn ROT.Map.Room self
 function Room:clearDoors()
-    self._doors={}
+    self._doors = PointSet()
     return self
+end
+
+function Room:_checkHorizontalEdge(isWallCallback, x, y)
+    local top = self:getTop() - 1
+    local bottom = self:getBottom() + 1
+    return y == top or y == bottom
+        and not isWallCallback(x, y + 1)
+        and not isWallCallback(x, y - 1)
+end
+
+function Room:_checkVerticalEdge(isWallCallback, x, y)
+    local left = self:getLeft() - 1
+    local right = self:getRight() + 1
+    return x == left or x == right
+        and not isWallCallback(x + 1, y)
+        and not isWallCallback(x - 1, y)
+end
+
+function Room:_checkEdge(isWallCallback, x, y)
+    local v = self:_checkVerticalEdge(isWallCallback, x, y)
+    local h = self:_checkHorizontalEdge(isWallCallback, x, y)
+    return (v or h) -- and not (v and h)
 end
 
 --- Add all doors based on available walls.
 -- @tparam function isWallCallback
 -- @treturn ROT.Map.Room self
 function Room:addDoors(isWallCallback)
-    local left  =self._x1-1
-    local right =self._x2+1
-    local top   =self._y1-1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
-            if x~=left and x~=right and y~=top and y~=bottom then
-            elseif isWallCallback(x,y) then
-            elseif (x==left or x==right) and not isWallCallback(x+1, y) and not isWallCallback(x-1, y) then
-                self:addDoor(x,y)
-            elseif (y==top or y==bottom) and not isWallCallback(x, y+1) and not isWallCallback(x, y-1)  then
+            if isWallCallback(x,y) then
+            elseif self:_checkEdge(isWallCallback, x, y) then
                 self:addDoor(x,y)
             end
         end
@@ -169,8 +182,8 @@ end
 --- Write various information about this room to the console.
 function Room:debug()
     local door='doors'
-    for _, pos in ipairs(self._doors) do
-        door=door ..'; ' .. pos.x .. ',' .. pos.y
+    for _, x, y in self._doors:each() do
+        door=door ..'; ' .. x .. ',' .. y
     end
     local debugString= 'room    : '..(self._x1 and self._x1 or 'not available')
                               ..','..(self._y1 and self._y1 or 'not available')
@@ -185,10 +198,10 @@ end
 -- @tparam function canBeDugCallback A function with two parameters (x, y) that will return true if x, y represents a map cell that can be made into floorspace.
 -- @treturn boolean true if room is valid.
 function Room:isValid(isWallCallback, canBeDugCallback)
-    local left  =self._x1-1
-    local right =self._x2+1
-    local top   =self._y1-1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local right =self:getRight()+1
+    local top   =self:getTop()-1
+    local bottom=self:getBottom()+1
     for x=left,right do
         for y=top,bottom do
             if x==left or x==right or y==top or y==bottom then
@@ -205,14 +218,14 @@ end
 -- Function runs a callback to dig the room into a map
 -- @tparam function digCallback The function responsible for digging the room into a map.
 function Room:create(digCallback)
-    local left  =self._x1-1
-    local top   =self._y1-1
-    local right =self._x2+1
-    local bottom=self._y2+1
+    local left  =self:getLeft()-1
+    local top   =self:getTop()-1
+    local right =self:getRight()+1
+    local bottom=self:getBottom()+1
     local value=0
     for x=left,right do
         for y=top,bottom do
-            if self:_hasDoor(x, y) then
+            if self._doors:find(x, y) then
                 value=2
             elseif x==left or x==right or y==top or y==bottom then
                 value=1
@@ -227,8 +240,8 @@ end
 --- Get center cell of room
 -- @treturn table {x-position, y-position}
 function Room:getCenter()
-    return {math.ceil((self._x1+self._x2)/2),
-            math.ceil((self._y1+self._y2)/2)}
+    return {math.ceil((self:getLeft()+self:getRight())/2),
+            math.ceil((self:getTop()+self:getBottom())/2)}
 end
 
 --- Get Left most floor space.
