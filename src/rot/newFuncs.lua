@@ -125,7 +125,7 @@ function string:split(delim, maxNb)
     local pat = "(.-)" .. delim .. "()"
     local nb = 0
     local lastPos
-    for part, pos in string.gfind(self, pat) do
+    for part, pos in string.gmatch(self, pat) do
         nb = nb + 1
         result[nb] = part
         lastPos = pos
