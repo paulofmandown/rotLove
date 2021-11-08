@@ -3,7 +3,7 @@ ROT=require 'src.rot'
 
 function calbak(x, y, val)
     map[x..','..y]=val
-    f:write(val==1 and '#' or '.', x, y, { 110, 110, 110, 255 }, { 0, 0, 0, 255 })
+    f:write(val==1 and '#' or '.', x, y, { .4, .4, .4, 255 }, { 0, 0, 0, 255 })
 end
 
 function lightCalbak(fov, x, y)
@@ -17,7 +17,7 @@ end
 function computeCalbak(x, y, r, v)
     local key  =x..','..y
     if not map[key] then return end
-    local color= { 121, 121, 0, 255 }
+    local color= { .5, .5, 0, 255 }
     f:write(r>0 and f:getCharacter(x, y) or '@', x, y, nil, color)
 end
 local player={x=1, y=1}

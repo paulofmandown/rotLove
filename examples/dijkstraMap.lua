@@ -96,8 +96,8 @@ end
 function dijkCalbak(x,y) return map[x][y]=='.' end
 
 function getRandomColor()
-    return { math.floor(ROT.RNG:random(0,1)),
-             math.floor(ROT.RNG:random(0,1)),
-             math.floor(ROT.RNG:random(0,1)),
-             1}
+    return { (ROT.RNG:random(0,1)),
+             (ROT.RNG:random(0,1)),
+             (ROT.RNG:random(0,1)),
+             1.0}
 end
