@@ -37,9 +37,9 @@ function doTheThing()
     start=os.clock()
     astar:compute(p3[1], p3[2], astarCallback)
 
-    f:write('S', tonumber(p1[1]), tonumber(p1[2]), nil, { 0, 0, 255, 255 })
-    f:write('E', tonumber(p2[1]), tonumber(p2[2]), nil, { 0, 0, 255, 255 })
-    f:write('E', tonumber(p3[1]), tonumber(p3[2]), nil, { 0, 0, 255, 255 })
+    f:write('S', tonumber(p1[1]), tonumber(p1[2]), nil, { 0, 0, 1, 255 })
+    f:write('E', tonumber(p2[1]), tonumber(p2[2]), nil, { 0, 0, 1, 255 })
+    f:write('E', tonumber(p3[1]), tonumber(p3[2]), nil, { 0, 0, 1, 255 })
 
 end
 

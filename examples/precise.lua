@@ -17,7 +17,7 @@ end
 function computeCalbak(x, y, r, v)
     local key  =x..','..y
     if not map[key] then return end
-    local color= { 121, 121, 0, 255 }
+    local color= { 0.4, 0.4, 0.0, 1.0 }
     f:write(r>0 and f:getCharacter(x, y) or '@', x, y, nil, color)
 end
 local player={x=1, y=1}

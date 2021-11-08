@@ -132,7 +132,7 @@ function Lighting:_emitLightFromCell(x, y, color, litCells)
             litCells:setCell(x, y, cellColor)
         end
         for l = 1, 3 do
-            cellColor[l] = cellColor[l] + math.floor(color[l]*formFactor)
+            cellColor[l] = cellColor[l] + (color[l]*formFactor)
         end
     end
     return self

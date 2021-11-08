@@ -43,9 +43,9 @@ function love.load()
     map={}
     field={}
     seen={}
-    seenColor={ 100, 100, 100, 255 }
-    fieldColor={ 225, 225, 225, 255 }
-    fieldbg={ 50, 50, 50, 255 }
+    seenColor={ 0.4, 0.4, 0.4, 1.0 }
+    fieldColor={ 1.0, 1.0, 1.0, 1.0 }
+    fieldbg={ 0.2, 0.2, 0.2, 1.0 }
     update=false
     player={x=1, y=1}
     doTheThing()
