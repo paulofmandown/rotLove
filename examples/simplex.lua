@@ -4,16 +4,16 @@ function generateNoise()
     sim=ROT.Noise.Simplex()
     for j=1,f:getHeight() do
         for i=1,f:getWidth() do
-            local val=sim:get(i/20, j/20)*255
-            red  =math.floor(val>0 and val or 0)
-            green=math.floor(val<0 and -val or 0)
+            local val=sim:get(i/20, j/20)
+            red  =(val>0 and val or 0)
+            green=(val<0 and -val or 0)
 
-            f:write(' ', i, j, nil, { red, green, 0, 255 })
+            f:write(' ', i, j, nil, { red, green, 0, 1.0 })
         end
     end
 end
 function love.load()
-    f  =ROT.Display(256, 100)
+    f  =ROT.Display(120, 50)
     generateNoise()
 end
 update=false
