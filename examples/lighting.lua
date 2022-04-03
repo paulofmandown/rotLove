@@ -52,12 +52,12 @@ function doTheThing()
         lighting:setLight(tonumber(point[1]),tonumber(point[2]), getRandomColor())
     end
     lighting:compute(lightingCallback)
-    local ambientLight={ 0, 0, 0, 255 }
+    local ambientLight={ 0, 0, 0, 1 }
     for k,_ in pairs(mapData) do
         local parts=k:split(',')
         local x    =tonumber(parts[1])
         local y    =tonumber(parts[2])
-        local baseColor=mapData[k]==floorValue and { 125, 125, 125, 255 } or { 50, 50, 50, 255 }
+        local baseColor=mapData[k]==floorValue and { 1/2, 1/2, 1/2, 1 } or { 1/5, 1/5, 1/5, 1 }
         local light=ambientLight
         local char=f:getCharacter(x, y)
         if lightData[k] then
@@ -81,10 +81,10 @@ function lightingCallback(x, y, color)
 end
 
 function getRandomColor()
-    return { math.floor(ROT.RNG:random(0,125)),
-             math.floor(ROT.RNG:random(0,125)),
-             math.floor(ROT.RNG:random(0,125)),
-             255}
+    return { math.floor(ROT.RNG:random(0,1/2)),
+             math.floor(ROT.RNG:random(0,1/2)),
+             math.floor(ROT.RNG:random(0,1/2)),
+             1}
 end
 
 function getRandomFloor()

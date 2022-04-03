@@ -39,8 +39,8 @@ function Display:init(w, h, scale, dfg, dbg, fullOrFlags, vsync, fsaa)
         self.drawQ=self.graphics.drawq
     end
 
-    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
-    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }
+    self.defaultForegroundColor=dfg and dfg or { 235/255, 235/255, 235/255 }
+    self.defaultBackgroundColor=dbg and dbg or { 15/255, 15/255, 15/255 }
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
@@ -101,7 +101,7 @@ function Display:draw()
         end
     end
     self.graphics.setCanvas()
-    self.graphics.setColor(255,255,255,255)
+    self.graphics.setColor(1,1,1,1)
     self.graphics.draw(self.canvas)
 end
 
@@ -266,7 +266,7 @@ function Display:_setColor(c)
     love.graphics.setColor(c or self.defaultForegroundColor)
 end
 function Display:_clamp(n)
-    return n<0 and 0 or n>255 and 255 or n
+    return n<0 and 0 or n>1 and 1 or n
 end
 
 --- Draw text.

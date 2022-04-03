@@ -17,19 +17,20 @@ local TextDisplay = ROT.Class:extend("TextDisplay")
 -- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @return nil
 function TextDisplay:init(w, h, font, size, dfg, dbg, fullOrFlags, vsync, fsaa)
+    self._widthInChars =w and w or 80
+    self._heightInChars=h and h or 24
+    local window=love.window or self.graphics
+    window.setMode(self._widthInChars, self._heightInChars, fullOrFlags, vsync, fsaa)
     self.graphics =love.graphics
     self._fontSize=size or 10
     self._font    =font and self.graphics.newFont(font, size) or self.graphics.newFont(self._fontSize)
     self.graphics.setFont(self._font)
     self._charWidth    =self._font:getWidth('W')
     self._charHeight   =self._font:getHeight()
-    self._widthInChars =w and w or 80
-    self._heightInChars=h and h or 24
-    local w=love.window or self.graphics
-    w.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
+    window.setMode(self._charWidth*self._widthInChars, self._charHeight*self._heightInChars, fullOrFlags, vsync, fsaa)
 
-    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
-    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }
+    self.defaultForegroundColor=dfg and dfg or { 235/255, 235/255, 235/255 }
+    self.defaultBackgroundColor=dbg and dbg or { 15/255, 15/255, 15/255 }
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
@@ -82,7 +83,7 @@ function TextDisplay:draw()
         end
     end end
     self.graphics.setCanvas()
-    self.graphics.setColor(255,255,255,255)
+    self.graphics.setColor(1,1,1,1)
     self.graphics.draw(self._canvas)
 end
 
@@ -246,7 +247,7 @@ function TextDisplay:_setColor(c)
     love.graphics.setColor(c or self.defaultForegroundColor)
 end
 function TextDisplay:_clamp(n)
-    return n<0 and 0 or n>255 and 255 or n
+    return n<0 and 0 or n>1 and 1 or n
 end
 
 --- Draw text.
